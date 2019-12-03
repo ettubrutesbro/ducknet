@@ -8,15 +8,16 @@ export function CannonProvider({children}){
   useEffect(() => {
     world.broadphase = new CANNON.NaiveBroadphase()
     world.solver.iterations = 10
-    world.gravity.set(0,0,-25)
+    world.gravity.set(0,-10, 0)
   }, [world])
   //world stepper every frame
   useRender(()=> world.step(1/60))
   //world is provided as context for all components
   return <cannonContext.Provider value = {world} children = {children} />
 }
+
 //cannon hook for tracking/updating a physics obj
-//useCannon(a component, a function???, deps????)
+//useCannon(cannon properties, a function to call on the body created herein, deps????)
 export function useCannon({ ...props}, fn, deps = []){
   const ref = useRef()
 
@@ -31,6 +32,7 @@ export function useCannon({ ...props}, fn, deps = []){
     return () => world.removeBody(body)
   }, deps)
   useRender(()=>{
+    // console.log('r')
     if(ref.current){
         //referenced threejs object position set to corresponding cannon phys object
         ref.current.position.copy(body.position)

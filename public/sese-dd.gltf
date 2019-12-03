@@ -1,0 +1,132 @@
+{
+  "asset": {
+    "version": "2.0",
+    "generator": "babylon.js glTF exporter for 3dsmax 2017 v20191127.7"
+  },
+  "scene": 0,
+  "scenes": [
+    {
+      "nodes": [
+        0
+      ],
+      "extensions": {}
+    }
+  ],
+  "nodes": [
+    {
+      "mesh": 0,
+      "translation": [
+        -1.605473,
+        2.85991883,
+        3.09332752
+      ],
+      "rotation": [
+        0,
+        0,
+        0,
+        1
+      ],
+      "scale": [
+        0.07031555,
+        0.07031555,
+        0.07031555
+      ],
+      "name": "Plane002"
+    }
+  ],
+  "meshes": [
+    {
+      "primitives": [
+        {
+          "attributes": {
+            "POSITION": 1,
+            "NORMAL": 2,
+            "TEXCOORD_0": 3
+          },
+          "indices": 0,
+          "mode": 4,
+          "material": 0,
+          "extensions": {
+            "KHR_draco_mesh_compression": {
+              "bufferView": 0,
+              "attributes": {
+                "POSITION": 0,
+                "NORMAL": 1,
+                "TEXCOORD_0": 2
+              }
+            }
+          }
+        }
+      ],
+      "name": "Plane002"
+    }
+  ],
+  "accessors": [
+    {
+      "componentType": 5123,
+      "count": 696,
+      "type": "SCALAR",
+      "name": "accessorIndices"
+    },
+    {
+      "componentType": 5126,
+      "count": 546,
+      "max": [
+        9,
+        0,
+        9.999999
+      ],
+      "min": [
+        -15,
+        -36.0068779,
+        -14
+      ],
+      "type": "VEC3",
+      "name": "accessorPositions"
+    },
+    {
+      "componentType": 5126,
+      "count": 546,
+      "type": "VEC3",
+      "name": "accessorNormals"
+    },
+    {
+      "componentType": 5126,
+      "count": 546,
+      "type": "VEC2",
+      "name": "accessorUVs"
+    }
+  ],
+  "bufferViews": [
+    {
+      "buffer": 0,
+      "byteOffset": 0,
+      "byteLength": 1433
+    }
+  ],
+  "buffers": [
+    {
+      "name": "sese-dd",
+      "byteLength": 1436,
+      "uri": "data:application/octet-stream;base64,RFJBQ08CAgEBAAAAbOgBAucBGgpTCBEcJBcAGx4cDn8EqAECbhAOFz53Az3v6+/ar0vXVqHF05am6fdE40GV1qKotv0CD2t8UVotUpSolIe2qop/pXmiSaWFKh7rokqrKJRSLWhFUVAAAQEQNyPlo1/NDrf6BlTGTMh1DXGvyBr6vzIOrnI+At1lt2Ovgq6mg/EQSgJE2eeYCiJ3O4EKAC9WhQP/AAAAAQABAQABAAkDAAACAQEJAwABAwEDCQIAAgIBAQEADwMlBBPJAQNhApED5QhxDDERoQ0ms9fZMnu6d7nNyS8nM1QJBI/kbYqsWNsN1UaBS80f5sZarTK7HZeoKv5iX0BY9dbXBwMAAMRdBI4jFgAAwjLSpK8okiAc0yIAABzpIYCqsgoicOPXHAIAYAUApJE4M1UBAACw8YHM4TgOxwEAWIdwHEQAm1FVQwCbxTEAwHFUNQTgOFQ1BMBxhuOO48aZqgCAquLGhQCqeuN8AKjqjRMC8P+NAwDinap8ANZhqnI4x71xCwUAdPXGAQAR5Nu4ILdQAICqVGEAwHF+HBwHAFXYrDgOVtgHGIRF8hUARIh1HCKAngIAAHBO1Y7DcaoKAHDcqQoAUFVTFQDAcaracd44AAAAoKpvvONMVY4DAABTleNQVQDYuBsHgI27ccdxvKwbBwAANi4CjgMQERbHAeAkjSMAMOZvvONMVY4DAAAA4DgAOK5CbcNxAABAQOA4AAgyVQUAoKqgqiJg45yqH8CNM1U7DhyfqgBgqgKA4wC48Y0DAPEGgMY5pSIAx43BIUCqsoccnqrVIQBQHSJVEQGiVBzvOBxHVQGAqWqqAgBQVQAAgOMA4DgAAAAAjpeVKgwAzMrxxkWQr+NUpQoDAEFuoQAAxjSH2zhfUSRAKFbEyGEBAMAKAACAKlxWGgcrDAQEwiIBi5EiwgIAALEAQJXjiDN1tcZxvKwAAAAA/z8AAAAAcMELBxDCAABgwQsHEEIOBgMBAQP/B1UnjQvBA////////////////////+thCdIBaxfWPcddR7CkDWQJEz2tproi7Espv73FjZyiO1cnTI3ZCPww9d+l1plsW47tlqwARw1IJqQD93u22WcPjFzwLoYLNX3NSudbSSckleRdXwHzzMzYXc7t88fu62ytVlfl3KTzbpxZ8768ley05U0ZBcQNKz0lL66M268L3vD5hr5vXqn4Xil+uvcMsZXHe7a/sgb8HQIvDQkFm9I8ASqN7axHAm5jJKkzwVYObZ3w/mBVfMtD1jS83oDN8x3A5h0jXQZWIjXPFVkawXHt7DjOuUiU/wMAAP8BAAD/A0x7gAoFAQEADQN5A30BgAOAgP0B8Qf5BPUFaQtNGS2tFagZWY0Sn8zN+9+LE5LX/LqPmOyzIdqv4/vIGjpPwPb66ekaG1B5eHqYDIGHCwAURGQD+JEqEJ3aApACXGIhGeeJYAgCVArAPZK9nDEAAICWdotuRRHpS2ZVAwAA/Z+qNI8AsCoAXJqqVWXVggKwKwCoKgAAIACsuhcAAKaaAKCDAAAC8A8AAA1UAQAA/d///////7+Z/w+garQBAAA7yfr4gQIAAKh6BQB4YRmgmcK4H2y5djbiUgB0kgC2ncRFmxSC+WgdAKDGuyWFlgIAugCIQCrASHFkowBAXrd8ZtVt/wMAMwMAAIAzAJQrABYIoG1TBUBKAUCqAsD/ATBVAPg/AACA2jsJAL9LA4CCUhUAAAgAmACaAIwAAgGEArgIAABkKQDlAnAKcAmQCPAPQAoA/nqDANAPkKoAQKpOFQCoqgW0vF9rdogBQP9jD51K9n4fqqUCwP8XC+imqTI5BgD+DwCiKwVuAAAAVg9A2kJ3CjpgTMrKxN3ndYIAAAAA/w8AAAAAAAAAAIC/AACAPwwAAAA="
+    }
+  ],
+  "materials": [
+    {
+      "name": "default",
+      "emissiveFactor": [
+        0,
+        0,
+        0
+      ],
+      "alphaMode": "OPAQUE",
+      "doubleSided": false
+    }
+  ],
+  "extensionsRequired": [
+    "KHR_draco_mesh_compression"
+  ],
+  "extensionsUsed": [
+    "KHR_draco_mesh_compression"
+  ]
+}

@@ -1,74 +1,97 @@
-import React, {useState, useEffect, useContext, useRef} from 'react';
+import React, {useState, useEffect, useContext, useRef, Suspense} from 'react';
 import logo from './logo.svg';
 import './App.css';
-import { Canvas, useFrame, useRender } from 'react-three-fiber'
+import { Canvas, useFrame, useRender, useLoader } from 'react-three-fiber'
 import styled from 'styled-components'
+
 import * as CANNON from 'cannon'
 
+import DatGui, {DatBoolean, DatColor, DatNumber, DatString} from 'react-dat-gui'
+
+import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader'
+import { DRACOLoader } from 'three/examples/jsm/loaders/DRACOLoader'
+
 import {CannonProvider, useCannon} from './cannonProvider'
+
+import ModelGJ from './assets/seseme.js'
+
+import {Debug, Range, TinkerGroup} from './components/Debug'
+import Camera from './components/core/Camera'
+
+import {toRads, toDegs} from './utils/3d'
+
+function Model({ url }) {
+  const model = useLoader(GLTFLoader, url, loader => {
+    const dracoLoader = new DRACOLoader()
+    dracoLoader.setDecoderPath('/draco-gltf/')
+    loader.setDRACOLoader(dracoLoader)
+  })
+  return <primitive object = {model.scene} />
+}
 
 function Ground({position}) {
   const ref = useCannon({mass: 0}, body => {
     body.addShape(new CANNON.Plane())
     body.position.set(...position)
+    body.quaternion.setFromAxisAngle(new CANNON.Vec3(1,0,0),-Math.PI/2)
   })
   return (
     <mesh ref = {ref}>
       <planeBufferGeometry attach = 'geometry' args = {[100,100]} />
-      <meshNormalMaterial attach = 'material' />
+      <meshBasicMaterial attach = 'material' color = {0x000000}/>
     </mesh>
   )
 }
 
-function Stuff({position}) {
-  const ref = useCannon({mass: 100000}, body => {
+function PhysicsBody({position}, visible = true) {
+  const ref = useCannon({mass: 10}, body => {
     body.addShape(new CANNON.Box(new CANNON.Vec3(1,1,1)))
     body.position.set(...position)
   })
   return (
     <mesh ref = {ref}>
       <boxGeometry attach = 'geometry' args = {[2,2,2]} />
-      <meshLambertMaterial attach = 'material' color = "#FF0000"/>
-    </mesh>
-  )
-}
-
-function Thing() {
-  const ref = useRef()
-  useFrame(() => (ref.current.rotation.x = ref.current.rotation.y += 0.01))
-  return (
-    <mesh
-      ref={ref}
-      onClick={e => console.log('click')}
-      onPointerOver={e => console.log('hover')}
-      onPointerOut={e => console.log('unhover')}>
-      <boxBufferGeometry attach="geometry" args={[1, 1, 1]} />
-      <meshNormalMaterial attach="material" />
+      <meshNormalMaterial attach = 'material' color = "#FF0000"/>
     </mesh>
   )
 }
 
 
 function App() {
+
+  const [cam, setCam] = useState({
+    x: 0, y: 0, z: 20,
+    zoom: 1,
+    rx: 0, ry: 0, rz: 0,
+  })
+
   return (
-    <div className="App">
-      <h1> hello world </h1>
-
-
-
-      <DuckCanvas>
+    <div className = 'full'>
+      <Canvas invalidateFrameLoop>
+        <Camera 
+          position = {[cam.x, cam.y, cam.z]}
+          rotation = {[cam.rx,cam.ry,cam.rz]}
+          zoom = {cam.zoom}
+        />
         <CannonProvider>
-          <Ground position = {[0, 0, -10]} />
-          <Stuff position = {[1,0,1]} />
-          <Stuff position = {[1.5,0,2]} />
+          <Ground position = {[0, -10, 0]} />
+          <PhysicsBody position = {[0.8,1,0]} />
+          <PhysicsBody position = {[0,3,0.3]} />
         </CannonProvider>
-      </DuckCanvas>
+
+        <Suspense fallback = {(<mesh> <sphereGeometry attach = 'geometry'/></mesh>)}>
+          { <ModelGJ /> }
+          {/* <Model url = './sese.gltf' /> */}
+        </Suspense>
+      </Canvas>
+
+      <Debug>
+        <TinkerGroup name = 'cam' obj = {cam} func = {setCam} />
+      </Debug>
     </div>
   );
 }
 
-const DuckCanvas = styled(Canvas)`
-  outline: 1px solid black;
-`
+
 
 export default App;
