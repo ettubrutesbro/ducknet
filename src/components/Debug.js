@@ -81,7 +81,7 @@ const defRng = {
     // per object with debuggable state values, 
     // provide per-value default min/max/step
     cam: {
-        default: [-20,20,.25],
+        default: [-30,30,1],
         zoom: [0,20,1],
         rx: [toRads(-180), toRads(180), toRads(1)],
         ry: [toRads(-180), toRads(180), toRads(1)],
