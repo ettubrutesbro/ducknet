@@ -29,7 +29,14 @@ function App() {
     x: 0, y: 3, z: 20,
     zoom: 1,
     rx: toRads(-15), ry: 0, rz: 0,
+    fov: 50,
+    orbit: false
   })
+
+  const [enclosure, modEnclosure] = useState({
+    left: true, right: true, ground: true, back: true, front: true,
+    showLeft: true, showRight: true, showGround: true, showBack: false, showFront: false,
+  }) 
 
   return (
     <div className = 'full'>
@@ -40,14 +47,26 @@ function App() {
           position = {[cam.x, cam.y, cam.z]}
           rotation = {[cam.rx,cam.ry,cam.rz]}
           zoom = {cam.zoom}
+          fov = {cam.fov}
+          debugWithOrbit = {cam.orbit}
         />
 
         <PhysicsProvider>
-          <Wall position = {[0, -5, 0]} rotation = {[-90, 0, 0]} size = {[11,5,.5]}/>
-          <Wall position = {[5, 0, 0]} rotation = {[0, -90, 0]} size = {[5,11,.5]} />
-          <Wall position = {[-5, 0, 0]} rotation = {[0, 90, 0]} size = {[5,11,.5]}/>
-          <Wall position = {[0, 0, -3]} rotation = {[0, 0, 0]} visible={true}/>
-          <Wall position = {[0, 0, 3]} rotation = {[0, 0, 0]} visible={true}/>
+          {enclosure.ground && 
+            <Wall position = {[0, -5, 0]} rotation = {[-90, 0, 0]} size = {[11,5,.5]} visible = {enclosure.showGround}/>
+          }
+          {enclosure.left &&
+            <Wall position = {[5, 0, 0]} rotation = {[0, -90, 0]} size = {[5,11,.5]} visible = {enclosure.showLeft}/>
+          }
+          {enclosure.right &&
+            <Wall position = {[-5, 0, 0]} rotation = {[0, 90, 0]} size = {[5,11,.5]} visible = {enclosure.showRight}/>
+          }
+          {enclosure.back &&
+            <Wall position = {[0, 0, -3]} rotation = {[0, 0, 0]} visible={enclosure.showBack} />
+          }
+          {enclosure.front &&
+            <Wall position = {[0, 0, 3]} rotation = {[0, 0, 0]} visible={enclosure.showFront} />
+          }
           {/*
           <Body position = {[0,5,0]} />
           <Body position = {[.5,10,0.25]} />
@@ -60,7 +79,8 @@ function App() {
       </Canvas>
 
       <Debug>
-        <TinkerGroup name = 'cam' obj = {cam} func = {setCam} />
+        <TinkerGroup name = 'cam' obj = {cam} func = {setCam} open />
+        <TinkerGroup name = 'enclosure' obj = {enclosure} func = {modEnclosure} open />
       </Debug>
     </div>
   );

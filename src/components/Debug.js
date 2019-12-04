@@ -2,13 +2,20 @@ import React, {Fragment} from 'react'
 import styled from 'styled-components'
 import {toRads, toDegs} from '../utils/3d'
 
-export const Range = (props) => {
-    const {max, min, step, change, name, obj, equation, property} = props
+//generic container 
+//todo: collapsible sections based on tinkergroup
+export const Debug = (props) => {
+    return <DebugBox> {props.children} </DebugBox>
+}
+
+const Range = (props) => {
+    const {max, min, step, onChange, name, obj, equation, property} = props
 
     const updateProperty = e => {
-        change({
+        console.log(e.target.value)
+        onChange({
             ...obj,
-            [e.target.name]: e.target.value
+            [e.target.name]: Number(e.target.value)
         })
     }
 
@@ -28,22 +35,51 @@ export const Range = (props) => {
     )
 }
 
-//generic container 
-export const Debug = (props) => {
-    return <DebugBox> {props.children} </DebugBox>
+const OnOffSwitch = (props) => {
+    const {onChange, property, obj} = props
+    const updateProperty = e => {
+        console.log(e.target.value)
+        onChange({
+            ...obj,
+            [e.target.name]: !obj[e.target.name]
+        })
+    }
+    return (
+        <InputRow>
+            <h4> {property}: {obj[property]} </h4>
+            <input 
+                type = "checkbox" 
+                name = {property}
+                checked = {obj[property]}
+                onChange = {updateProperty}
+            />
+        </InputRow>
+    )
 }
 
+const Group = styled.details`
+    border-bottom: 1px solid #898989;
+    padding: 8px 15px;
+`
+const Label = styled.summary`
+    cursor: pointer;
+    &:focus{
+        outline: none;
+    }
+`
 export const TinkerGroup = (props) => {
-    const {obj, func, name} = props
+    const {obj, func, name, open} = props
     return(
-        <Fragment>
+        <Group open = {open}>
+            <Label> {name} </Label>
             {Object.keys(obj).map((property)=>{
-                return ( //if obj[property] is a number...
+                console.log(typeof obj[property])
+                return typeof obj[property] === 'number'? (
                     <Range
                         key = {obj+property}
                         obj = {obj}
                         property = {property}
-                        change = {func}
+                        onChange = {func}
                         min = {defRng[name][property]? defRng[name][property][0] 
                             : defRng[name]? defRng[name].default[0] 
                             : 0
@@ -56,9 +92,16 @@ export const TinkerGroup = (props) => {
                             : 1}
                         equation = {labelEquations[property] || null}
                     /> 
-                )
+                ): typeof obj[property]==='boolean'? (
+                    <OnOffSwitch  
+                        key = {obj+property}
+                        obj = {obj}
+                        property = {property}
+                        onChange = {func}
+                    />
+                ) : (<InputRow> {property} doesn't have a matching debug input yet </InputRow>)
             })}
-        </Fragment>
+        </Group>
     )
 }
 
@@ -67,8 +110,10 @@ const DebugBox = styled.div`
     z-index: 65000;
     top: 15px;
     right: 15px;
-    padding: 15px;
     width: 280px;
+    background: rgba(255,255,255,0.5);
+    border: 1px solid #898989;
+    border-bottom: none;
 `
 
 const InputRow = styled.div`
@@ -83,6 +128,8 @@ const defRng = {
     cam: {
         default: [-30,30,1],
         zoom: [0,20,1],
+        z: [10,100,1],
+        fov: [10, 180, 1],
         rx: [toRads(-180), toRads(180), toRads(1)],
         ry: [toRads(-180), toRads(180), toRads(1)],
         rz: [toRads(-180), toRads(180), toRads(1)],

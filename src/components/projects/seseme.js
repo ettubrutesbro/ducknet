@@ -15,8 +15,8 @@ function Seseme(props) {
   })
 
   return (
-    <SimpleBody size = {[2.4, 4, 2.4]} {...props}>
-      <mesh name="Plane002" scale = {[.1,.1,.1]} position = {[0.3,1.6,0]}>
+    <SimpleBody size = {[2.4, 3.6, 2.4]} {...props}>
+      <mesh name="Plane002" scale = {[.1,.1,.1]} position = {[0.3,1.8,0.2]}>
         <bufferGeometry attach="geometry" {...gltf.__$[1].geometry} />
         <meshNormalMaterial attach="material" />
       </mesh>

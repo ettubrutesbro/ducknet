@@ -1,5 +1,19 @@
 import React, {useRef, useEffect} from 'react'
-import {useThree, useFrame} from 'react-three-fiber'
+import {useThree, useFrame, useRender, extend} from 'react-three-fiber'
+import {OrbitControls} from 'three/examples/jsm/controls/OrbitControls'
+
+//orbit controls for debug only
+extend({OrbitControls})
+const Controls = props => {
+  const { gl, camera } = useThree()
+  const ref = useRef()
+  useRender(()=> {
+    ref.current.update()
+    // console.log('orbcontrols')
+    // console.log(camera)
+  })
+  return <orbitControls ref = {ref} args = {[camera, gl.domElement]} {...props} />
+} 
 
 function Camera(props) {
   const ref = useRef()
@@ -11,10 +25,16 @@ function Camera(props) {
   }, [])
   // Updates per-frame might not help? paul put in updateMatrixWorld
   // but only updProjMatrix works for zoom changes [test for rotation]
-  // useFrame(() => {
-  //   ref.current.updateMatrixWorld()
-  // })
-  return <perspectiveCamera ref={ref} {...props} />
+  useFrame(() => {
+    // console.log('camera')
+    // console.log(ref.current)
+    // ref.current.updateMatrixWorld()
+    ref.current.updateProjectionMatrix()
+  })
+  return <React.Fragment> 
+    <perspectiveCamera ref={ref} {...props} />
+    {props.debugWithOrbit && <Controls/>}
+  </React.Fragment>
 }
 
 export default Camera
