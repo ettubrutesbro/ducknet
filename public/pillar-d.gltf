@@ -16,22 +16,22 @@
     {
       "mesh": 0,
       "translation": [
-        -1.605473,
-        2.85991883,
-        3.09332752
+        -2.10479355,
+        1.61077452,
+        3.24167466
       ],
       "rotation": [
         0,
+        -0.7071068,
         0,
-        0,
-        1
+        0.7071067
       ],
       "scale": [
         0.07031555,
         0.07031555,
         0.07031555
       ],
-      "name": "Plane002"
+      "name": "B"
     }
   ],
   "meshes": [
@@ -58,41 +58,41 @@
           }
         }
       ],
-      "name": "Plane002"
+      "name": "B"
     }
   ],
   "accessors": [
     {
       "componentType": 5123,
-      "count": 696,
+      "count": 45,
       "type": "SCALAR",
       "name": "accessorIndices"
     },
     {
       "componentType": 5126,
-      "count": 546,
+      "count": 33,
       "max": [
-        9,
-        0,
-        9.999999
+        3.75,
+        18,
+        3.75
       ],
       "min": [
-        -15,
-        -36.0068779,
-        -14
+        -3.75,
+        -18.0000019,
+        -3.75
       ],
       "type": "VEC3",
       "name": "accessorPositions"
     },
     {
       "componentType": 5126,
-      "count": 546,
+      "count": 33,
       "type": "VEC3",
       "name": "accessorNormals"
     },
     {
       "componentType": 5126,
-      "count": 546,
+      "count": 33,
       "type": "VEC2",
       "name": "accessorUVs"
     }
@@ -101,14 +101,14 @@
     {
       "buffer": 0,
       "byteOffset": 0,
-      "byteLength": 1433
+      "byteLength": 275
     }
   ],
   "buffers": [
     {
-      "name": "sese",
-      "byteLength": 1436,
-      "uri": "sese.bin"
+      "name": "pillar-d",
+      "byteLength": 276,
+      "uri": "data:application/octet-stream;base64,RFJBQ08CAgEBAAAACg8CDgMBDQcBBd/zLFUAAQEQSQSr0rZ2/wJrQQP/AAAAAQABAAABAAkDAAACAQEJAwABAwEDCQIAAgIBAQEADis1E2kGZSYEWjteh6oaAHAcAGQcAABA4zhOAGAcAAAAwMYbJwDgOACAcXLcODUOAEjVAAAANE4AkKoBAAAAAP8/AAAAAHDAAQCQwQAAcMAAABBCDgYDAQEC/we5KKUL////////////////////76ULDfouLNZx8mi7DF/7E5f/AwAA/wEAAP8CR0IKBQEBAA0DZSZpBmkGH80MBMKs4Lah/L//E4L/+z8GAAAAKwOv3YAAAAAA/w8AAFVVVT+oqiq+rKoqPgwA"
     }
   ],
   "materials": [
