@@ -1,25 +1,65 @@
 import * as THREE from 'three'
-import React, { useEffect, useRef, Suspense } from 'react'
+import React, { useState, useEffect, useRef, Suspense } from 'react'
 import { useLoader, useFrame } from 'react-three-fiber'
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader'
 import { DRACOLoader } from 'three/examples/jsm/loaders/DRACOLoader'
 
 import {Body, SimpleBody, LoadingProject} from '../core/Body'
+import {toRads} from '../../utils/3d'
   
-function Seseme(props) {
+export function Seseme(props) {
   const group = useRef()
-  const gltf = useLoader(GLTFLoader, '/sese.gltf', loader => {
+  const pedestal = useLoader(GLTFLoader, '/seseme.gltf', loader => {
+    const dracoLoader = new DRACOLoader()
+    dracoLoader.setDecoderPath('/draco-gltf/')
+    loader.setDRACOLoader(dracoLoader)
+  })
+  const pillar = useLoader(GLTFLoader, '/pillar-d.gltf', loader => {
     const dracoLoader = new DRACOLoader()
     dracoLoader.setDecoderPath('/draco-gltf/')
     loader.setDRACOLoader(dracoLoader)
   })
 
+  const [plrHts, modPlrHt] = useState({
+    a: 9.5, b: -1.5, c: -9.5, d:-15
+  })
+
+
   return (
-    <SimpleBody size = {[2.4, 3.6, 2.4]} {...props}>
-      <mesh name="Plane002" scale = {[.1,.1,.1]} position = {[0.3,1.8,0.2]}>
-        <bufferGeometry attach="geometry" {...gltf.__$[1].geometry} />
-        <meshNormalMaterial attach="material" />
-      </mesh>
+    <SimpleBody 
+      shapes = {['box','box']}
+      shapeParams = {[
+        {size: [2.4, 3.6, 2.4], offset: [0,0,0]},
+        {size: [1.7, 3.1, 1.7], offset: [0,3,0]}
+      ]} 
+      {...props}
+    >
+      <group name = 'seseme' position = {[0.3,1.8,0.2]} scale = {[.1,.1,.1]} >
+        <mesh name="pedestal">
+          <bufferGeometry attach="geometry" {...pedestal.__$[1].geometry} />
+          <meshNormalMaterial attach="material" />
+        </mesh>
+        <mesh name = "pillar" position = {[1,plrHts.a,2.1]}>
+          <bufferGeometry attach = 'geometry' {...pillar.__$[1].geometry} />
+          <meshNormalMaterial attach = 'material' />
+        </mesh>
+       
+        <mesh name = "pillar2" position = {[1,plrHts.b,-6.25]} rotation = {[0,toRads(90),0]} >
+          <bufferGeometry attach = 'geometry' {...pillar.__$[1].geometry} />
+          <meshNormalMaterial attach = 'material' />
+        </mesh>
+        
+        <mesh name = "pillar3" position = {[-7.1,plrHts.c,-6.25]} rotation = {[0,toRads(180),0]} >
+          <bufferGeometry attach = 'geometry' {...pillar.__$[1].geometry} />
+          <meshNormalMaterial attach = 'material' />
+        </mesh>
+        
+        <mesh name = "pillar4" position = {[-7.1,plrHts.d,2.1]} rotation = {[0,toRads(-90),0]} >
+          <bufferGeometry attach = 'geometry' {...pillar.__$[1].geometry} />
+          <meshNormalMaterial attach = 'material' />
+        </mesh>
+      
+      </group>
     </SimpleBody>
   )
 }

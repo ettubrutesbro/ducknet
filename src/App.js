@@ -10,10 +10,11 @@ import { DRACOLoader } from 'three/examples/jsm/loaders/DRACOLoader'
 
 
 import {PhysicsProvider, usePhysics} from './components/core/Physics'
-import {Body, LoadingProject} from './components/core/Body'
-import {Wall} from './components/core/Wall'
+import {SimpleBody} from './components/core/Body'
+import {Enclosure} from './components/core/Wall'
 
 import Seseme from './components/projects/seseme'
+import Eclipse from './components/projects/Eclipse'
 
 
 
@@ -26,20 +27,18 @@ import {toRads, toDegs} from './utils/3d'
 function App() {
 
   const [cam, setCam] = useState({
-    x: 0, y: 3, z: 20,
+    x: 0, y: 21, z: 50,
     zoom: 1,
-    rx: toRads(-15), ry: 0, rz: 0,
-    fov: 50,
-    orbit: false
+    rx: toRads(-18), ry: 0, rz: 0,
+    fov: 25,
+    orbit: true
   })
 
-  const [enclosure, modEnclosure] = useState({
-    left: true, right: true, ground: true, back: true, front: true,
-    showLeft: true, showRight: true, showGround: true, showBack: false, showFront: false,
-  }) 
 
   return (
     <div className = 'full'>
+      
+
       <Canvas 
         invalidateFrameloop = {false}
       >
@@ -52,35 +51,17 @@ function App() {
         />
 
         <PhysicsProvider>
-          {enclosure.ground && 
-            <Wall position = {[0, -5, 0]} rotation = {[-90, 0, 0]} size = {[11,5,.5]} visible = {enclosure.showGround}/>
-          }
-          {enclosure.left &&
-            <Wall position = {[5, 0, 0]} rotation = {[0, -90, 0]} size = {[5,11,.5]} visible = {enclosure.showLeft}/>
-          }
-          {enclosure.right &&
-            <Wall position = {[-5, 0, 0]} rotation = {[0, 90, 0]} size = {[5,11,.5]} visible = {enclosure.showRight}/>
-          }
-          {enclosure.back &&
-            <Wall position = {[0, 0, -3]} rotation = {[0, 0, 0]} visible={enclosure.showBack} />
-          }
-          {enclosure.front &&
-            <Wall position = {[0, 0, 3]} rotation = {[0, 0, 0]} visible={enclosure.showFront} />
-          }
-          {/*
-          <Body position = {[0,5,0]} />
-          <Body position = {[.5,10,0.25]} />
-          <Body position = {[-0.25,15,-.25]} />
-          */}
+          <Enclosure /> 
 
-          <Seseme position = {[0,5,0]} rotation = {[5,35,-3]}/>
+          { <Seseme position = {[0,10,0]} rotation = {[5,35,-3]} /> }
+          { <Eclipse position = {[1.5,5,.5]} rotation = {[0,0,15]} /> }
+
         </PhysicsProvider>
 
       </Canvas>
 
       <Debug>
         <TinkerGroup name = 'cam' obj = {cam} func = {setCam} open />
-        <TinkerGroup name = 'enclosure' obj = {enclosure} func = {modEnclosure} open />
       </Debug>
     </div>
   );

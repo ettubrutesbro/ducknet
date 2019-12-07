@@ -12,7 +12,6 @@ const Range = (props) => {
     const {max, min, step, onChange, name, obj, equation, property} = props
 
     const updateProperty = e => {
-        console.log(e.target.value)
         onChange({
             ...obj,
             [e.target.name]: Number(e.target.value)
@@ -73,7 +72,6 @@ export const TinkerGroup = (props) => {
         <Group open = {open}>
             <Label> {name} </Label>
             {Object.keys(obj).map((property)=>{
-                console.log(typeof obj[property])
                 return typeof obj[property] === 'number'? (
                     <Range
                         key = {obj+property}
@@ -128,11 +126,17 @@ const defRng = {
     cam: {
         default: [-30,30,1],
         zoom: [0,20,1],
-        z: [10,100,1],
+        z: [-10,100,1],
         fov: [10, 180, 1],
         rx: [toRads(-180), toRads(180), toRads(1)],
         ry: [toRads(-180), toRads(180), toRads(1)],
         rz: [toRads(-180), toRads(180), toRads(1)],
+    },
+    cage: {
+        default: [3,20,1]
+    },
+    plrHt: {
+        default: [-20,30,.5]
     }
 }
 
@@ -140,5 +144,9 @@ const labelEquations = {
     rx: toDegs,
     ry: toDegs,
     rz: toDegs,
+    a: (v)=>v+18,
+    b: (v)=>v+18,
+    c: (v)=>v+18,
+    d: (v)=>v+18,
 }
 

@@ -20,6 +20,7 @@ export function PhysicsProvider({children}){
 //cannon hook for tracking/updating a physics obj
 //usePhysics(cannon properties, a function to call on the body created herein, deps????)
 export function usePhysics({ ...props}, fn, deps = []){
+  let isSleep
   const ref = useRef()
 
   //use provided context: will get value (world info) from nearest parent cannonProvider
@@ -33,14 +34,21 @@ export function usePhysics({ ...props}, fn, deps = []){
     return () => world.removeBody(body)
   }, deps)
   
-  useRender(()=>{
-    // if(body.id === 1) console.log(body.sleepState)
-    if(ref.current){
+  useRender(()=>{    
+    if(ref.current){ 
+        if(body.sleepState===2){
+          if(!isSleep){
+            body.onSleep()
+            isSleep = true
+          }
+          return 
+        }
+        console.log('ren')
         //referenced threejs object position set to corresponding cannon phys object
         ref.current.position.copy(body.position)
         ref.current.quaternion.copy(body.quaternion)
     }
   })
 
-  return ref
+  return {ref: ref}
 }
