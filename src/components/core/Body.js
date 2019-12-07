@@ -63,13 +63,20 @@ export function Body({
     if(forcePos){
       phys.body.wakeUp()
       phys.body.position.set(...forcePos)
+      phys.body.mass = 0
+      phys.body.updateMassProperties()
+      phys.body.velocity.set(0,0,0)
+      phys.body.angularVelocity.set(0,0,0)
      
     }
     if(forceRot){
        phys.body.quaternion.setFromEuler(...forceRot.map((r)=>toRads(r)), 'XYZ')
     }
-    if(forcePos || forceRot){
-      //either make it sleep or static here so it doesnt keep falling? 
+    if(!forcePos && !forceRot){
+      console.log('attempting to wake up and reset mass')
+      phys.body.wakeUp()
+      phys.body.mass = 100
+      phys.body.updateMassProperties()
     }
     // if(forceTo.rotation)
   }, [forcePos])
