@@ -1,21 +1,42 @@
-import React, {Suspense} from 'react'
+import React, {Suspense, useEffect, useState} from 'react'
 import {useLoader} from 'react-three-fiber'
 import {Body} from '../core/Body'
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader'
 import { DRACOLoader } from 'three/examples/jsm/loaders/DRACOLoader'
 
-export function Eclipse({onClick = () => console.log('clicked eclipse'), ...props}){
+
+
+export function Eclipse({
+    onClick = () => console.log('clicked eclipse'), 
+    selected = false,
+    ...props
+}){
     const dragon = useLoader(GLTFLoader, '/eclipse.gltf', loader => {
     const dracoLoader = new DRACOLoader()
         dracoLoader.setDecoderPath('/draco-gltf/')
         loader.setDRACOLoader(dracoLoader)
       })
+    const [forcePos, setForced] = useState(null)
+    const [forceRot, setRot] = useState(null)
+    useEffect(()=>{
+        if(selected === 'eclipse'){
+            console.log('you picked me!')
+            setForced([0,0,0])
+            setRot([90,0,45])
+        }
+        else{
+            setForced(null)
+            setRot(null)
+        }
+    }, [selected])
 
     return(
     <Body 
         shapes = {['cylinder', 'sphere']}
         //for performance savings, the sphere could be replaced with a tapered cylinder?
         shapeParams = {[{size: [1.1,1.8,2.6,8], offset: [0,.2,0]}, {size: [1.5], offset: [0,-.2,0]}]}
+        forcePos = {forcePos}
+        forceRot = {forceRot}
         {...props}
     >
         

@@ -10,7 +10,10 @@ import Seseme from '../projects/seseme'
 export function Body({
   shapes = ['box'], //array of shapes (just box, sph, cyl rn)
   shapeParams = [{size: [2,2,2], offset: [0,0,0]}], //matching objects specify size and offset [add rot later] for shapes
-  position=[0,0,0], rotation=[0,0,0], visible = true, children
+  position=[0,0,0], rotation=[0,0,0], visible = true, 
+  forcePos=null, //when this has values, force to pos/rot and set static
+  forceRot=null,
+  children
 }) {
   const [isSleep, setSleepState] = useState(false)
   const phys = usePhysics({mass: 100}, body => {
@@ -53,6 +56,25 @@ export function Body({
     body.allowSleep = true
     body.onSleep = () => {setSleepState(true)}
   })
+
+  useEffect(()=>{
+    console.log('bodyeffect')
+    console.log(forcePos)
+    if(forcePos){
+      //wake up: phys.body.wakeUp()
+      phys.body.position.set(...forcePos)
+     
+    }
+    if(forceRot){
+       phys.body.quaternion.setFromEuler(...forceRot.map((r)=>toRads(r)), 'XYZ')
+    }
+    if(forcePos || forceRot){
+      //either make it sleep or static here so it doesnt keep falling? 
+    }
+    // if(forceTo.rotation)
+  })
+
+
 
   return (
       <group ref = {phys.ref}>

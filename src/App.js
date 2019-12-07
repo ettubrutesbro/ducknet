@@ -40,8 +40,6 @@ function App() {
 
   return (
     <div className = 'full'>
-      
-      <SelectionContext.Provider value = {selected}>
       <Canvas 
         invalidateFrameloop = {false}
         onPointerMissed = {()=> select(null)}
@@ -55,9 +53,20 @@ function App() {
         />
         <PhysicsProvider>
           <Enclosure /> 
-          <Seseme position = {[0,10,0]} rotation = {[5,35,-3]} onClick = {()=>select('seseme')}/> 
-          <Eclipse position = {[1.5,5,.5]} rotation = {[0,0,15]} onClick = {()=>select('eclipse')}/> 
-
+            {/*
+            <Seseme 
+              position = {[0,10,0]} 
+              rotation = {[5,35,-3]} 
+              onClick = {()=>select('seseme')}
+              selected = {selected}
+            /> 
+            */}
+            <Eclipse 
+              position = {[1.5,5,.5]} 
+              rotation = {[0,0,15]} 
+              onClick = {()=>select('eclipse')}
+              selected = {selected}
+            /> 
         </PhysicsProvider>
 
       </Canvas>
@@ -65,7 +74,6 @@ function App() {
       <Debug>
         <TinkerGroup name = 'cam' obj = {cam} func = {setCam} open />
       </Debug>
-      </SelectionContext.Provider>
     </div>
   );
 }

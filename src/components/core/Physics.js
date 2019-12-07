@@ -50,5 +50,5 @@ export function usePhysics({ ...props}, fn, deps = []){
     }
   })
 
-  return {ref: ref}
+  return {ref: ref, body: body}
 }
