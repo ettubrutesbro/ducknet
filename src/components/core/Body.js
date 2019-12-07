@@ -7,7 +7,7 @@ import {toRads} from '../../utils/3d'
 import Seseme from '../projects/seseme'
 
 //box only, subsequent bodies will use parameters to construct compound bodies / other shapes
-export function SimpleBody({
+export function Body({
   shapes = ['box'], //array of shapes (just box, sph, cyl rn)
   shapeParams = [{size: [2,2,2], offset: [0,0,0]}], //matching objects specify size and offset [add rot later] for shapes
   position=[0,0,0], rotation=[0,0,0], visible = true, children

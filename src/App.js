@@ -8,9 +8,8 @@ import * as CANNON from 'cannon'
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader'
 import { DRACOLoader } from 'three/examples/jsm/loaders/DRACOLoader'
 
-
 import {PhysicsProvider, usePhysics} from './components/core/Physics'
-import {SimpleBody} from './components/core/Body'
+import {Body} from './components/core/Body'
 import {Enclosure} from './components/core/Wall'
 
 import Seseme from './components/projects/seseme'
@@ -24,6 +23,8 @@ import Camera from './components/core/Camera'
 import {toRads, toDegs} from './utils/3d'
 
 
+export const SelectionContext = React.createContext()
+
 function App() {
 
   const [cam, setCam] = useState({
@@ -31,16 +32,19 @@ function App() {
     zoom: 1,
     rx: toRads(-18), ry: 0, rz: 0,
     fov: 25,
-    orbit: true
+    orbit: false
   })
+
+  const [selected, select] = useState(null)
 
 
   return (
     <div className = 'full'>
       
-
+      <SelectionContext.Provider value = {selected}>
       <Canvas 
         invalidateFrameloop = {false}
+        onPointerMissed = {()=> select(null)}
       >
         <Camera 
           position = {[cam.x, cam.y, cam.z]}
@@ -49,12 +53,10 @@ function App() {
           fov = {cam.fov}
           debugWithOrbit = {cam.orbit}
         />
-
         <PhysicsProvider>
           <Enclosure /> 
-
-          { <Seseme position = {[0,10,0]} rotation = {[5,35,-3]} /> }
-          { <Eclipse position = {[1.5,5,.5]} rotation = {[0,0,15]} /> }
+          <Seseme position = {[0,10,0]} rotation = {[5,35,-3]} onClick = {()=>select('seseme')}/> 
+          <Eclipse position = {[1.5,5,.5]} rotation = {[0,0,15]} onClick = {()=>select('eclipse')}/> 
 
         </PhysicsProvider>
 
@@ -63,6 +65,7 @@ function App() {
       <Debug>
         <TinkerGroup name = 'cam' obj = {cam} func = {setCam} open />
       </Debug>
+      </SelectionContext.Provider>
     </div>
   );
 }

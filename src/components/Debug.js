@@ -1,11 +1,18 @@
-import React, {Fragment} from 'react'
+import React, {Fragment, useContext} from 'react'
 import styled from 'styled-components'
 import {toRads, toDegs} from '../utils/3d'
 
+import {SelectionContext} from '../App'
+
 //generic container 
 //todo: collapsible sections based on tinkergroup
-export const Debug = (props) => {
-    return <DebugBox> {props.children} </DebugBox>
+export function Debug(props){
+    const selection = useContext(SelectionContext)
+    return <DebugBox> 
+        <h4>{selection}</h4>
+        <hr />
+        {props.children} 
+    </DebugBox>
 }
 
 const Range = (props) => {

@@ -1,10 +1,10 @@
 import React, {Suspense} from 'react'
 import {useLoader} from 'react-three-fiber'
-import {SimpleBody} from '../core/Body'
+import {Body} from '../core/Body'
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader'
 import { DRACOLoader } from 'three/examples/jsm/loaders/DRACOLoader'
 
-export function Eclipse(props){
+export function Eclipse({onClick = () => console.log('clicked eclipse'), ...props}){
     const dragon = useLoader(GLTFLoader, '/eclipse.gltf', loader => {
     const dracoLoader = new DRACOLoader()
         dracoLoader.setDecoderPath('/draco-gltf/')
@@ -12,19 +12,19 @@ export function Eclipse(props){
       })
 
     return(
-    <SimpleBody 
+    <Body 
         shapes = {['cylinder', 'sphere']}
         //for performance savings, the sphere could be replaced with a tapered cylinder?
         shapeParams = {[{size: [1.1,1.8,2.6,8], offset: [0,.2,0]}, {size: [1.5], offset: [0,-.2,0]}]}
         {...props}
     >
         
-        <mesh scale = {[.2,.2,.2]} position = {[0,0.7,0]}>
+        <mesh scale = {[.2,.2,.2]} position = {[0,0.7,0]} onClick = {onClick}>
             <bufferGeometry attach = 'geometry' {...dragon.__$[1].geometry} />
             <meshNormalMaterial attach = "material" />
         </mesh>
     
-    </SimpleBody>
+    </Body>
     )
 }
 

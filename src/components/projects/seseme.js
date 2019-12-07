@@ -4,10 +4,10 @@ import { useLoader, useFrame } from 'react-three-fiber'
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader'
 import { DRACOLoader } from 'three/examples/jsm/loaders/DRACOLoader'
 
-import {Body, SimpleBody, LoadingProject} from '../core/Body'
+import {Body, LoadingProject} from '../core/Body'
 import {toRads} from '../../utils/3d'
   
-export function Seseme(props) {
+export function Seseme({onClick = () => console.log('clicked seseme'), ...props}) {
   const group = useRef()
   const pedestal = useLoader(GLTFLoader, '/seseme.gltf', loader => {
     const dracoLoader = new DRACOLoader()
@@ -26,7 +26,7 @@ export function Seseme(props) {
 
 
   return (
-    <SimpleBody 
+    <Body 
       shapes = {['box','box']}
       shapeParams = {[
         {size: [2.4, 3.6, 2.4], offset: [0,0,0]},
@@ -34,7 +34,8 @@ export function Seseme(props) {
       ]} 
       {...props}
     >
-      <group name = 'seseme' position = {[0.3,1.8,0.2]} scale = {[.1,.1,.1]} >
+      <group name = 'seseme' position = {[0.3,1.8,0.2]} scale = {[.1,.1,.1]}>
+        <group name = 'main' onClick = {onClick}>
         <mesh name="pedestal">
           <bufferGeometry attach="geometry" {...pedestal.__$[1].geometry} />
           <meshNormalMaterial attach="material" />
@@ -58,9 +59,9 @@ export function Seseme(props) {
           <bufferGeometry attach = 'geometry' {...pillar.__$[1].geometry} />
           <meshNormalMaterial attach = 'material' />
         </mesh>
-      
+        </group>
       </group>
-    </SimpleBody>
+    </Body>
   )
 }
 
