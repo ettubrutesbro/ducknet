@@ -25,6 +25,7 @@ export function Eclipse({
             setRot([90,0,45])
         }
         else{
+            console.log('unpicked eclipse')
             setForced(null)
             setRot(null)
         }

@@ -61,7 +61,7 @@ export function Body({
     console.log('bodyeffect')
     console.log(forcePos)
     if(forcePos){
-      //wake up: phys.body.wakeUp()
+      phys.body.wakeUp()
       phys.body.position.set(...forcePos)
      
     }
@@ -72,7 +72,7 @@ export function Body({
       //either make it sleep or static here so it doesnt keep falling? 
     }
     // if(forceTo.rotation)
-  })
+  }, [forcePos])
 
 
 
