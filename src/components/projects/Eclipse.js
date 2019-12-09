@@ -18,26 +18,40 @@ export function Eclipse({
       })
     const [forcePos, setForced] = useState(null)
     const [forceRot, setRot] = useState(null)
+
+    const [forced, forceTo] = useState({
+        position: null, 
+        rotation: null
+    })
+
     useEffect(()=>{
         if(selected === 'eclipse'){
-            console.log('you picked me!')
-            setForced([0,0,0])
-            setRot([90,0,45])
+            forceTo({
+                position: [0,0,0],
+                rotation: [90,0,45]
+            })
+
         }
         else{
             console.log('unpicked eclipse')
-            setForced(null)
-            setRot(null)
+            forceTo({
+                position: null,
+                rotation: null,
+            })
+
+
         }
     }, [selected])
 
-    return(
-    <Body 
+
+    return( <Body 
         shapes = {['cylinder', 'sphere']}
         //for performance savings, the sphere could be replaced with a tapered cylinder?
         shapeParams = {[{size: [1.1,1.8,2.6,8], offset: [0,.2,0]}, {size: [1.5], offset: [0,-.2,0]}]}
         forcePos = {forcePos}
         forceRot = {forceRot}
+
+        forced = {forced}
         {...props}
     >
         
@@ -46,8 +60,7 @@ export function Eclipse({
             <meshNormalMaterial attach = "material" />
         </mesh>
     
-    </Body>
-    )
+    </Body>)
 }
 
 // this might get cumbersome but it's what i have rn

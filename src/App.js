@@ -70,12 +70,13 @@ function App() {
         </PhysicsProvider>
 
       </Canvas>
-
+    {/* 
       <Debug>
         {selected}
         <TinkerGroup name = 'cam' obj = {cam} func = {setCam} open />
         
       </Debug>
+      */}
     </div>
   );
 }

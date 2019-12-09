@@ -11,8 +11,7 @@ export function Body({
   shapes = ['box'], //array of shapes (just box, sph, cyl rn)
   shapeParams = [{size: [2,2,2], offset: [0,0,0]}], //matching objects specify size and offset [add rot later] for shapes
   position=[0,0,0], rotation=[0,0,0], visible = true, 
-  forcePos=null, //when this has values, force to pos/rot and set static
-  forceRot=null,
+  forced={position: null, rotation: null},
   children
 }) {
   const [isSleep, setSleepState] = useState(false)
@@ -20,7 +19,6 @@ export function Body({
 
     shapes.forEach((shape, i)=>{
         const Shape = shape.charAt(0).toUpperCase() + shape.slice(1)
-        console.log(Shape)
 
         if(shape === 'box'){
           //Box gets special treatment because cannon defines box size through half-extents
@@ -42,7 +40,7 @@ export function Body({
             shapeParams[i].offset? new CANNON.Vec3(...shapeParams[i].offset.map((v)=>v)) : null
           )
 
-        } else { //other shapes dont use vec3, just a few nums
+        } else { //sphere just uses one number
           body.addShape(
             new CANNON[Shape](...shapeParams[i].size.map(s=>s) ), 
             shapeParams[i].offset? new CANNON.Vec3(...shapeParams[i].offset.map((v)=>v)) : null
@@ -58,28 +56,24 @@ export function Body({
   })
 
   useEffect(()=>{
-    console.log('bodyeffect')
-    console.log(forcePos)
-    if(forcePos){
+    if(forced.position || forced.rotation){
       phys.body.wakeUp()
-      phys.body.position.set(...forcePos)
       phys.body.mass = 0
-      phys.body.updateMassProperties()
       phys.body.velocity.set(0,0,0)
       phys.body.angularVelocity.set(0,0,0)
-     
+      phys.body.updateMassProperties()
+
+      if(forced.position) phys.body.position.set(...forced.position)
+      if(forced.rotation) phys.body.quaternion.setFromEuler(...forced.rotation.map((r)=>toRads(r)), 'XYZ')
     }
-    if(forceRot){
-       phys.body.quaternion.setFromEuler(...forceRot.map((r)=>toRads(r)), 'XYZ')
-    }
-    if(!forcePos && !forceRot){
-      console.log('attempting to wake up and reset mass')
+    else{
       phys.body.wakeUp()
       phys.body.mass = 100
       phys.body.updateMassProperties()
     }
+
     // if(forceTo.rotation)
-  }, [forcePos])
+  }, [forced])
 
 
 
