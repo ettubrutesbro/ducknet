@@ -27,14 +27,7 @@ export const SelectionContext = React.createContext()
 
 function App() {
 
-  const [cam, setCam] = useState({
-    x: 0, y: 21, z: 50,
-    zoom: 1,
-    rx: toRads(-18), ry: 0, rz: 0,
-    fov: 25,
-    orbit: false
-  })
-
+  const [projectCamera, setProjectCamera] = useState(null)
   const [selected, select] = useState(null)
 
 
@@ -44,39 +37,42 @@ function App() {
         invalidateFrameloop = {false}
         onPointerMissed = {()=> select(null)}
       >
-        <Camera 
-          position = {[cam.x, cam.y, cam.z]}
-          rotation = {[cam.rx,cam.ry,cam.rz]}
-          zoom = {cam.zoom}
-          fov = {cam.fov}
-          debugWithOrbit = {cam.orbit}
-        />
+
         <PhysicsProvider>
+          <Camera 
+            projectCamera = {projectCamera}
+          />
           <Enclosure /> 
             {
             <Seseme 
               position = {[0,10,0]} 
               rotation = {[5,35,-3]} 
               onClick = {()=>select('seseme')}
-              selected = {selected}
+              //selected and onSelect should be distributed
+              //automatically via some kind of React.children map
+              selected = {selected==='seseme'}
+              onSelect = {setProjectCamera}
+
             /> 
             }
             <Eclipse 
               position = {[1.5,5,.5]} 
               rotation = {[90,90,8]} 
               onClick = {()=>select('eclipse')}
-              selected = {selected}
+
+              selected = {selected==='eclipse'}
+              onSelect = {setProjectCamera}
             /> 
         </PhysicsProvider>
 
       </Canvas>
-    {
+    {/*
       <Debug>
         {selected}
         <TinkerGroup name = 'cam' obj = {cam} func = {setCam} open />
         
       </Debug>
-      }
+      */}
     </div>
   );
 }

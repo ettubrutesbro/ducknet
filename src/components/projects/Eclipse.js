@@ -9,6 +9,7 @@ import {toRads} from '../../utils/3d'
 export function Eclipse({
     onClick = () => console.log('clicked eclipse'), 
     selected = false,
+    onSelect,
     ...props
 }){
     const dragon = useLoader(GLTFLoader, '/eclipse.gltf', loader => {
@@ -16,19 +17,25 @@ export function Eclipse({
         dracoLoader.setDecoderPath('/draco-gltf/')
         loader.setDRACOLoader(dracoLoader)
       })
-
+    const [projectCamera, changeView] = useState({
+        position: [32, 21, 35],
+        rotation: [toRads(-26), toRads(35), toRads(14)],
+        fov: 35,
+    })
     const [forced, forceTo] = useState(null)
 
     useEffect(()=>{
-        if(selected === 'eclipse'){
+        if(selected){
             forceTo({
                 position: [0,0,0],
                 rotation: [0,0,0]
             })
+            onSelect(projectCamera)
         }
         else{
             console.log('unpicked eclipse')
             forceTo(null)
+            onSelect(null)
         }
     }, [selected])
 

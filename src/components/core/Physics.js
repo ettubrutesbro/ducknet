@@ -7,6 +7,8 @@ const physicsContext = React.createContext()
 export function PhysicsProvider({children}){
   const [world] = useState(()=> new CANNON.World())
   useEffect(() => {
+    console.log('WORLD:')
+    console.log(world)
     world.broadphase = new CANNON.NaiveBroadphase()
     world.allowSleep = true
     world.solver.iterations = 10
@@ -15,9 +17,11 @@ export function PhysicsProvider({children}){
   //world stepper every frame
   useRender(()=> {
     world.step(1/60)
-    TWEEN.update()
+    TWEEN.update() //kinda dangerous: this is not physics, though tween probably will only deal with it...
 
   })
+  window.world = world
+
   //world is provided as context for all components
   return <physicsContext.Provider value = {world} children = {children} />
 }

@@ -10,9 +10,20 @@ import {toRads} from '../../utils/3d'
 export function Seseme({
   onClick = () => console.log('clicked seseme'), 
   selected, 
+  onSelect, //enables project component to send camera changes up
+  debug = true,
   ...props
 }) {
-  const group = useRef()
+
+  const ref = useRef()
+  const [projectCamera, changeView] = useState({
+    position: [32, 21, 35],
+    rotation: [toRads(-26), toRads(35), toRads(14)],
+    fov: 35,
+  })
+  const [forced, forceTo] = useState(null)
+
+
   const pedestal = useLoader(GLTFLoader, '/seseme.gltf', loader => {
     const dracoLoader = new DRACOLoader()
     dracoLoader.setDecoderPath('/draco-gltf/')
@@ -23,26 +34,37 @@ export function Seseme({
     dracoLoader.setDecoderPath('/draco-gltf/')
     loader.setDRACOLoader(dracoLoader)
   })
+  // const group = useRef()
 
   const [plrHts, modPlrHt] = useState({
     a: 9.5, b: -1.5, c: -9.5, d:-15
   })
 
-  const [forced, forceTo] = useState(null)
 
   useEffect(()=>{
-      if(selected === 'seseme'){
+      // console.log(ref.current.position)
+      if(selected){
+          console.log('picked seseme')
           forceTo({
               position: [0,5,0],
               rotation: [0,45,0]
           })
+          onSelect(projectCamera)
       }
       else{
           console.log('unpicked seseme')
           forceTo(null)
+          onSelect(null)
       }
   }, [selected])
 
+  useFrame(()=>{
+    //debug on exposes data? 
+    if(debug){
+        
+    }
+  }, 0)
+  
 
 
   return (
