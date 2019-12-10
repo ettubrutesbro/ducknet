@@ -14,6 +14,7 @@ import {Enclosure} from './components/core/Wall'
 
 import Seseme from './components/projects/seseme'
 import Eclipse from './components/projects/Eclipse'
+import Scorecard from './components/projects/Scorecard'
 
 
 
@@ -43,18 +44,23 @@ function App() {
             projectCamera = {projectCamera}
           />
           <Enclosure /> 
-            {
+            <Scorecard
+              position = {[1,20,-.5]}
+              rotation = {[-40,10,15]}
+              onSelect = {setProjectCamera}
+            />
+            
             <Seseme 
               position = {[0,10,0]} 
               rotation = {[5,35,-3]} 
               onClick = {()=>select('seseme')}
-              //selected and onSelect should be distributed
-              //automatically via some kind of React.children map
+              //onClick, selected and onSelect should be distributed
+              //automatically via some kind of React.children map..? or <Project />
               selected = {selected==='seseme'}
               onSelect = {setProjectCamera}
 
             /> 
-            }
+            
             <Eclipse 
               position = {[1.5,5,.5]} 
               rotation = {[90,90,8]} 
@@ -63,6 +69,8 @@ function App() {
               selected = {selected==='eclipse'}
               onSelect = {setProjectCamera}
             /> 
+          
+
         </PhysicsProvider>
 
       </Canvas>

@@ -1,6 +1,11 @@
-import React, {Fragment, useContext} from 'react'
+import React, {Fragment, useContext, useState, useEffect} from 'react'
+import {useFrame} from 'react-three-fiber'
 import styled from 'styled-components'
+
 import {toRads, toDegs} from '../utils/3d'
+
+import {find} from 'lodash'
+
 //generic container 
 //todo: collapsible sections based on tinkergroup
 export function Debug(props){
@@ -151,4 +156,5 @@ const labelEquations = {
     c: (v)=>v+18,
     d: (v)=>v+18,
 }
+
 

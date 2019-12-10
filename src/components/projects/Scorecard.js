@@ -6,13 +6,13 @@ import { DRACOLoader } from 'three/examples/jsm/loaders/DRACOLoader'
 
 import {toRads} from '../../utils/3d'
 
-export function Eclipse({
+function Scorecard({
     onClick = () => console.log('clicked eclipse'), 
     selected = false,
     onSelect,
     ...props
 }){
-    const dragon = useLoader(GLTFLoader, '/eclipse.gltf', loader => {
+    const ca = useLoader(GLTFLoader, '/scorecard.gltf', loader => {
     const dracoLoader = new DRACOLoader()
         dracoLoader.setDecoderPath('/draco-gltf/')
         loader.setDRACOLoader(dracoLoader)
@@ -33,7 +33,7 @@ export function Eclipse({
             onSelect(projectCamera)
         }
         else{
-            console.log('unpicked eclipse')
+            console.log('unpicked sc')
             forceTo(null)
             onSelect(null)
         }
@@ -41,23 +41,29 @@ export function Eclipse({
 
 
     return( <Body 
-        name = 'eclipse'
-        shapes = {['cylinder', 'sphere']}
+        name = 'scorecard'
+        shapes = {['box']}
         //for performance savings, the sphere could be replaced with a tapered cylinder?
-        shapeParams = {[{size: [1.1,1.8,2.6,8], offset: [0,.2,0]}, {size: [1.5], offset: [0,-.2,0]}]}
+        shapeParams = {[{size: [2.25,6,0.3], offset: [0,0,0], rotation: [0, 0, toRads(38)]}]}
         forced = {forced}
         {...props}
     >
         
-        <mesh scale = {[.2,.2,.2]} position = {[0,0.7,0]} rotation = {[0,toRads(90),0]} onClick = {onClick}>
-            <bufferGeometry attach = 'geometry' {...dragon.__$[1].geometry} />
-            <meshNormalMaterial attach = "material" />
-        </mesh>
+        <group scale = {[.012,.012,.012]} position = {[0.15,0,-0.1]} rotation = {[toRads(90),0,0]} onClick = {onClick}>
+            {ca.__$.map((child, i)=>{
+                return(
+                    <mesh key = {child.name} name = {child.name}>
+                        <bufferGeometry attach = 'geometry' {...ca.__$[i].geometry} />
+                        <meshNormalMaterial attach = 'material' /> 
+                    </mesh>
+                )
+            })}
+        </group>
     
     </Body>)
 }
 
 // this might get cumbersome but it's what i have rn
-export default function EclipseWrapped(props){
-  return <Suspense fallback = {<React.Fragment />}><Eclipse {...props} /></Suspense>
+export default function ScorecardWrapped(props){
+  return <Suspense fallback = {<React.Fragment />}><Scorecard {...props} /></Suspense>
 }

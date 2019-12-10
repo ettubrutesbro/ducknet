@@ -11,6 +11,7 @@ console.log(TWEEN)
 
 //box only, subsequent bodies will use parameters to construct compound bodies / other shapes
 export function Body({
+  name = 'untitled',
   shapes = ['box'], //array of shapes (just box, sph, cyl rn)
   shapeParams = [{size: [2,2,2], offset: [0,0,0]}], //matching objects specify size and offset [add rot later] for shapes
   position=[0,0,0], rotation=[0,0,0], visible = true, 
@@ -31,7 +32,9 @@ export function Body({
           //(like a radius for a box), and it uses a Vec3
           body.addShape(
             new CANNON[Shape](new CANNON.Vec3(...shapeParams[i].size.map(s=>s/2))),
-            shapeParams[i].offset? new CANNON.Vec3(...shapeParams[i].offset.map((v)=>v)) : null
+            shapeParams[i].offset? new CANNON.Vec3(...shapeParams[i].offset.map((v)=>v)) : null,
+            //rotation only seems to be necessary for box so far?
+            shapeParams[i].rotation? new CANNON.Quaternion().setFromEuler(...shapeParams[i].rotation, 'XYZ') : null
           )
         } else if(shape==='cylinder'){ 
           //cylinder is also v. different - created on diff. axis? [see cannon issue #58]
@@ -54,7 +57,7 @@ export function Body({
         }
     })
 
-
+    body.name = name
     body.position.set(...position)
     body.quaternion.setFromEuler(...rotation.map((r)=>toRads(r)),'XYZ')
     body.allowSleep = true
@@ -114,7 +117,7 @@ export function Body({
       <group ref = {phys.ref}>
         
         {shapes.map((shape, i)=>{
-          return <mesh key = {i} position = {shapeParams[i].offset || [0,0,0]}>
+          return <mesh key = {i} position = {shapeParams[i].offset || [0,0,0]} rotation = {shapeParams[i].rotation || [0,0,0]}>
             {shape === 'box' && <boxGeometry attach = 'geometry' args = {shapeParams[i].size} />}
             {shape === 'cylinder' && <cylinderGeometry 
               attach = 'geometry' args = {shapeParams[i].size}

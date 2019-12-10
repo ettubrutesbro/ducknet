@@ -69,6 +69,7 @@ export function Seseme({
 
   return (
     <Body 
+      name = 'seseme'
       shapes = {['box','box']}
       shapeParams = {[
         {size: [2.4, 3.6, 2.4], offset: [0,0,0]},
