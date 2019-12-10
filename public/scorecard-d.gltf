@@ -25,7 +25,7 @@
       "mesh": 0,
       "translation": [
         345.669,
-        0,
+        -11.147357,
         263.127045
       ],
       "rotation": [
@@ -36,7 +36,7 @@
       ],
       "scale": [
         1,
-        1,
+        2.64813,
         1
       ],
       "name": "restofca"
@@ -45,7 +45,7 @@
       "mesh": 1,
       "translation": [
         345.669,
-        0,
+        -11.147357,
         263.127045
       ],
       "rotation": [
@@ -56,7 +56,7 @@
       ],
       "scale": [
         1,
-        1,
+        2.64813,
         1
       ],
       "name": "sfsm"
@@ -65,7 +65,7 @@
       "mesh": 2,
       "translation": [
         345.669,
-        0,
+        -11.147357,
         263.127045
       ],
       "rotation": [
@@ -76,7 +76,7 @@
       ],
       "scale": [
         1,
-        1,
+        2.64813,
         1
       ],
       "name": "siskiyou"
@@ -85,7 +85,7 @@
       "mesh": 3,
       "translation": [
         345.669,
-        0,
+        -11.147357,
         263.127045
       ],
       "rotation": [
@@ -96,7 +96,7 @@
       ],
       "scale": [
         1,
-        1,
+        2.64813,
         1
       ],
       "name": "modoc"
@@ -105,7 +105,7 @@
       "mesh": 4,
       "translation": [
         345.669,
-        0,
+        -11.147357,
         263.127045
       ],
       "rotation": [
@@ -116,7 +116,7 @@
       ],
       "scale": [
         1,
-        1,
+        2.64813,
         1
       ],
       "name": "lassen"
@@ -125,7 +125,7 @@
       "mesh": 5,
       "translation": [
         345.669,
-        0,
+        -11.147357,
         263.127045
       ],
       "rotation": [
@@ -136,7 +136,7 @@
       ],
       "scale": [
         1,
-        1,
+        2.64813,
         1
       ],
       "name": "mendocino"
@@ -145,7 +145,7 @@
       "mesh": 6,
       "translation": [
         345.669,
-        0,
+        -11.147357,
         263.127045
       ],
       "rotation": [
@@ -156,7 +156,7 @@
       ],
       "scale": [
         1,
-        1,
+        2.64813,
         1
       ],
       "name": "inyo"
@@ -165,7 +165,7 @@
       "mesh": 7,
       "translation": [
         345.669,
-        0,
+        -11.147357,
         263.127045
       ],
       "rotation": [
@@ -176,7 +176,7 @@
       ],
       "scale": [
         1,
-        1,
+        2.64813,
         1
       ],
       "name": "sanbernie"
@@ -185,7 +185,7 @@
       "mesh": 8,
       "translation": [
         345.669,
-        0,
+        -11.147357,
         263.127045
       ],
       "rotation": [
@@ -196,7 +196,7 @@
       ],
       "scale": [
         1,
-        1,
+        2.64813,
         1
       ],
       "name": "sandiego"
@@ -362,7 +362,7 @@
           }
         }
       ],
-      "name": "inyo001"
+      "name": "inyo"
     },
     {
       "primitives": [
@@ -714,7 +714,7 @@
   ],
   "buffers": [
     {
-      "name": "scorecard",
+      "name": "scorecard-d",
       "byteLength": 2056,
       "uri": "data:application/octet-stream;base64,RFJBQ08CAgEBAAAAXrgBAbcBCwAu3/u2/iVrUZS2tRYUomsp1hZ/H1+U1Nu1lC6oFrpYi0JK1xZKQVvvlxQFKEpVAQEBEGwkZLjy8T2jDeDzAAsN39vacNSyRBVFvVfehuEdStZofRiRaiGHAv8AAAABAAEACQMAAAIBAQkDAAEDAQEBAA8D5QobsF0B8QwRE/0OFQQeiaH7xiNFPWgxt/2mdzIoxiIdufNpoXxzxdahmj+IvC4AoAECAAC4ZkQAQGtmJwBQEkssAHihwgMAcOB3CgBoGGwDAMK6IgEAKa8LAQCMrIAHAMCtFWhJCsBfAQDsiggAcE1iAOCf8B0AEMhhS8KNHQBIIHwQACgBUgIAugIAS/LHPABoM/wBADz9sAGA5XyFAMCZvCpL2sHOBoDEwAUBgAyOJQBAU9j0AEDINQFLOsRiBoAwhBoDAEFKlQCAPdUQAUDrwrQAYA/kkiVxJHEJAFRhuAmWhOTmDwAQYTkgAECwpwsAQHEdBgBt9x0AEKg7AEDjvQsAENo1CADkcVAEAPgG6AAgwXcJAJfDmgFgP4oPAPoAAABw674AgM5NAwAJvCcAmoFnAbi8IwHguNsWAP6w+QAgdfGwABAYGB4AEPstADuWGADtwagrybQSA6A9bwYAACBEldS1CCQA4oX/AUC6ZAQADQ2fACC/6KuW5F7VOwDgKxgDiP73loQoSAaAAp4gADAEAAAAAP8/AAAGKTTDAAAAANu1VMOkfdFDDgYDAQECAmk2mQkzBOHaPN5xmjOuRFzdcfBPZx2R0u8pfnG4pMBgxqu2bBztTZKqeY8hXJVAoE/vu8mWhiqZ/wMAAP8BAAD/AjtpCkRSQUNPAgIBAQAAAAgMAQsAAANfqwoBARArBEDlvYAC/wAAAAEAAQAJAwAAAgEBCQMAAQMBAQEADwMBCCcBCAEQASAEAGCmkCYGADzqHBsAGCcDSABA7h8uw+hGTYIBICNgYoTRc7/nBwAAAAAAAAD/PwAArkPiwgAAAABwKovBkB3LQQ4GAwEAAgMBQAEAAEBVVVUVAAD/AwAA/wEAAP8CDkIKRFJBQ08CAgEBAAAAEiABHwIACF/flPJFS1EFAQEQZQiFf49Ff+ZuhQL/AAAAAQABAAkDAAACAQEJAwABAwEBAQAPAx0HkQMnrQqpKgY4MpaSTIABgDum8l/v7RgAgL0DAAAA9g4ApPwAAADgPGPv7ljzDAC0Yym/AD0GAFB0sSAAoAhMGAEAzmKUuuNvxU8CACQZHgMAZhUAAAAUXVwiAIA4AQAAAAD/PwAARCsawwAAAACGoFTDAACaQg4GAwEBAQEBQAEA/wMAAP8BAAD/AjVECgBEUkFDTwICAQEAAAAIDAELAAADb6sKAQEQVQTXU/ZGAv8AAAABAAEACQMAAAIBAQkDAAEDAQEBAA8DARABCCcBGAEQBABwIqgRAAAg1wMAAKDrAQAzEwAIAADg1gMAMDMBAAEAAAAA/z8AAIhWmsIAAAAAhqBUwwAASEIOBgMBAQEBAUABAP8DAAD/AQAA/wKhQQoARFJBQ08CAgEBAAAAEBwBGwEAB2/7LaqoqgIBARBiB9YEeOnmk0IC/wAAAAEAAQAJAwAAAgEBCQMAAQMBAQEADwMBFCsBDAEgBQBugc6yAAAAYOEDAFQOAACAU67CB0F5ypkzQRUA0OyCoAQAzBlmHwAIv7HbAgC6FQ5ZAGC3ChQAIOmjxpzyAAAAAAAA/z8AAIhWjsIAAAAAhqAuwwAAhkIOBgMBAQICnThlBwm5nnJXixtOqI3/AwAA/wEAAP8CukMKAERSQUNPAgIBAQAAABAcARsBAAdvte2jClUFAQEQTweWzgsLFsCCAv8AAAABAAEACQMAAAIBAQkDAAEDAQEBAA8DAQQTAQQTAQwBLAUArKHzh0AXAPypbAUAuJ/1KwDAzu8jAIBN2IwRF+98vggAtJsRAKCcAYAiBTIpABABBtIAgHPFbwMAAADCJC4CACx/uEjmMYkAAHitrQEAAAAAAAAA/z8AAESrJsMAAAAADEHtwrgsXEIOBgMBAQIC3TMlDA0+Q5QVofM/29SxV1eA/wMAAP8BAAD/AjVECgBEUkFDTwICAQEAAAAIDAELAAADX6sKAQEQRwRA8DWKAv8AAAABAAEACQMAAAIBAQkDAAEDAQEBAA8DARAvATADAHyWOCIAAADMAwBAMDkUAgDCJFEoMAEAdj0A8EtCRxSYAAAAAAAAAP8/AADgpZJBAAAAAMAQtMAAAMpCDgYDAQEBAQFAAQD/AwAA/wEAAP8CxUEKRFJBQ08CAgEBAAAAChABDwAABO9aVQUBARBVBV6nyhiEAv8AAAABAAEACQMAAAIBAQkDAAEDAQEBAA8DaQYXaQYLNRMD/R8ES+YyeaM9AAAAkPYAwM/sQAAAQDMAyDwAxBsAQLgNAAAAQODfTeYBYBUAAAAAYKIBAAAAAP8/AADwUldCAAAAAPS+hEKYqPxCDgYDAQECAgE2AQoHgJm5IRViQP8DAAD/AQAA/wI0QgpEUkFDTwICAQEAAAAIDAELAAADX6sKAQEQRwTCvPuJAv8AAAABAAEACQMAAAIBAQkDAAEDAQEBAA8DAQgBCCcBEAEgBADAVpE6FwAUwZ0LAIwgAAAAPIkAgBMKAAjQuZxQAKDOBQCaRAAAAAD/PwAA8FJ9QgAAAAB6XypDAABCQg4GAwEBAQEBQAEA/wMAAP8BAAD/AsVBCg=="
     }

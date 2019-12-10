@@ -45,14 +45,14 @@ function App() {
           />
           <Enclosure /> 
             <Scorecard
-              position = {[1,20,-.5]}
-              rotation = {[-40,10,15]}
+              position = {[-4,35,0]}
+              rotation = {[0,10,0]}
               onSelect = {setProjectCamera}
             />
             
             <Seseme 
-              position = {[0,10,0]} 
-              rotation = {[5,35,-3]} 
+              position = {[-1.5,18,0]} 
+              rotation = {[0,35,0]} 
               onClick = {()=>select('seseme')}
               //onClick, selected and onSelect should be distributed
               //automatically via some kind of React.children map..? or <Project />
@@ -62,8 +62,8 @@ function App() {
             /> 
             
             <Eclipse 
-              position = {[1.5,5,.5]} 
-              rotation = {[90,90,8]} 
+              position = {[4,5,0]} 
+              rotation = {[0,90,90]} 
               onClick = {()=>select('eclipse')}
 
               selected = {selected==='eclipse'}

@@ -12,7 +12,7 @@ function Scorecard({
     onSelect,
     ...props
 }){
-    const ca = useLoader(GLTFLoader, '/scorecard.gltf', loader => {
+    const ca = useLoader(GLTFLoader, '/scorecard-d.gltf', loader => {
     const dracoLoader = new DRACOLoader()
         dracoLoader.setDecoderPath('/draco-gltf/')
         loader.setDRACOLoader(dracoLoader)
@@ -42,14 +42,18 @@ function Scorecard({
 
     return( <Body 
         name = 'scorecard'
-        shapes = {['box']}
+        shapes = {['box', 'box']}
         //for performance savings, the sphere could be replaced with a tapered cylinder?
-        shapeParams = {[{size: [2.25,6,0.3], offset: [0,0,0], rotation: [0, 0, toRads(38)]}]}
+        shapeParams = {[
+            // {size: [2.25,6,1], offset: [0,0,0], rotation: [0, 0, toRads(38)]}
+            {size: [1.7,4,1.4], offset: [0.7,-1,0], rotation: [0, 0, toRads(44)]},
+            {size: [1.7,1.5,1.4], offset: [-1,1.8,0]}
+        ]}
         forced = {forced}
         {...props}
     >
         
-        <group scale = {[.012,.012,.012]} position = {[0.15,0,-0.1]} rotation = {[toRads(90),0,0]} onClick = {onClick}>
+        <group scale = {[.012,.05,.012]} position = {[0.15,0,-0.4]} rotation = {[toRads(90),0,0]} onClick = {onClick}>
             {ca.__$.map((child, i)=>{
                 return(
                     <mesh key = {child.name} name = {child.name}>
