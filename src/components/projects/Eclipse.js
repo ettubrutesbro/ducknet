@@ -4,7 +4,7 @@ import {Body} from '../core/Body'
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader'
 import { DRACOLoader } from 'three/examples/jsm/loaders/DRACOLoader'
 
-
+import {toRads} from '../../utils/3d'
 
 export function Eclipse({
     onClick = () => console.log('clicked eclipse'), 
@@ -16,30 +16,19 @@ export function Eclipse({
         dracoLoader.setDecoderPath('/draco-gltf/')
         loader.setDRACOLoader(dracoLoader)
       })
-    const [forcePos, setForced] = useState(null)
-    const [forceRot, setRot] = useState(null)
 
-    const [forced, forceTo] = useState({
-        position: null, 
-        rotation: null
-    })
+    const [forced, forceTo] = useState(null)
 
     useEffect(()=>{
         if(selected === 'eclipse'){
             forceTo({
                 position: [0,0,0],
-                rotation: [90,0,45]
+                rotation: [0,0,0]
             })
-
         }
         else{
             console.log('unpicked eclipse')
-            forceTo({
-                position: null,
-                rotation: null,
-            })
-
-
+            forceTo(null)
         }
     }, [selected])
 
@@ -48,14 +37,11 @@ export function Eclipse({
         shapes = {['cylinder', 'sphere']}
         //for performance savings, the sphere could be replaced with a tapered cylinder?
         shapeParams = {[{size: [1.1,1.8,2.6,8], offset: [0,.2,0]}, {size: [1.5], offset: [0,-.2,0]}]}
-        forcePos = {forcePos}
-        forceRot = {forceRot}
-
         forced = {forced}
         {...props}
     >
         
-        <mesh scale = {[.2,.2,.2]} position = {[0,0.7,0]} onClick = {onClick}>
+        <mesh scale = {[.2,.2,.2]} position = {[0,0.7,0]} rotation = {[0,toRads(90),0]} onClick = {onClick}>
             <bufferGeometry attach = 'geometry' {...dragon.__$[1].geometry} />
             <meshNormalMaterial attach = "material" />
         </mesh>

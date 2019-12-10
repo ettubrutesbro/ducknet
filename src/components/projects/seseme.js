@@ -7,7 +7,11 @@ import { DRACOLoader } from 'three/examples/jsm/loaders/DRACOLoader'
 import {Body, LoadingProject} from '../core/Body'
 import {toRads} from '../../utils/3d'
   
-export function Seseme({onClick = () => console.log('clicked seseme'), ...props}) {
+export function Seseme({
+  onClick = () => console.log('clicked seseme'), 
+  selected, 
+  ...props
+}) {
   const group = useRef()
   const pedestal = useLoader(GLTFLoader, '/seseme.gltf', loader => {
     const dracoLoader = new DRACOLoader()
@@ -24,6 +28,22 @@ export function Seseme({onClick = () => console.log('clicked seseme'), ...props}
     a: 9.5, b: -1.5, c: -9.5, d:-15
   })
 
+  const [forced, forceTo] = useState(null)
+
+  useEffect(()=>{
+      if(selected === 'seseme'){
+          forceTo({
+              position: [0,5,0],
+              rotation: [0,45,0]
+          })
+      }
+      else{
+          console.log('unpicked seseme')
+          forceTo(null)
+      }
+  }, [selected])
+
+
 
   return (
     <Body 
@@ -32,6 +52,7 @@ export function Seseme({onClick = () => console.log('clicked seseme'), ...props}
         {size: [2.4, 3.6, 2.4], offset: [0,0,0]},
         {size: [1.7, 3.1, 1.7], offset: [0,3,0]}
       ]} 
+      forced = {forced}
       {...props}
     >
       <group name = 'seseme' position = {[0.3,1.8,0.2]} scale = {[.1,.1,.1]}>

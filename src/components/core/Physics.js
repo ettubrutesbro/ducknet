@@ -1,6 +1,7 @@
 import React, {useState, useEffect, useContext, useRef} from 'react'
 import {useRender} from 'react-three-fiber'
 import * as CANNON from 'cannon'
+import TWEEN from '@tweenjs/tween.js'
 const physicsContext = React.createContext()
 
 export function PhysicsProvider({children}){
@@ -9,10 +10,14 @@ export function PhysicsProvider({children}){
     world.broadphase = new CANNON.NaiveBroadphase()
     world.allowSleep = true
     world.solver.iterations = 10
-    world.gravity.set(0,-10, 0)
+    world.gravity.set(0,-20, 0)
   }, [world])
   //world stepper every frame
-  useRender(()=> world.step(1/60))
+  useRender(()=> {
+    world.step(1/60)
+    TWEEN.update()
+
+  })
   //world is provided as context for all components
   return <physicsContext.Provider value = {world} children = {children} />
 }
@@ -29,6 +34,10 @@ export function usePhysics({ ...props}, fn, deps = []){
   //instantiate body for whoever is using usePhysics
   const [body] = useState(()=> new CANNON.Body(props))
   useEffect(()=>{
+    if(body.mass > 0){ 
+      console.log('usePhysics useEffect fired for dynamic body')
+      console.log(deps)
+    }
     fn(body)
     world.addBody(body)
     return () => world.removeBody(body)
@@ -43,7 +52,6 @@ export function usePhysics({ ...props}, fn, deps = []){
           }
           return 
         }
-        console.log('ren')
         //referenced threejs object position set to corresponding cannon phys object
         ref.current.position.copy(body.position)
         ref.current.quaternion.copy(body.quaternion)

@@ -53,30 +53,30 @@ function App() {
         />
         <PhysicsProvider>
           <Enclosure /> 
-            {/*
+            {
             <Seseme 
               position = {[0,10,0]} 
               rotation = {[5,35,-3]} 
               onClick = {()=>select('seseme')}
               selected = {selected}
             /> 
-            */}
+            }
             <Eclipse 
               position = {[1.5,5,.5]} 
-              rotation = {[0,0,15]} 
+              rotation = {[90,90,8]} 
               onClick = {()=>select('eclipse')}
               selected = {selected}
             /> 
         </PhysicsProvider>
 
       </Canvas>
-    {/* 
+    {
       <Debug>
         {selected}
         <TinkerGroup name = 'cam' obj = {cam} func = {setCam} open />
         
       </Debug>
-      */}
+      }
     </div>
   );
 }

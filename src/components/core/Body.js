@@ -1,10 +1,13 @@
 import React, {useState, useEffect, Suspense} from 'react'
-import {usePhysics} from './Physics'
-import * as THREE from 'three'
 import * as CANNON from 'cannon'
-import {toRads} from '../../utils/3d'
+// import {animated, useSpring} from 'react-spring'
+import TWEEN from '@tweenjs/tween.js'
 
-import Seseme from '../projects/seseme'
+
+import {usePhysics} from './Physics'
+import {toRads } from '../../utils/3d'
+
+console.log(TWEEN)
 
 //box only, subsequent bodies will use parameters to construct compound bodies / other shapes
 export function Body({
@@ -12,9 +15,12 @@ export function Body({
   shapeParams = [{size: [2,2,2], offset: [0,0,0]}], //matching objects specify size and offset [add rot later] for shapes
   position=[0,0,0], rotation=[0,0,0], visible = true, 
   forced={position: null, rotation: null},
-  children
+  inScene = true, //controls whether usePhys will run again; toggle when no need to render (i.e. it fell out of view)
+  children,
 }) {
+
   const [isSleep, setSleepState] = useState(false)
+
   const phys = usePhysics({mass: 100}, body => {
 
     shapes.forEach((shape, i)=>{
@@ -52,36 +58,62 @@ export function Body({
     body.position.set(...position)
     body.quaternion.setFromEuler(...rotation.map((r)=>toRads(r)),'XYZ')
     body.allowSleep = true
-    body.onSleep = () => {setSleepState(true)}
-  })
+    body.onSleep = () => {
+      console.log('slept')
+      setSleepState(true)
+    }
+  }, [inScene]) //deps doesnt work here?
 
   useEffect(()=>{
-    if(forced.position || forced.rotation){
+    console.log('body useeffect')
+
+    setSleepState(false)
+
+    if(forced){
       phys.body.wakeUp()
       phys.body.mass = 0
       phys.body.velocity.set(0,0,0)
       phys.body.angularVelocity.set(0,0,0)
       phys.body.updateMassProperties()
+      phys.body.allowSleep = false
 
-      if(forced.position) phys.body.position.set(...forced.position)
-      if(forced.rotation) phys.body.quaternion.setFromEuler(...forced.rotation.map((r)=>toRads(r)), 'XYZ')
+      const pos = phys.body.position.clone()
+      const rot = phys.body.quaternion.clone()
+      const targetRot = phys.body.quaternion.clone().setFromEuler(...forced.rotation.map(r=>toRads(r)), 'XYZ')
+
+      const current = {
+        x: pos.x,  y: pos.y,  z: pos.z,
+        rx: rot.x, ry: rot.y, rz: rot.z, rw: rot.w,
+      }
+      const newPos = {
+        x: forced.position[0], y: forced.position[1], z: forced.position[2],
+        rx: targetRot.x, ry: targetRot.y, rz: targetRot.z, rw: targetRot.w,
+      }
+      phys.body.moveTween = new TWEEN.Tween(current)
+        .to(newPos, 300)
+        .onUpdate(function(){
+          phys.body.position.set(current.x,current.y,current.z)
+          phys.body.quaternion.set(current.rx, current.ry, current.rz, current.rw)
+        })
+        .onComplete(()=>{
+          console.log('body done moving')
+          phys.body.allowSleep = true
+        })
+        .start()
     }
     else{
+      if(phys.body.moveTween) phys.body.moveTween.stop()
       phys.body.wakeUp()
       phys.body.mass = 100
       phys.body.updateMassProperties()
     }
 
-    // if(forceTo.rotation)
   }, [forced])
-
-
 
   return (
       <group ref = {phys.ref}>
         
         {shapes.map((shape, i)=>{
-          console.log(`making a ${shape} with args ${shapeParams[i].size}`)
           return <mesh key = {i} position = {shapeParams[i].offset || [0,0,0]}>
             {shape === 'box' && <boxGeometry attach = 'geometry' args = {shapeParams[i].size} />}
             {shape === 'cylinder' && <cylinderGeometry 
