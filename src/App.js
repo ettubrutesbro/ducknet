@@ -4,6 +4,8 @@ import { Canvas, useFrame, useRender, useLoader } from 'react-three-fiber'
 import styled from 'styled-components'
 
 import * as CANNON from 'cannon'
+import {animated, useSpring} from 'react-spring'
+
 
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader'
 import { DRACOLoader } from 'three/examples/jsm/loaders/DRACOLoader'
@@ -33,7 +35,7 @@ function App() {
 
 
   return (
-    <div className = 'full'>
+    <animated.div className = 'full'>
       <Canvas 
         invalidateFrameloop = {false}
         onPointerMissed = {()=> select(null)}
@@ -44,12 +46,17 @@ function App() {
             projectCamera = {projectCamera}
           />
           <Enclosure /> 
+            
             <Scorecard
               position = {[-4,35,0]}
               rotation = {[0,10,0]}
+              
+              onClick = {() => select('scorecard')}
+              selected = {selected === 'scorecard'}
+
               onSelect = {setProjectCamera}
             />
-            
+            {/*
             <Seseme 
               position = {[-1.5,18,0]} 
               rotation = {[0,35,0]} 
@@ -60,7 +67,6 @@ function App() {
               onSelect = {setProjectCamera}
 
             /> 
-            
             <Eclipse 
               position = {[4,5,0]} 
               rotation = {[0,90,90]} 
@@ -69,7 +75,8 @@ function App() {
               selected = {selected==='eclipse'}
               onSelect = {setProjectCamera}
             /> 
-          
+            
+            */}
 
         </PhysicsProvider>
 
@@ -81,7 +88,7 @@ function App() {
         
       </Debug>
       */}
-    </div>
+    </animated.div>
   );
 }
 

@@ -14,10 +14,6 @@ const Controls = props => {
     ref.current.update()
   })
   return <orbitControls ref = {ref} args = {[camera, gl.domElement]} {...props} />
-
-  useEffect(()=>{
-    new TWEEN.Tween()
-  }, [...props])
 } 
 
 const defaults = {
@@ -45,7 +41,8 @@ function Camera({
     const target = xyzArray(projectCamera || defaults)
 
     const camTween = new TWEEN.Tween(current)
-      .to(target, 500)
+      .to(target, 550)
+      .easing(current.fov < target.fov? TWEEN.Easing.Quintic.Out : TWEEN.Easing.Quadratic.InOut)
       .onUpdate(function(){
         setCam({
           position: [current.x, current.y, current.z],

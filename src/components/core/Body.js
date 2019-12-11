@@ -93,7 +93,8 @@ export function Body({
         rx: targetRot.x, ry: targetRot.y, rz: targetRot.z, rw: targetRot.w,
       }
       phys.body.moveTween = new TWEEN.Tween(current)
-        .to(newPos, 300)
+        .to(newPos, 400)
+        .easing(TWEEN.Easing.Quadratic.Out)
         .onUpdate(function(){
           phys.body.position.set(current.x,current.y,current.z)
           phys.body.quaternion.set(current.rx, current.ry, current.rz, current.rw)
