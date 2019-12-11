@@ -31,8 +31,8 @@ export function Wall({
 export function Enclosure({mode}){
   const [cage, modCage] = useState({
     left: true, right: true, ground: true, back: true, front: true,
-    showLeft: false, showRight: false, showGround: true, showBack: true, showFront: false,
-    width: 19, height: 12, depth: 4.5, //TODO: vary these attributes depending on screensize
+    showLeft: false, showRight: false, showGround: false, showBack: false, showFront: false,
+    width: 25, height: 12, depth: 5, //TODO: vary these attributes depending on screensize
   }) 
 
   return(

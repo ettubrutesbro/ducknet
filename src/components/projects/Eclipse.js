@@ -1,4 +1,5 @@
 import React, {Suspense, useEffect, useState} from 'react'
+import * as THREE from 'three'
 import {useLoader} from 'react-three-fiber'
 import {Body} from '../core/Body'
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader'
@@ -17,6 +18,7 @@ export function Eclipse({
         dracoLoader.setDecoderPath('/draco-gltf/')
         loader.setDRACOLoader(dracoLoader)
       })
+     const texture = useLoader(THREE.TextureLoader, '/mc35Blur03.jpg' )
     const [projectCamera, changeView] = useState({
         position: [32, 21, 35],
         rotation: [toRads(-26), toRads(35), toRads(14)],
@@ -41,6 +43,7 @@ export function Eclipse({
 
 
     return( <Body 
+        visible = {false}
         name = 'eclipse'
         shapes = {['cylinder', 'sphere']}
         //for performance savings, the sphere could be replaced with a tapered cylinder?
@@ -51,7 +54,8 @@ export function Eclipse({
         
         <mesh scale = {[.2,.2,.2]} position = {[0,0.7,0]} rotation = {[0,toRads(90),0]} onClick = {onClick}>
             <bufferGeometry attach = 'geometry' {...dragon.__$[1].geometry} />
-            <meshNormalMaterial attach = "material" />
+            
+            <meshMatcapMaterial attach = 'material' matcap = {texture} />
         </mesh>
     
     </Body>)

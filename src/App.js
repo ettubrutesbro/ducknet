@@ -48,15 +48,15 @@ function App() {
           <Enclosure /> 
             
             <Scorecard
-              position = {[-4,35,0]}
+              position = {[-1,35,0]}
               rotation = {[0,10,0]}
-              
+
               onClick = {() => select('scorecard')}
               selected = {selected === 'scorecard'}
 
               onSelect = {setProjectCamera}
             />
-            {/*
+            
             <Seseme 
               position = {[-1.5,18,0]} 
               rotation = {[0,35,0]} 
@@ -65,18 +65,18 @@ function App() {
               //automatically via some kind of React.children map..? or <Project />
               selected = {selected==='seseme'}
               onSelect = {setProjectCamera}
-
+          
             /> 
             <Eclipse 
-              position = {[4,5,0]} 
-              rotation = {[0,90,90]} 
+              position = {[2,5,0]} 
+              rotation = {[0,0,90]} 
               onClick = {()=>select('eclipse')}
 
               selected = {selected==='eclipse'}
               onSelect = {setProjectCamera}
             /> 
             
-            */}
+            
 
         </PhysicsProvider>
 

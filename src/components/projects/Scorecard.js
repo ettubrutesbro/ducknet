@@ -1,5 +1,6 @@
 import React, {Suspense, useEffect, useState} from 'react'
 import {useLoader} from 'react-three-fiber'
+import * as THREE from 'three'
 import {a, useSprings} from 'react-spring/three'
 import useInterval from 'use-interval'
 import chroma from 'chroma-js'
@@ -19,15 +20,19 @@ function Scorecard({
     ...props
 }){
     const ca = useLoader(GLTFLoader, '/scorecard-ss.gltf', loader => {
-    const dracoLoader = new DRACOLoader()
-        dracoLoader.setDecoderPath('/draco-gltf/')
-        loader.setDRACOLoader(dracoLoader)
-      })
-    const [projectCamera, changeView] = useState({
-        position: [0, 6, 10],
-        rotation: [toRads(-18), toRads(0), toRads(0)],
-        fov: 75,
+      const dracoLoader = new DRACOLoader()
+      dracoLoader.setDecoderPath('/draco-gltf/')
+      loader.setDRACOLoader(dracoLoader)
     })
+    const [projectCamera, changeView] = useState({
+        position: [0, 21, 50],
+        rotation: [toRads(-18), toRads(0), toRads(0)],
+        fov: 95,
+    })
+
+    const texture = useLoader(THREE.TextureLoader, '/mc35Blur03.jpg' )
+
+
     const [forced, forceTo] = useState(null)
 
     useEffect(()=>{
@@ -102,15 +107,15 @@ function Scorecard({
         shapes = {['box', 'box']}
         shapeParams = {[
             // {size: [2.25,6,1], offset: [0,0,0], rotation: [0, 0, toRads(38)]}
-            {size: [1.7,4,1.4], offset: [0.7,-1,0], rotation: [0, 0, toRads(44)]},
-            {size: [1.7,1.5,1.4], offset: [-1,1.8,0]}
+            {size: [1.7,4,1.75], offset: [0.7,-1,0], rotation: [0, 0, toRads(44)]},
+            {size: [1.7,1.5,1.75], offset: [-1,1.8,0]}
         ]}
         forced = {forced}
         visible = {false}
         {...props}
     >
         
-        <group scale = {[.012,.05,.012]} position = {[0.15,0,-0.4]} rotation = {[toRads(90),0,0]} onClick = {onClick}>
+        <group scale = {[.015,.05,.015]} position = {[0.15,0,-0.4]} rotation = {[toRads(90),0,0]} onClick = {onClick}>
             {springs.map(({position, color, sideColor, indentColor, outdentColor}, i)=>{
                 const child = faces[i]
 
