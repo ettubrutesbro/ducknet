@@ -35,7 +35,7 @@ export function Seseme({
     loader.setDRACOLoader(dracoLoader)
   })
 
-   const texture = useLoader(THREE.TextureLoader, '/metal2.jpg' )
+   const texture = useLoader(THREE.TextureLoader, '/metal4.jpg' )
   // const group = useRef()
 
   const [plrHts, modPlrHt] = useState({
@@ -85,32 +85,45 @@ export function Seseme({
         <group name = 'main' onClick = {onClick}>
         <mesh name="pedestal">
           <bufferGeometry attach="geometry" {...pedestal.__$[1].geometry} />
-          <meshMatcapMaterial matcap = {texture} attach="material" />
+          <Material matcap = {texture} attach="material" />
         </mesh>
         <mesh name = "pillar" position = {[1,plrHts.a,2.1]}>
           <bufferGeometry attach = 'geometry' {...pillar.__$[1].geometry} />
-          <meshMatcapMaterial matcap = {texture} attach = 'material' />
+          <Material />
         </mesh>
        
         <mesh name = "pillar2" position = {[1,plrHts.b,-6.25]} rotation = {[0,toRads(90),0]} >
           <bufferGeometry attach = 'geometry' {...pillar.__$[1].geometry} />
-          <meshMatcapMaterial matcap = {texture} attach = 'material' />
+          <Material />
         </mesh>
         
         <mesh name = "pillar3" position = {[-7.1,plrHts.c,-6.25]} rotation = {[0,toRads(180),0]} >
           <bufferGeometry attach = 'geometry' {...pillar.__$[1].geometry} />
-          <meshMatcapMaterial matcap = {texture} attach = 'material' />
+          <Material />
         </mesh>
         
         <mesh name = "pillar4" position = {[-7.1,plrHts.d,2.1]} rotation = {[0,toRads(-90),0]} >
           <bufferGeometry attach = 'geometry' {...pillar.__$[1].geometry} />
-          <meshMatcapMaterial matcap = {texture} attach = 'material' />
+          <Material />
         </mesh>
         </group>
       </group>
     </Body>
   )
 }
+
+function Material(){
+  return(
+    <meshPhongMaterial 
+      attach = 'material' 
+      color = {0x4f473d}
+      specular = {0x84836e}
+      emissive = {0x11141c}
+      shininess = {12}
+    />
+  )
+}
+
 
 // this might get cumbersome but it's what i have rn
 export default function SesemeWrapped(props){

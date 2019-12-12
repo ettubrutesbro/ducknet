@@ -32,7 +32,7 @@ export function Enclosure({mode}){
   const [cage, modCage] = useState({
     left: true, right: true, ground: true, back: true, front: true,
     showLeft: false, showRight: false, showGround: false, showBack: false, showFront: false,
-    width: 25, height: 12, depth: 5, //TODO: vary these attributes depending on screensize
+    width: 19, height: 12, depth: 4.6, //TODO: vary these attributes depending on screensize
   }) 
 
   return(
@@ -52,6 +52,9 @@ export function Enclosure({mode}){
     {cage.front &&
       <Wall name = 'F' position = {[0, 0, (cage.depth/2)+.5]} rotation = {[0, 0, 0]} size = {[cage.width,cage.height,1]} visible={cage.showFront} />
     }
+      <ambientLight intensity = {0.1}/>
+      <pointLight position = {[3, 4, 25]} color = {0xffffff} intensity = {0.3} castShadow />
+      <pointLight position = {[-10, 10, 8]} color = {0xffffff} intensity = {0.3} castShadow />
     </group>
   )
 }

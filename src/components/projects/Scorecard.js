@@ -7,6 +7,7 @@ import chroma from 'chroma-js'
 
 import {Body} from '../core/Body'
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader'
+import { OBJLoader } from 'three/examples/jsm/loaders/OBJLoader'
 import { DRACOLoader } from 'three/examples/jsm/loaders/DRACOLoader'
 
 import {toRads} from '../../utils/3d'
@@ -19,18 +20,24 @@ function Scorecard({
     onSelect,
     ...props
 }){
-    const ca = useLoader(GLTFLoader, '/scorecard-ss.gltf', loader => {
+    const ca = useLoader(GLTFLoader, '/scorecard/fin/state-gp.gltf', loader => {
       const dracoLoader = new DRACOLoader()
       dracoLoader.setDecoderPath('/draco-gltf/')
       loader.setDRACOLoader(dracoLoader)
     })
+
+    // const ca = useLoader(OBJLoader, '/scorecard/scobj.obj')
+
     const [projectCamera, changeView] = useState({
-        position: [0, 21, 50],
-        rotation: [toRads(-18), toRads(0), toRads(0)],
-        fov: 95,
+        position: [4.75, 8, 12],
+        rotation: [toRads(-8), toRads(0), toRads(0)],
+        fov: 70,
     })
 
-    const texture = useLoader(THREE.TextureLoader, '/mc35Blur03.jpg' )
+    const alpha = useLoader(THREE.TextureLoader, '/scorecard/fin/scorecarduv.png' )
+    console.log(alpha)
+    alpha.flipY = false
+
 
 
     const [forced, forceTo] = useState(null)
@@ -38,8 +45,8 @@ function Scorecard({
     useEffect(()=>{
         if(selected){
             forceTo({
-                position: [0,5,0],
-                rotation: [0,35,0]
+                position: [-1.5,5,0],
+                rotation: [0,55,0]
             })
             onSelect(projectCamera)
         }
@@ -50,99 +57,53 @@ function Scorecard({
         }
     }, [selected])
 
-    const d = [null, 'dental', null, 'meals', null, 'madeupshit']
-    const countyColors = {
-        dental: 'hsla(286, 30%, 84%, 1)',
-        meals: '#8bd2bf', 
-        madeupshit: '#74a9cf',
-        yallsuck: 'hsla(286, 30%, 84%, 1)', 
-    }
-    // const sideColors = {
-    //     dental: chroma(countyColors.dental).darken().hex(),
-    //     meals: chroma(countyColors.meals).darken().hex(),
-    //     madeupshit: chroma(countyColors.madeupshit).darken().hex(),
-    // }
-    const counties = {
-        dental: {modoc: 7, mendocino: 7, siskiyou: 4, inyo: -5.5, lassen: -6},
-        meals: { sfsm: 5, sandiego: 4, lassen: -6, sanbernie: -3},
-        madeupshit: { sanbernie: 3, lassen: -2, modoc: -5, siskiyou: -8, mendocino: 3},
-        yallsuck: {sfsm: -2, sandiego: -2, inyo: -2, modoc: -4, lassen: -2},
-    }
-    const [vis, changeVis] = useState(0)
 
-    const [springs, set] = useSprings(9, i => ({
-        position: [0,0,0], 
-        color: '#ff0000', sideColor: '#de0000', indentColor: '#de0000', outdentColor: '#de0000',
-        config: { mass: 20, tension: 500, friction: 200 }
-    }))
 
-    useInterval(()=>{
-        changeVis(vis < 5? vis+1 : 0)
-    }, 3500)
-
-    useEffect(()=>{
-        set(i => {
-            // console.log(i, ca.__$[i].name)
-            const cty = ca.__$[i].name
-            const baseColor = d[vis]? countyColors[d[vis]] : '#BBBBBB'
-            return { 
-                position: [0, d[vis]? counties[d[vis]][cty] || 0 : 0,0], 
-                color: baseColor,
-                sideColor: chroma(baseColor).darken(0.8).hex() ,
-                indentColor: chroma(baseColor).brighten(0.4).hex() ,
-                outdentColor: chroma(baseColor).saturate(0.4).darken(0.4).hex() ,
-                // delay:  
-            }
-        })
-    }, [vis])
-
-    const sides = ca.__$.filter((child) => child.name.includes('_sides')).sort((a,b) => a.name > b.name? -1 : 1)
-    const faces = ca.__$.filter((child) => !child.name.includes('_sides')&&child.name).sort((a,b) => a.name > b.name? -1 : 1)
-
-    console.log(sides)
-    console.log(faces)
+    // useInterval(()=>{
+    //     changeVis(vis < 5? vis+1 : 0)
+    // }, 3500)
+    console.log(ca)
 
     return( <Body 
         name = 'scorecard'
         shapes = {['box', 'box']}
         shapeParams = {[
             // {size: [2.25,6,1], offset: [0,0,0], rotation: [0, 0, toRads(38)]}
-            {size: [1.7,4,1.75], offset: [0.7,-1,0], rotation: [0, 0, toRads(44)]},
-            {size: [1.7,1.5,1.75], offset: [-1,1.8,0]}
+            {size: [1.7,4,1.5], offset: [0.7,-1,0], rotation: [0, 0, toRads(44)]},
+            {size: [1.7,1.5,1.5], offset: [-1,1.8,0]}
         ]}
         forced = {forced}
         visible = {false}
         {...props}
     >
         
-        <group scale = {[.015,.05,.015]} position = {[0.15,0,-0.4]} rotation = {[toRads(90),0,0]} onClick = {onClick}>
-            {springs.map(({position, color, sideColor, indentColor, outdentColor}, i)=>{
-                const child = faces[i]
-
-                // console.log(chroma(color).darken().saturate(2).hex())
-                // const {position, color} = springs
-                let faceColor = color
-                if(d[vis] && counties[d[vis]][child.name]){
-                    if(counties[d[vis]][child.name] > 0) faceColor = outdentColor
-                    else faceColor = indentColor
-                } 
+        <group 
+            scale = {[.1,.1,.1]} //obj 
+            // scale = {[.015,.05,.015]} // gltfprescale
+            // scale = {[.1,.1,.1]} 
+            position = {[0.15,0,-0.4]} 
+            // rotation = {[toRads(90),0,0]} 
+            onClick = {onClick}
+        >
+           {
+            // ca.children.map((child) => {
+            ca.__$.map((child) => {
+                console.log(child.name)
                 return(
-                    <a.group 
-                        key = {child.name} 
-                        name = {child.name}
-                        position = {position}
-                    >
-                        <mesh>
-                            <bufferGeometry attach = 'geometry' {...faces[i].geometry} />
-                            <a.meshBasicMaterial transparent attach = 'material' color = {faceColor} /> 
-                        </mesh>
-                        <mesh>
-                            <bufferGeometry attach = 'geometry' {...sides[i].geometry} />
-                            <a.meshBasicMaterial transparent attach = 'material' color = {sideColor} /> 
-                        </mesh>
-                    </a.group>
-                )
+                    <mesh>
+                        <bufferGeometry attach = 'geometry' {...child.geometry} />
+                        <meshLambertMaterial
+
+                            attach ='material'
+                            map = {alpha}
+                            // visible = {child.name === 'restofca'}
+                            // transparent
+                        />
+                    </mesh>
+                )           
             })}
+
+ 
         </group>
     
     </Body>)
@@ -151,4 +112,17 @@ function Scorecard({
 // this might get cumbersome but it's what i have rn
 export default function ScorecardWrapped(props){
   return <Suspense fallback = {<React.Fragment />}><Scorecard {...props} /></Suspense>
+}
+
+
+function Material({...props}){
+  return(
+    <meshBasicMaterial 
+      attach = 'material' 
+      // color = {0xffffff}
+      // color = {0x88c696}
+      // emissive = {0x8111c}
+      {...props}
+    />
+  )
 }

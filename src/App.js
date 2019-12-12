@@ -40,7 +40,7 @@ function App() {
         invalidateFrameloop = {false}
         onPointerMissed = {()=> select(null)}
       >
-
+        <directionalLight args = {[0xffffff, 0.4]} castShadow />
         <PhysicsProvider>
           <Camera 
             projectCamera = {projectCamera}
@@ -56,7 +56,7 @@ function App() {
 
               onSelect = {setProjectCamera}
             />
-            
+            {/* 
             <Seseme 
               position = {[-1.5,18,0]} 
               rotation = {[0,35,0]} 
@@ -69,13 +69,13 @@ function App() {
             /> 
             <Eclipse 
               position = {[2,5,0]} 
-              rotation = {[0,0,90]} 
+              rotation = {[0,0,0]} 
               onClick = {()=>select('eclipse')}
 
               selected = {selected==='eclipse'}
               onSelect = {setProjectCamera}
             /> 
-            
+            */}
             
 
         </PhysicsProvider>

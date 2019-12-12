@@ -17,8 +17,8 @@ const Controls = props => {
 } 
 
 const defaults = {
-    position: [0, 21, 50],
-    rotation: [toRads(-18), 0, 0],
+    position: [0, 0, 45],
+    rotation: [0, 0, 0],
     zoom: 1,
     fov: 25,
     orbit: false
