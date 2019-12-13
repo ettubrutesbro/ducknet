@@ -26,6 +26,7 @@ const defaults = {
 
 function Camera({
   projectCamera, 
+  isDefault = true,
   ...props
 }) {
   const ref = useRef()
@@ -35,8 +36,10 @@ function Camera({
   const { setDefaultCamera } = useThree()
   useEffect(() => {
     void setDefaultCamera(ref.current)
-    console.log('camera fired useeffect')
-
+    console.log('mount: camera set as default')
+  }, [isDefault])
+  useEffect(()=>{
+    console.log('moving camera')
     const current = xyzArray(camdata)
     const target = xyzArray(projectCamera || defaults)
 

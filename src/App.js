@@ -32,16 +32,21 @@ export const WorldFunctions = React.createContext({
 
 function App() {
 
+  const isInitialMount = useRef(true)
+
   const [projectCamera, setProjectCamera] = useState(null)
   const [selected, select] = useState(null)
   const [abyss, admitToAbyss] = useState([])
 
   useEffect(()=>{
-    if(admitToAbyss.length > 0 && !selected){
-      console.log('clearing abyss')
-      // admitToAbyss([])
+    if(isInitialMount.current){
+      isInitialMount.current = false
     }
-  }, [abyss, selected])
+    else if(!selected){
+      console.log('clearing abyss')
+      admitToAbyss([])
+    }
+  }, [selected])
 
   return (
     <animated.div className = 'full'>
@@ -59,6 +64,7 @@ function App() {
             active = {!selected} 
           /> 
             <WorldFunctions.Provider value = {{
+              selected: selected,
               setProjectCamera: setProjectCamera,
               abyss: abyss,
               admitToAbyss: admitToAbyss
@@ -72,6 +78,8 @@ function App() {
                 selected = {selected === 'scorecard'}
                 onSelect = {setProjectCamera}
                 falling = {selected && selected !== 'scorecard'}
+
+                showBody
                 // onExitView = {admitToAbyss}
               />
             }

@@ -61,17 +61,14 @@ export function Body({
     body.quaternion.setFromEuler(...rotation.map((r)=>toRads(r)),'XYZ')
     body.allowSleep = true
     body.onSleep = () => {
-      console.log(name, 'slept')
       setSleepState(true)
     }
     body.onWake = () => {
-      console.log(name, 'woke')
       setSleepState(false)
     }
   }, [inScene], name) 
 
   useEffect(()=>{
-    console.log(name, 'forced')
 
     setSleepState(false)
 
@@ -129,10 +126,11 @@ export function Body({
             {shape === 'sphere' && <sphereGeometry attach = 'geometry' args = {shapeParams[i].size} />}
            <meshBasicMaterial 
             attach = 'material' 
-            color = "#FF0000" 
+            color = "#ffffff" 
+            wireframe = {true}
             visible = {visible}
             transparent
-            opacity = {isSleep? 0.15 : 0.5}
+            opacity = {isSleep? 0.25 : 0.5}
           />
           </mesh>
         })}
