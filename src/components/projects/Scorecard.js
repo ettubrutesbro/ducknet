@@ -18,15 +18,14 @@ function Scorecard({
     onClick = () => console.log('clicked eclipse'), 
     selected = false,
     onSelect,
+    showBody = false,
     ...props
 }){
-    const ca = useLoader(GLTFLoader, '/scorecard/fin/state-gp.gltf', loader => {
+    const ca = useLoader(GLTFLoader, '/scorecard/state.gltf', loader => {
       const dracoLoader = new DRACOLoader()
       dracoLoader.setDecoderPath('/draco-gltf/')
       loader.setDRACOLoader(dracoLoader)
     })
-
-    // const ca = useLoader(OBJLoader, '/scorecard/scobj.obj')
 
     const [projectCamera, changeView] = useState({
         position: [4.75, 8, 12],
@@ -34,11 +33,8 @@ function Scorecard({
         fov: 70,
     })
 
-    const alpha = useLoader(THREE.TextureLoader, '/scorecard/fin/scorecarduv.png' )
-    console.log(alpha)
+    const alpha = useLoader(THREE.TextureLoader, '/scorecard/stateuv.png' )
     alpha.flipY = false
-
-
 
     const [forced, forceTo] = useState(null)
 
@@ -57,12 +53,10 @@ function Scorecard({
         }
     }, [selected])
 
-
-
     // useInterval(()=>{
     //     changeVis(vis < 5? vis+1 : 0)
     // }, 3500)
-    console.log(ca)
+
 
     return( <Body 
         name = 'scorecard'
@@ -73,27 +67,21 @@ function Scorecard({
             {size: [1.7,1.5,1.5], offset: [-1,1.8,0]}
         ]}
         forced = {forced}
-        visible = {false}
+        visible = {showBody}
         {...props}
     >
         
         <group 
-            scale = {[.1,.1,.1]} //obj 
-            // scale = {[.015,.05,.015]} // gltfprescale
-            // scale = {[.1,.1,.1]} 
+            scale = {[.075,.075,.075]} 
             position = {[0.15,0,-0.4]} 
             // rotation = {[toRads(90),0,0]} 
             onClick = {onClick}
         >
-           {
-            // ca.children.map((child) => {
-            ca.__$.map((child) => {
-                console.log(child.name)
+           {ca.__$.map((child) => {
                 return(
                     <mesh>
                         <bufferGeometry attach = 'geometry' {...child.geometry} />
                         <meshLambertMaterial
-
                             attach ='material'
                             map = {alpha}
                             // visible = {child.name === 'restofca'}
