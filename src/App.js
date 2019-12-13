@@ -26,13 +26,22 @@ import Camera from './components/core/Camera'
 import {toRads, toDegs} from './utils/3d'
 
 
-export const SelectionContext = React.createContext()
+export const WorldFunctions = React.createContext({
+  //insert functions that every child of the world should have? 
+})
 
 function App() {
 
   const [projectCamera, setProjectCamera] = useState(null)
   const [selected, select] = useState(null)
+  const [abyss, admitToAbyss] = useState([])
 
+  useEffect(()=>{
+    if(admitToAbyss.length > 0 && !selected){
+      console.log('clearing abyss')
+      // admitToAbyss([])
+    }
+  }, [abyss, selected])
 
   return (
     <animated.div className = 'full'>
@@ -40,42 +49,61 @@ function App() {
         invalidateFrameloop = {false}
         onPointerMissed = {()=> select(null)}
       >
+        {/* <fog attach="fog" args={['#ffffff', 55, 85]} /> */}
         <directionalLight args = {[0xffffff, 0.4]} castShadow />
         <PhysicsProvider>
           <Camera 
             projectCamera = {projectCamera}
           />
-          <Enclosure /> 
-            
-            <Scorecard
-              position = {[-1,35,0]}
-              rotation = {[0,10,0]}
+          <Enclosure
+            active = {!selected} 
+          /> 
+            <WorldFunctions.Provider value = {{
+              setProjectCamera: setProjectCamera,
+              abyss: abyss,
+              admitToAbyss: admitToAbyss
+            }}>
+            {!abyss.includes('scorecard') && 
+              <Scorecard
+                position = {[-1,35,0]}
+                rotation = {[0,10,0]}
 
-              onClick = {() => select('scorecard')}
-              selected = {selected === 'scorecard'}
+                onClick = {() => select('scorecard')}
+                selected = {selected === 'scorecard'}
+                onSelect = {setProjectCamera}
+                falling = {selected && selected !== 'scorecard'}
+                // onExitView = {admitToAbyss}
+              />
+            }
+            {/*!abyss.includes('seseme') &&
+              <Seseme 
+                position = {[-1.5,18,0]} 
+                rotation = {[0,35,0]} 
+                //onClick, selected and onSelect should be distributed
+                //automatically via some kind of React.children map..? or <Project />
 
-              onSelect = {setProjectCamera}
-            />
-            {/* 
-            <Seseme 
-              position = {[-1.5,18,0]} 
-              rotation = {[0,35,0]} 
-              onClick = {()=>select('seseme')}
-              //onClick, selected and onSelect should be distributed
-              //automatically via some kind of React.children map..? or <Project />
-              selected = {selected==='seseme'}
-              onSelect = {setProjectCamera}
-          
-            /> 
-            <Eclipse 
-              position = {[2,5,0]} 
-              rotation = {[0,0,0]} 
-              onClick = {()=>select('eclipse')}
-
-              selected = {selected==='eclipse'}
-              onSelect = {setProjectCamera}
-            /> 
+                onClick = {()=>select('seseme')}
+                selected = {selected==='seseme'}
+                onSelect = {setProjectCamera}
+                falling = {selected && selected !== 'seseme'}
+                showBody
+                // onExitView = {admitToAbyss}
+              /> 
             */}
+            {!abyss.includes('eclipse') &&
+              <Eclipse 
+                position = {[2,5,0]} 
+                rotation = {[0,0,0]} 
+                onClick = {()=>select('eclipse')}
+
+                selected = {selected==='eclipse'}
+                onSelect = {setProjectCamera}
+                falling = {selected && selected !== 'eclipse'}
+                showBody
+                // onExitView = {admitToAbyss}
+              /> 
+            }
+            </WorldFunctions.Provider>
             
 
         </PhysicsProvider>

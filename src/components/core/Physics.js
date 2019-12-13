@@ -2,6 +2,9 @@ import React, {useState, useEffect, useContext, useRef} from 'react'
 import {useRender} from 'react-three-fiber'
 import * as CANNON from 'cannon'
 import TWEEN from '@tweenjs/tween.js'
+
+import {WorldFunctions} from '../../App'
+
 const physicsContext = React.createContext()
 
 export function PhysicsProvider({children}){
@@ -28,7 +31,10 @@ export function PhysicsProvider({children}){
 
 //cannon hook for tracking/updating a physics obj
 //usePhysics(cannon properties, a function to call on the body created herein, deps????)
-export function usePhysics({ ...props}, fn, deps = []){
+export function usePhysics({ ...props}, fn, deps = [], name){
+
+  const worldFuncContext = useContext(WorldFunctions)
+
   let isSleep
   const ref = useRef()
 
@@ -49,12 +55,23 @@ export function usePhysics({ ...props}, fn, deps = []){
   
   useRender(()=>{    
     if(ref.current){ 
+        if(body.position.y< -100){
+          console.log('admitting', name, 'to abyss')
+          worldFuncContext.admitToAbyss([...worldFuncContext.abyss, name])
+          body.position.set(0,10,0)
+          return
+        }
+
         if(body.sleepState===2){
           if(!isSleep){
             body.onSleep()
             isSleep = true
           }
-          return 
+          return
+        }else{
+          if(isSleep && body.sleepState!==2){
+            body.onWake()
+          }
         }
         //referenced threejs object position set to corresponding cannon phys object
         ref.current.position.copy(body.position)

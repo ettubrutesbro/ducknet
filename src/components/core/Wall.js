@@ -28,28 +28,28 @@ export function Wall({
   )
 }
 
-export function Enclosure({mode}){
+export function Enclosure({active}){
   const [cage, modCage] = useState({
     left: true, right: true, ground: true, back: true, front: true,
-    showLeft: false, showRight: false, showGround: false, showBack: false, showFront: false,
+    showLeft: true, showRight: true, showGround: true, showBack: true, showFront: false,
     width: 19, height: 12, depth: 4.6, //TODO: vary these attributes depending on screensize
   }) 
 
   return(
     <group>
-    {cage.ground && 
+    {cage.ground && active && 
       <Wall name = 'ground' position = {[0, (-cage.height/2)-.5, 0]} rotation = {[-90, 0, 0]} size = {[cage.width,cage.depth,1]} visible = {cage.showGround}/>
     }
-    {cage.left &&
+    {cage.left && active &&
       <Wall name = 'L' position = {[(cage.width/2)+.5, 0, 0]} rotation = {[0, -90, 0]} size = {[cage.depth,cage.height,1]} visible = {cage.showLeft}/>
     }
-    {cage.right &&
+    {cage.right && active &&
       <Wall name = 'R' position = {[(-cage.width/2)-.5, 0, 0]} rotation = {[0, 90, 0]} size = {[cage.depth,cage.height,1]} visible = {cage.showRight}/>
     }
-    {cage.back &&
+    {cage.back && active &&
       <Wall name = 'B' position = {[0, 0, (-cage.depth/2)-.5]} rotation = {[0, 0, 0]} size = {[cage.width,cage.height,1]} visible={cage.showBack} />
     }
-    {cage.front &&
+    {cage.front && active &&
       <Wall name = 'F' position = {[0, 0, (cage.depth/2)+.5]} rotation = {[0, 0, 0]} size = {[cage.width,cage.height,1]} visible={cage.showFront} />
     }
       <ambientLight intensity = {0.1}/>

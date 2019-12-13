@@ -3,7 +3,6 @@ import * as CANNON from 'cannon'
 // import {animated, useSpring} from 'react-spring'
 import TWEEN from '@tweenjs/tween.js'
 
-
 import {usePhysics} from './Physics'
 import {toRads } from '../../utils/3d'
 
@@ -20,7 +19,7 @@ export function Body({
   children,
 }) {
 
-  const [isSleep, setSleepState] = useState(false)
+  const [isSleep, setSleepState] = useState(false) //for visualizing sleep
 
   const phys = usePhysics({mass: 100}, body => {
 
@@ -62,13 +61,17 @@ export function Body({
     body.quaternion.setFromEuler(...rotation.map((r)=>toRads(r)),'XYZ')
     body.allowSleep = true
     body.onSleep = () => {
-      console.log('slept')
+      console.log(name, 'slept')
       setSleepState(true)
     }
-  }, [inScene]) //deps doesnt work here?
+    body.onWake = () => {
+      console.log(name, 'woke')
+      setSleepState(false)
+    }
+  }, [inScene], name) 
 
   useEffect(()=>{
-    console.log('body useeffect')
+    console.log(name, 'forced')
 
     setSleepState(false)
 
@@ -129,7 +132,7 @@ export function Body({
             color = "#FF0000" 
             visible = {visible}
             transparent
-            opacity = {isSleep? 0.3 : 0.15}
+            opacity = {isSleep? 0.15 : 0.5}
           />
           </mesh>
         })}

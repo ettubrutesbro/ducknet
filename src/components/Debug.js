@@ -4,7 +4,7 @@ import styled from 'styled-components'
 
 import {toRads, toDegs} from '../utils/3d'
 
-import {find} from 'lodash'
+// import {find} from 'lodash'
 
 //generic container 
 //todo: collapsible sections based on tinkergroup
