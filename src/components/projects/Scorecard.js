@@ -20,7 +20,7 @@ function Scorecard({
     onSelect,
     ...props
 }){
-    const ca = useLoader(GLTFLoader, '/scorecard/fin/state-gp.gltf', loader => {
+    const ca = useLoader(GLTFLoader, '/scorecard/fin/state-gp2.gltf', loader => {
       const dracoLoader = new DRACOLoader()
       dracoLoader.setDecoderPath('/draco-gltf/')
       loader.setDRACOLoader(dracoLoader)
