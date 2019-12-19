@@ -115,7 +115,7 @@ export function Body({
   }, [forced])
 
   return (
-      <group ref = {phys.ref}>
+      <group ref = {phys.ref} visible = {false}>
         
         {shapes.map((shape, i)=>{
           return <mesh key = {i} position = {shapeParams[i].offset || [0,5,0]} rotation = {shapeParams[i].rotation || [0,0,0]}>

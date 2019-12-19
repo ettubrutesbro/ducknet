@@ -80,6 +80,7 @@ export function usePhysics({ ...props}, fn, deps = [], name){
         //referenced threejs object position set to corresponding cannon phys object
         ref.current.position.copy(body.position)
         ref.current.quaternion.copy(body.quaternion)
+        ref.current.visible = true
     }
   })
 
