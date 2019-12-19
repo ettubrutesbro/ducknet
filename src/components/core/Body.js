@@ -21,7 +21,7 @@ export function Body({
 
   const [isSleep, setSleepState] = useState(false) //for visualizing sleep
 
-  const phys = usePhysics({mass: 100}, body => {
+  const phys = usePhysics({mass: 100, position: new CANNON.Vec3(...position)}, body => {
 
     shapes.forEach((shape, i)=>{
         const Shape = shape.charAt(0).toUpperCase() + shape.slice(1)
@@ -66,7 +66,7 @@ export function Body({
     body.onWake = () => {
       setSleepState(false)
     }
-  }, [inScene], name) 
+  }, [], name) 
 
   useEffect(()=>{
 
@@ -118,7 +118,7 @@ export function Body({
       <group ref = {phys.ref}>
         
         {shapes.map((shape, i)=>{
-          return <mesh key = {i} position = {shapeParams[i].offset || [0,0,0]} rotation = {shapeParams[i].rotation || [0,0,0]}>
+          return <mesh key = {i} position = {shapeParams[i].offset || [0,5,0]} rotation = {shapeParams[i].rotation || [0,0,0]}>
             {shape === 'box' && <boxGeometry attach = 'geometry' args = {shapeParams[i].size} />}
             {shape === 'cylinder' && <cylinderGeometry 
               attach = 'geometry' args = {shapeParams[i].size}
@@ -148,5 +148,5 @@ export const LoadingProject = (props) => {
       console.log(`${props.name} loaded`)
     }
   })
-  return <mesh> <sphereGeometry attach = 'geometry' /> </mesh>
+  return <mesh> </mesh>
 }

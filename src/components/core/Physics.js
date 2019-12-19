@@ -46,6 +46,8 @@ export function usePhysics({ ...props}, fn, deps = [], name){
   useEffect(()=>{
     if(body.mass > 0){ 
       console.log(name, 'added to world')
+      console.log(body.position)
+      if(name === 'scorecard') debugger //it's visible here....
     }
     fn(body)
     world.addBody(body)

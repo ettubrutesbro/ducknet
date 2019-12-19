@@ -11,8 +11,7 @@ export function Seseme({
   onClick = () => console.log('clicked seseme'), 
   selected, 
   onSelect, //enables project component to send camera changes up
-  // debug = true,
-  showBody = false,
+  debug = true,
   ...props
 }) {
 
@@ -25,23 +24,23 @@ export function Seseme({
   const [forced, forceTo] = useState(null)
 
 
-  const pedestal = useLoader(GLTFLoader, '/seseme/pedestal.gltf', loader => {
+  const pedestal = useLoader(GLTFLoader, '/seseme.gltf', loader => {
     const dracoLoader = new DRACOLoader()
     dracoLoader.setDecoderPath('/draco-gltf/')
     loader.setDRACOLoader(dracoLoader)
   })
-  const pillar = useLoader(GLTFLoader, '/seseme/pillar.gltf', loader => {
+  const pillar = useLoader(GLTFLoader, '/pillar-d.gltf', loader => {
     const dracoLoader = new DRACOLoader()
     dracoLoader.setDecoderPath('/draco-gltf/')
     loader.setDRACOLoader(dracoLoader)
   })
 
-   // const texture = useLoader(THREE.TextureLoader, '/metal4.jpg' )
+   const texture = useLoader(THREE.TextureLoader, '/metal4.jpg' )
   // const group = useRef()
 
   const [plrHts, modPlrHt] = useState({
     a: 9.5, b: -1.5, c: -9.5, d:-15
-  })
+                                                  })
 
 
   useEffect(()=>{
@@ -61,12 +60,6 @@ export function Seseme({
       }
   }, [selected])
 
-  // useFrame(()=>{
-  //   //debug on exposes data? 
-  //   if(debug){
-        
-  //   }
-  // }, 0)
   
 
 
@@ -80,13 +73,13 @@ export function Seseme({
       ]} 
       forced = {forced}
       {...props}
-      visible  = {showBody}
+      visible  = {false}
     >
       <group name = 'seseme' position = {[0.3,1.8,0.2]} scale = {[.1,.1,.1]}>
         <group name = 'main' onClick = {onClick}>
         <mesh name="pedestal">
           <bufferGeometry attach="geometry" {...pedestal.__$[1].geometry} />
-          <Material attach="material" />
+          <Material matcap = {texture} attach="material" />
         </mesh>
         <mesh name = "pillar" position = {[1,plrHts.a,2.1]}>
           <bufferGeometry attach = 'geometry' {...pillar.__$[1].geometry} />

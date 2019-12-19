@@ -48,6 +48,7 @@ function Scorecard({
         }
         else{
             console.log('unpicked sc')
+            // debugger
             forceTo(null)
             onSelect(null)
         }
@@ -76,6 +77,7 @@ function Scorecard({
             position = {[0.15,0,-0.4]} 
             // rotation = {[toRads(90),0,0]} 
             onClick = {onClick}
+            // visible = {false}
         >
            {ca.__$.map((child) => {
                 return(
