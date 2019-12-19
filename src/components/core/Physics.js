@@ -36,6 +36,7 @@ export function usePhysics({ ...props}, fn, deps = [], name){
   const worldFuncContext = useContext(WorldFunctions)
 
   let isSleep
+  let firstRun = true
   const ref = useRef()
 
   //use provided context: will get value (world info) from nearest parent cannonProvider
@@ -46,8 +47,6 @@ export function usePhysics({ ...props}, fn, deps = [], name){
   useEffect(()=>{
     if(body.mass > 0){ 
       console.log(name, 'added to world')
-      console.log(body.position)
-      if(name === 'scorecard') debugger //it's visible here....
     }
     fn(body)
     world.addBody(body)
@@ -80,7 +79,11 @@ export function usePhysics({ ...props}, fn, deps = [], name){
         //referenced threejs object position set to corresponding cannon phys object
         ref.current.position.copy(body.position)
         ref.current.quaternion.copy(body.quaternion)
-        ref.current.visible = true
+        if(firstRun){
+          console.log('first run - setting visibility after phys position coppied')
+          ref.current.visible = true
+          firstRun = false
+        }
     }
   })
 
