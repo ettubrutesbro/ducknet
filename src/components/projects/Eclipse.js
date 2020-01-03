@@ -12,6 +12,7 @@ export function Eclipse({
     selected = false,
     onSelect,
     showBody = false,
+    falling,
     ...props
 }){
     const dragon = useLoader(GLTFLoader, '/eclipse/eclipse.gltf', loader => {
@@ -46,6 +47,7 @@ export function Eclipse({
     return( <Body 
         visible = {showBody}
         name = 'eclipse'
+        falling = {falling}
         shapes = {['cylinder', 'sphere']}
         //for performance savings, the sphere could be replaced with a tapered cylinder?
         shapeParams = {[{size: [1.1,1.8,2.6,8], offset: [0,.2,0]}, {size: [1.5], offset: [0,-.2,0]}]}

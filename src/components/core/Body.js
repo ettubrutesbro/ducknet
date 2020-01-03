@@ -16,6 +16,7 @@ export function Body({
   position=[0,0,0], rotation=[0,0,0], visible = true, 
   forced={position: null, rotation: null},
   inScene = true, //controls whether usePhys will run again; toggle when no need to render (i.e. it fell out of view)
+  falling,
   children,
 }) {
 
@@ -107,12 +108,21 @@ export function Body({
     }
     else{
       if(phys.body.moveTween) phys.body.moveTween.stop()
+      console.log('waking', phys.body.name)
       phys.body.wakeUp()
       phys.body.mass = 100
       phys.body.updateMassProperties()
     }
 
   }, [forced])
+
+  useEffect(()=>{
+    if(falling){
+      console.log(phys.body.name, 'falling')
+      phys.body.wakeUp()
+    }
+
+  }, [falling])
 
   return (
       <group ref = {phys.ref} visible = {false}>
@@ -126,11 +136,11 @@ export function Body({
             {shape === 'sphere' && <sphereGeometry attach = 'geometry' args = {shapeParams[i].size} />}
            <meshBasicMaterial 
             attach = 'material' 
-            color = "#ffffff" 
+            color = {isSleep? '#ffffff' : '#ff0000'}
             wireframe = {true}
             visible = {visible}
             transparent
-            opacity = {isSleep? 0.25 : 0.5}
+            opacity = {0.4}
           />
           </mesh>
         })}

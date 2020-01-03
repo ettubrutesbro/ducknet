@@ -53,6 +53,7 @@ function App() {
       <Canvas 
         invalidateFrameloop = {false}
         onPointerMissed = {()=> select(null)}
+        props = {{antialias: false}}
       >
         {/* <fog attach="fog" args={['#ffffff', 55, 85]} /> */}
         <directionalLight args = {[0xffffff, 0.4]} castShadow />
@@ -79,7 +80,7 @@ function App() {
                 onSelect = {setProjectCamera}
                 falling = {selected && selected !== 'scorecard'}
 
-                showBody
+                // showBody
                 // onExitView = {admitToAbyss}
               />
             }
@@ -107,7 +108,7 @@ function App() {
                 selected = {selected==='eclipse'}
                 onSelect = {setProjectCamera}
                 falling = {selected && selected !== 'eclipse'}
-                showBody
+                // showBody
                 // onExitView = {admitToAbyss}
               /> 
             }

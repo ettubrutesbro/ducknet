@@ -531,8 +531,8 @@
 		{
 			"contents": "import React, {useState, useEffect, Suspense} from 'react'\nimport * as CANNON from 'cannon'\n// import {animated, useSpring} from 'react-spring'\nimport TWEEN from '@tweenjs/tween.js'\n\nimport {usePhysics} from './Physics'\nimport {toRads } from '../../utils/3d'\n\nconsole.log(TWEEN)\n\n//box only, subsequent bodies will use parameters to construct compound bodies / other shapes\n\n\nexport const LoadingProject = (props) => {\n  useEffect(()=>{\n    return () => {\n      //insert some callback to let app know one model is done\n      console.log(`${props.name} loaded`)\n    }\n  })\n  return <mesh> </mesh>\n}",
 			"file": "src/components/core/Body.js",
-			"file_size": 5471,
-			"file_write_time": 132207126891138658,
+			"file_size": 5689,
+			"file_write_time": 132222103974052652,
 			"settings":
 			{
 				"buffer_size": 597,
@@ -578,7 +578,7 @@
 			"file": "src/components/projects/Scorecard.js",
 			"settings":
 			{
-				"buffer_size": 3245,
+				"buffer_size": 3286,
 				"encoding": "UTF-8",
 				"line_ending": "Windows"
 			}
@@ -587,7 +587,7 @@
 			"file": "src/components/core/Physics.js",
 			"settings":
 			{
-				"buffer_size": 2790,
+				"buffer_size": 2895,
 				"line_ending": "Windows"
 			}
 		}
@@ -1166,15 +1166,15 @@
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 3245,
+						"buffer_size": 3286,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								1645,
-								1645
+								0,
+								0
 							]
 						],
 						"settings":
@@ -1226,15 +1226,15 @@
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 2790,
+						"buffer_size": 2895,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								1798,
-								1798
+								0,
+								0
 							]
 						],
 						"settings":
