@@ -65,26 +65,31 @@ function Scorecard({
     const d = [null, 'dental', null, 'meals', null, 'madeupshit']
     const [vis, changeVis] = useState(0)
 
-    const animatingCounties = ['mendo','modoc','siskiyou','lassen','inyo','sanbernie','sandiego','sfsm','restofca']
 
-    const [springs, setSprings] = useSprings(9, i => ({
+     const loadedNameOrder = ca.__$.map(c => c.name)
+     console.log(loadedNameOrder)
+
+    const [springs, setSprings] = useSprings(10, i => ({
         position: [0,0,0],
+        color: 0xdedede,
         config: { mass: 20, tension: 500, friction: 200 }
     }))
 
-    useInterval(()=>{
-        changeVis(vis < 1? vis+1 : 0)
-    }, 5500)
-
     const countyPositions = {
-        dental: {modoc: 2.5, mendo: 0, siskiyou: 1.5, inyo:0, lassen: 1, restofca: 0},
+        dental: { siskiyou: 6,
+        },
+        meals: { sandiego: 6 }
     }
+
+    useInterval(()=>{
+        changeVis(vis < 3? vis+1 : 0)
+    }, 5500)
 
     useEffect(()=>{
         setSprings(i => {
             // console.log(i, ca.__$[i].name)
             const cty = ca.__$[i].name
-            return { 
+            return {
                 position: [0,0, d[vis]? countyPositions[d[vis]][cty] || 0 : 0], 
             }
         })
@@ -95,8 +100,8 @@ function Scorecard({
         shapes = {['box', 'box']}
         shapeParams = {[
             // {size: [2.25,6,1], offset: [0,0,0], rotation: [0, 0, toRads(38)]}
-            {size: [1.7,3.75,1.2], offset: [0.7,-.9,0], rotation: [0, 0, toRads(44)]},
-            {size: [1.7,1.5,1.2], offset: [-1,1.8,0]}
+            {size: [1.7,3.75,1.7], offset: [0.7,-.9,0], rotation: [0, 0, toRads(44)]},
+            {size: [1.7,1.5,1.7], offset: [-1,1.8,0]}
         ]}
         forced = {forced}
         visible = {showBody}
@@ -111,10 +116,9 @@ function Scorecard({
             onClick = {onClick}
             // visible = {false}
         >
-           {springs.map(({position}, i)=>{
-            // ca.__$.map((child) => {
-                const child = ca.__$.filter(child => child.name.includes(animatingCounties[i]))[0]
-                // const child = ca.__$.filter(child => child.name)[i]
+            
+           {springs.map(({position,color}, i)=>{
+                const child = ca.__$[i]
                 return(
                     <a.mesh 
                         key = {child.name}
@@ -122,11 +126,11 @@ function Scorecard({
                         position = {position}
                     >
                         <bufferGeometry attach = 'geometry' {...child.geometry} />
-                        <meshBasicMaterial
-                            color = {0xdedede}
+                        <a.meshBasicMaterial
+                            color = {color}
                             attach ='material'
                             map = {texture}
-                            alphaMap = {alpha}
+                            // alphaMap = {alpha}
                             // visible = {child.name === 'restofca'}
                             transparent
                             opacity = {1}
