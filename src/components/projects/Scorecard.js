@@ -22,7 +22,7 @@ function Scorecard({
     falling,
     ...props
 }){
-    const ca = useLoader(GLTFLoader, '/scorecard/2020uvs.gltf', loader => {
+    const ca = useLoader(GLTFLoader, '/scorecard/resplit.gltf', loader => {
       const dracoLoader = new DRACOLoader()
       dracoLoader.setDecoderPath('/draco-gltf/')
       loader.setDRACOLoader(dracoLoader)
@@ -34,11 +34,8 @@ function Scorecard({
         fov: 85,
     })
 
-    const texture = useLoader(THREE.TextureLoader, '/scorecard/scorecardtexture.jpg' )
+    const texture = useLoader(THREE.TextureLoader, '/scorecard/peelshade.png' )
     texture.flipY = false
-    texture.anisotropy = 2048
-    const alpha = useLoader(THREE.TextureLoader, '/scorecard/scorecardalpha.png' )
-    alpha.flipY = false
 
     const [forced, forceTo] = useState(null)
 
@@ -69,7 +66,7 @@ function Scorecard({
      const loadedNameOrder = ca.__$.map(c => c.name)
      console.log(loadedNameOrder)
 
-    const [springs, setSprings] = useSprings(10, i => ({
+    const [springs, setSprings] = useSprings(13, i => ({
         position: [0,0,0],
         color: 0xdedede,
         config: { mass: 20, tension: 500, friction: 200 }
@@ -127,7 +124,7 @@ function Scorecard({
                     >
                         <bufferGeometry attach = 'geometry' {...child.geometry} />
                         <a.meshBasicMaterial
-                            color = {color}
+                            color = {0x74aacf}
                             attach ='material'
                             map = {texture}
                             // alphaMap = {alpha}
