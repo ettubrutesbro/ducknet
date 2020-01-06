@@ -22,6 +22,9 @@ function Scorecard({
     falling,
     ...props
 }){
+
+    const offsetFromPhys = [0.15,0,-0.4]
+
     const ca = useLoader(GLTFLoader, '/scorecard/resplit.gltf', loader => {
       const dracoLoader = new DRACOLoader()
       dracoLoader.setDecoderPath('/draco-gltf/')
@@ -67,14 +70,42 @@ function Scorecard({
      console.log(loadedNameOrder)
 
     const [springs, setSprings] = useSprings(13, i => ({
-        position: [0,0,0],
+        scale: [1,1,1],
         color: '#dedede',
-        config: { mass: 20, tension: 500, friction: 200 }
+        config: { mass: 1, tension: 120, friction: 32 }
     }))
 
-    const countyPositions = {
-        dental: { siskiyou: {z: 3, c: '#ff0000'}, },
-        meals: { sandiego: {z:3, c: '#ff0000'} }
+    const countyVisStates = {
+        dental: { 
+            pseudonorth: {z: 0.8, c: '#81D2B0'},
+            modoc: {z: 0.75},
+            lassen: {z: .925, c: '#54b88e'}, 
+            siskiyou: {c: '#d6f0ee', z: .675},
+            pseudocentral: {z: 0.625, c: '#D6F0EE'},
+            pseudocoast: {z: .84, c: '#54b88e'},
+            sanbernie: {z: 0.5, c: '#D6F0EE'},
+            sandiego: {z: 0.55, c: '#D6F0EE'},
+            sfsm: {z: .975, c: '#3CA77A'},
+            mendo: {z: 1.05, c: '#3CA77A'},
+            inyo: {z: .75},
+            baseZ: 0.7,
+            baseColor: '#97D7C8' 
+        },
+        meals: { 
+            modoc: {c: '#2F8F67', z: 1.15},
+            mendo: {z: 1.02},
+            sanbernie: {z: 1.17},
+            pseudosouth: {z: 1.15},
+            pseudonorth: {c: '#7FCCAC'},
+            pseudocentral: {c: '#257554', z: 1.29},
+            pseudocoast: {c: '#2F8F67', z: 1.2},
+            sandiego: {z: 1, c: '#6FC9A3'},
+            siskiyou: {z: 1.05},
+            inyo: {z: 0.88, c: '#97D7C8'},
+            lassen: {z: 0.95, c: '#97D7C8'},
+            baseZ: 1.1,
+            baseColor: '#54b88e' 
+        }
     }
 
     useInterval(()=>{
@@ -83,14 +114,15 @@ function Scorecard({
 
     useEffect(()=>{
         if(d[vis]){
-            const dv = d[vis]
+            const currentVis = d[vis]
             setSprings(i => {
                 // console.log(i, ca.__$[i].name)
                 const cty = ca.__$[i].name
-                    const cv = countyPositions[dv][cty]
+                    const cv = countyVisStates[currentVis][cty]
                     return {
-                        position: [0,0, cv? cv.z || 0 : 0], 
-                        color: cv? cv.c || '#dedede' : '#dedede'
+                        scale: [1,1, cv? cv.z || countyVisStates[currentVis].baseZ : countyVisStates[currentVis].baseZ], 
+                        color: cv? cv.c || countyVisStates[currentVis].baseColor : countyVisStates[currentVis].baseColor,
+                        delay: 50 * i
                     }
                 
             })
@@ -113,19 +145,19 @@ function Scorecard({
         
         <group 
             scale = {[.075,.075,.075]} 
-            position = {[0.15,0,-0.4]} 
+            position = {offsetFromPhys} 
             // rotation = {[toRads(90),0,0]} 
             onClick = {onClick}
             // visible = {false}
         >
             
-           {springs.map(({position,color}, i)=>{
+           {springs.map(({scale,color}, i)=>{
                 const child = ca.__$[i]
                 return(
                     <a.mesh 
                         key = {child.name}
                         name = {child.name}
-                        position = {position}
+                        scale = {scale}
                     >
                         <bufferGeometry attach = 'geometry' {...child.geometry} />
                         <a.meshBasicMaterial
