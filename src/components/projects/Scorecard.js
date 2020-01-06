@@ -68,14 +68,13 @@ function Scorecard({
 
     const [springs, setSprings] = useSprings(13, i => ({
         position: [0,0,0],
-        color: 0xdedede,
+        color: '#dedede',
         config: { mass: 20, tension: 500, friction: 200 }
     }))
 
     const countyPositions = {
-        dental: { siskiyou: 6,
-        },
-        meals: { sandiego: 6 }
+        dental: { siskiyou: {z: 3, c: '#ff0000'}, },
+        meals: { sandiego: {z:3, c: '#ff0000'} }
     }
 
     useInterval(()=>{
@@ -83,13 +82,19 @@ function Scorecard({
     }, 5500)
 
     useEffect(()=>{
-        setSprings(i => {
-            // console.log(i, ca.__$[i].name)
-            const cty = ca.__$[i].name
-            return {
-                position: [0,0, d[vis]? countyPositions[d[vis]][cty] || 0 : 0], 
-            }
-        })
+        if(d[vis]){
+            const dv = d[vis]
+            setSprings(i => {
+                // console.log(i, ca.__$[i].name)
+                const cty = ca.__$[i].name
+                    const cv = countyPositions[dv][cty]
+                    return {
+                        position: [0,0, cv? cv.z || 0 : 0], 
+                        color: cv? cv.c || '#dedede' : '#dedede'
+                    }
+                
+            })
+        }
     }, [vis])
 
     return( <Body 
@@ -124,7 +129,7 @@ function Scorecard({
                     >
                         <bufferGeometry attach = 'geometry' {...child.geometry} />
                         <a.meshBasicMaterial
-                            color = {0x74aacf}
+                            color = {color}
                             attach ='material'
                             map = {texture}
                             // alphaMap = {alpha}
