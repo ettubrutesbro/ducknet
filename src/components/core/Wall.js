@@ -33,7 +33,7 @@ export function Enclosure({active}){
     left: true, right: true, ground: true, back: true, front: true,
     // showLeft: true, showRight: true, showGround: true, showBack: true, showFront: false,
     showLeft: false, showRight: false, showGround: false, showBack: false, showFront: false,
-    width: 19, height: 12, depth: 4.6, //TODO: vary these attributes depending on screensize
+    width: 19, height: 12, depth: 7, //TODO: vary these attributes depending on screensize
   }) 
 
   return(

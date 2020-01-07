@@ -2,20 +2,27 @@
 children (all the projects)
 so they don't have to be manually repeated 
 
-abyss inclusion conditional render
-selected, falling, 
+TODO: contexts are pretty confusing - do certain things need to be in context from worldfunc?
+should this component have a separate ProjectContext that it passes down for projects only?
 
 */
-import React, {useContext} from 'react'
+import React, {useContext, useState, useEffect} from 'react'
 
 import {WorldFunctions} from '../../App'
 
 function Projects({children}){
 
-    const {select, selected, abyss, setProjectCamera, alone} = useContext(WorldFunctions)
+    const {select, selected, abyss, setProjectCamera} = useContext(WorldFunctions)
 
-    //maybe report # of children back up to App so it knows what do with abyss?
-    //or maybe i actually want to control that here. 
+    const [alone, setAlone] = useState(null) //for telling a project when the others are all in abyss
+    //check if abyss has every project but the selected one
+    useEffect(()=>{
+        if(abyss.length === children.length-1 && selected){ //need a way to get actual # of projects
+          setAlone(selected)
+        }
+        else setAlone(null)
+    }, [abyss, selected])
+
     return(
         <React.Fragment>
         {children.filter(child => !abyss.includes(child.props.name)).map((child)=>{

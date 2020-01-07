@@ -24,18 +24,17 @@ export function Seseme({
   const [forced, forceTo] = useState(null)
 
 
-  const pedestal = useLoader(GLTFLoader, '/seseme.gltf', loader => {
+  const pedestal = useLoader(GLTFLoader, '/seseme/pedestal.gltf', loader => {
     const dracoLoader = new DRACOLoader()
     dracoLoader.setDecoderPath('/draco-gltf/')
     loader.setDRACOLoader(dracoLoader)
   })
-  const pillar = useLoader(GLTFLoader, '/pillar-d.gltf', loader => {
+  const pillar = useLoader(GLTFLoader, '/seseme/pillar.gltf', loader => {
     const dracoLoader = new DRACOLoader()
     dracoLoader.setDecoderPath('/draco-gltf/')
     loader.setDRACOLoader(dracoLoader)
   })
 
-   const texture = useLoader(THREE.TextureLoader, '/metal4.jpg' )
   // const group = useRef()
 
   const [plrHts, modPlrHt] = useState({
@@ -73,32 +72,32 @@ export function Seseme({
       ]} 
       forced = {forced}
       {...props}
-      visible  = {false}
+      visible  = {true}
     >
       <group name = 'seseme' position = {[0.3,1.8,0.2]} scale = {[.1,.1,.1]}>
         <group name = 'main' onClick = {onClick}>
         <mesh name="pedestal">
           <bufferGeometry attach="geometry" {...pedestal.__$[1].geometry} />
-          <Material matcap = {texture} attach="material" />
+          <meshLambertMaterial attach = 'material' />
         </mesh>
         <mesh name = "pillar" position = {[1,plrHts.a,2.1]}>
           <bufferGeometry attach = 'geometry' {...pillar.__$[1].geometry} />
-          <Material />
+          <meshLambertMaterial attach = 'material' />
         </mesh>
        
         <mesh name = "pillar2" position = {[1,plrHts.b,-6.25]} rotation = {[0,toRads(90),0]} >
           <bufferGeometry attach = 'geometry' {...pillar.__$[1].geometry} />
-          <Material />
+          <meshLambertMaterial attach = 'material' />
         </mesh>
         
         <mesh name = "pillar3" position = {[-7.1,plrHts.c,-6.25]} rotation = {[0,toRads(180),0]} >
           <bufferGeometry attach = 'geometry' {...pillar.__$[1].geometry} />
-          <Material />
+          <meshLambertMaterial attach = 'material' />
         </mesh>
         
         <mesh name = "pillar4" position = {[-7.1,plrHts.d,2.1]} rotation = {[0,toRads(-90),0]} >
           <bufferGeometry attach = 'geometry' {...pillar.__$[1].geometry} />
-          <Material />
+          <meshLambertMaterial attach = 'material' />
         </mesh>
         </group>
       </group>
@@ -108,7 +107,7 @@ export function Seseme({
 
 function Material(){
   return(
-    <meshPhongMaterial 
+    <meshNormalMaterial 
       attach = 'material' 
       color = {0x4f473d}
       specular = {0x84836e}

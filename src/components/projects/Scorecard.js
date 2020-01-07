@@ -149,7 +149,7 @@ function Scorecard({
         if(
             selected 
             && doneForcing 
-            // && alone //with one other project its awk
+            && alone //with one other project its awk
         ){
             setLeft({opacity: 1, position: [-2, -1, 0], scale: [0.1,0.1,0.1] })
         }

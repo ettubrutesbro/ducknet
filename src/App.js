@@ -39,8 +39,7 @@ function App() {
   const [projectCamera, setProjectCamera] = useState(null)
   const [selected, select] = useState(null)
   const [abyss, admitToAbyss] = useState([]) //for removing projects as they fall out of view 
-  const [alone, setAlone] = useState(null) //for telling a project when the others are all in abyss
-
+  
   useEffect(()=>{
     if(isInitialMount.current){
       isInitialMount.current = false
@@ -51,13 +50,7 @@ function App() {
     }
   }, [selected])
 
-  //check if abyss has every project but the selected one
-  useEffect(()=>{
-    if(abyss.length === 1 && selected){ //need a way to get actual # of projects
-      setAlone(selected)
-    }
-    else setAlone(null)
-  }, [abyss, selected])
+
 
   return (
     <animated.div className = 'full'>
@@ -82,7 +75,6 @@ function App() {
               setProjectCamera: setProjectCamera,
               abyss: abyss,
               admitToAbyss: admitToAbyss,
-              alone: alone,
             }}>
             <Projects>
               <Scorecard
@@ -91,26 +83,19 @@ function App() {
                 position = {[-1,35,0]}
                 rotation = {[0,10,0]}
               />
-            {/*
+            
               <Seseme 
+                name = 'seseme'
+                key = 'seseme'
                 position = {[-1.5,18,0]} 
                 rotation = {[0,35,0]} 
-                //onClick, selected and onSelect should be distributed
-                //automatically via some kind of React.children map..? or <Project />
-
-                onClick = {()=>select('seseme')}
-                selected = {selected==='seseme'}
-                onSelect = {setProjectCamera}
-                falling = {selected && selected !== 'seseme'}
-                showBody
               /> 
-            */}
+            
               <Eclipse 
                 name = 'eclipse'
                 key = 'eclipse'
                 position = {[2,5,0]} 
-                rotation = {[0,0,0]} 
-                onClick = {()=>select('eclipse')}
+                rotation = {[0,0,0]}
               /> 
             
             </Projects>
