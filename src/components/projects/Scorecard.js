@@ -62,7 +62,7 @@ function Scorecard({
     //     changeVis(vis < 5? vis+1 : 0)
     // }, 3500)
 
-    const d = [null, 'dental', null, 'meals', null, 'madeupshit']
+    const d = ['dental', 'breastfeeding', 'meals', null, 'madeupshit']
     const [vis, changeVis] = useState(0)
 
 
@@ -75,41 +75,56 @@ function Scorecard({
         config: { mass: 1, tension: 120, friction: 32 }
     }))
 
-    const countyVisStates = {
+    const pcts = {
         dental: { 
-            pseudonorth: {z: 0.8, c: '#81D2B0'},
-            modoc: {z: 0.75},
-            lassen: {z: .925, c: '#54b88e'}, 
-            siskiyou: {c: '#d6f0ee', z: .675},
-            pseudocentral: {z: 0.625, c: '#D6F0EE'},
-            pseudocoast: {z: .84, c: '#54b88e'},
-            sanbernie: {z: 0.5, c: '#D6F0EE'},
-            sandiego: {z: 0.55, c: '#D6F0EE'},
-            sfsm: {z: .975, c: '#3CA77A'},
-            mendo: {z: 1.05, c: '#3CA77A'},
-            inyo: {z: .75},
+            modoc: 0.75,
+            pseudonorth: 0.8,
+            lassen: .925, 
+            siskiyou: .675,
+            pseudocentral: 0.625,
+            pseudocoast: .84,
+            sanbernie: 0.5,
+            sandiego: 0.55,
+            sfsm: .975,
+            mendo: 1.05,
+            inyo: .75,
             baseZ: 0.7,
-            baseColor: '#97D7C8' 
+            colorRange: chroma.scale(['#d6f0ee', '#97D7C8',  '#3CA77A']).mode('lab').domain([.55, .7, 1.05])
+        },
+        breastfeeding: {
+            //this range is too big, adjust it so that the peaks aren't so much larger (80%!)
+            modoc: 1.8,
+            siskiyou: 1.7, 
+            lassen: 1.6,
+            sandiego: 1.66,
+            inyo: 1.8,
+            pseudonorth: 1.25,
+            pseudocentral: 1.3,
+            pseudocoast: 1,
+            pseudosouth: 1.1,
+            sfsm: 1.7,
+            mendo: 1.6, 
+            baseZ: 1.325,
+            colorRange:chroma.scale(['#94B6D7', '#4998C5', '#056FAF', '#034E7A']).mode('lab').domain([1.1, 1.4, 1.6, 1.8]) 
         },
         meals: { 
-            modoc: {c: '#2F8F67', z: 1.15},
-            mendo: {z: 1.02},
-            sanbernie: {z: 1.17},
-            pseudosouth: {z: 1.15},
-            pseudonorth: {c: '#7FCCAC'},
-            pseudocentral: {c: '#257554', z: 1.29},
-            pseudocoast: {c: '#2F8F67', z: 1.2},
-            sandiego: {z: 1, c: '#6FC9A3'},
-            siskiyou: {z: 1.05},
-            inyo: {z: 0.88, c: '#97D7C8'},
-            lassen: {z: 0.95, c: '#97D7C8'},
-            baseZ: 1.1,
-            baseColor: '#54b88e' 
-        }
+            modoc: 1.15,
+            mendo: 1,
+            sanbernie: 1.17,
+            pseudosouth: 1.13,
+            pseudocentral: 1.35,
+            pseudocoast: 1.22,
+            sandiego: 1,
+            siskiyou: 1.05,
+            inyo: 0.88,
+            lassen: 0.95,
+            baseZ: 1.08,
+            colorRange: chroma.scale(['#87D0BC', '#54b88e', '#0E855A']).mode('lab').domain([.88, 1.1, 1.35])
+        },
     }
 
     useInterval(()=>{
-        changeVis(vis < 3? vis+1 : 0)
+        changeVis(vis < 2? vis+1 : 0)
     }, 5500)
 
     useEffect(()=>{
@@ -118,11 +133,11 @@ function Scorecard({
             setSprings(i => {
                 // console.log(i, ca.__$[i].name)
                 const cty = ca.__$[i].name
-                    const cv = countyVisStates[currentVis][cty]
+                    const cv = pcts[currentVis][cty]
                     return {
-                        scale: [1,1, cv? cv.z || countyVisStates[currentVis].baseZ : countyVisStates[currentVis].baseZ], 
-                        color: cv? cv.c || countyVisStates[currentVis].baseColor : countyVisStates[currentVis].baseColor,
-                        delay: 50 * i
+                        scale: [1,1, cv || pcts[currentVis].baseZ], 
+                        color: pcts[currentVis].colorRange(cv || pcts[currentVis].baseZ).hex(),
+                        delay: 25 * i
                     }
                 
             })
