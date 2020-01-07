@@ -122,7 +122,7 @@ export function Body({
 
   useEffect(()=>{
     if(falling){
-      console.log(phys.body.name, 'falling')
+      // console.log(phys.body.name, 'falling')
       phys.body.wakeUp()
     }
 

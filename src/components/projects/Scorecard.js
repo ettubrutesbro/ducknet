@@ -20,6 +20,7 @@ function Scorecard({
     onSelect,
     showBody = false,
     falling,
+    alone,
     ...props
 }){
 
@@ -145,13 +146,17 @@ function Scorecard({
                 
             })
         }
-        if(selected && doneForcing){
+        if(
+            selected 
+            && doneForcing 
+            // && alone //with one other project its awk
+        ){
             setLeft({opacity: 1, position: [-2, -1, 0], scale: [0.1,0.1,0.1] })
         }
         else{
             setLeft({opacity: 0, position: [0,0,0], scale: [0.01, 0.01,0.01] })
         }
-    }, [vis, selected, doneForcing])
+    }, [vis, selected, doneForcing, alone])
 
 
     return( <Body 

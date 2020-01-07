@@ -23,6 +23,8 @@ import Scorecard from './components/projects/Scorecard'
 import {Debug, Range, TinkerGroup} from './components/Debug'
 import Camera from './components/core/Camera'
 
+import Projects from './components/core/Projects'
+
 import {toRads, toDegs} from './utils/3d'
 
 
@@ -36,7 +38,8 @@ function App() {
 
   const [projectCamera, setProjectCamera] = useState(null)
   const [selected, select] = useState(null)
-  const [abyss, admitToAbyss] = useState([])
+  const [abyss, admitToAbyss] = useState([]) //for removing projects as they fall out of view 
+  const [alone, setAlone] = useState(null) //for telling a project when the others are all in abyss
 
   useEffect(()=>{
     if(isInitialMount.current){
@@ -48,6 +51,14 @@ function App() {
     }
   }, [selected])
 
+  //check if abyss has every project but the selected one
+  useEffect(()=>{
+    if(abyss.length === 1 && selected){ //need a way to get actual # of projects
+      setAlone(selected)
+    }
+    else setAlone(null)
+  }, [abyss, selected])
+
   return (
     <animated.div className = 'full'>
       <Canvas 
@@ -55,8 +66,9 @@ function App() {
         onPointerMissed = {()=> select(null)}
         props = {{antialias: false}}
       >
-        {/* <fog attach="fog" args={['#ffffff', 55, 85]} /> */}
+        {/* <fog attach="fog" args={['#ffffff', 55, 85]} /> 
         <directionalLight args = {[0xffffff, 0.4]} castShadow />
+        */}
         <PhysicsProvider>
           <Camera 
             projectCamera = {projectCamera}
@@ -65,26 +77,21 @@ function App() {
             active = {!selected} 
           /> 
             <WorldFunctions.Provider value = {{
+              select: select,
               selected: selected,
               setProjectCamera: setProjectCamera,
               abyss: abyss,
-              admitToAbyss: admitToAbyss
+              admitToAbyss: admitToAbyss,
+              alone: alone,
             }}>
-            {!abyss.includes('scorecard') && 
+            <Projects>
               <Scorecard
+                name = 'scorecard'
+                key = 'scorecard'
                 position = {[-1,35,0]}
                 rotation = {[0,10,0]}
-
-                onClick = {() => select('scorecard')}
-                selected = {selected === 'scorecard'}
-                onSelect = {setProjectCamera}
-                falling = {selected && selected !== 'scorecard'}
-
-                // showBody
-                // onExitView = {admitToAbyss}
               />
-            }
-            {/*!abyss.includes('seseme') &&
+            {/*
               <Seseme 
                 position = {[-1.5,18,0]} 
                 rotation = {[0,35,0]} 
@@ -96,22 +103,17 @@ function App() {
                 onSelect = {setProjectCamera}
                 falling = {selected && selected !== 'seseme'}
                 showBody
-                // onExitView = {admitToAbyss}
               /> 
             */}
-            {!abyss.includes('eclipse') &&
               <Eclipse 
+                name = 'eclipse'
+                key = 'eclipse'
                 position = {[2,5,0]} 
                 rotation = {[0,0,0]} 
                 onClick = {()=>select('eclipse')}
-
-                selected = {selected==='eclipse'}
-                onSelect = {setProjectCamera}
-                falling = {selected && selected !== 'eclipse'}
-                // showBody
-                // onExitView = {admitToAbyss}
               /> 
-            }
+            
+            </Projects>
             </WorldFunctions.Provider>
             
 

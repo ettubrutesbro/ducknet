@@ -55,7 +55,7 @@ export function usePhysics({ ...props}, fn, deps = [], name){
   
   useRender(()=>{    
     if(ref.current){ 
-        if(body.position.y< -50 && !worldFuncContext.abyss.includes(name)){
+        if(body.position.y< -20 && !worldFuncContext.abyss.includes(name)){
           console.log('admitting', name, 'to abyss')
           worldFuncContext.admitToAbyss([...worldFuncContext.abyss, name])
           if(!worldFuncContext.selected){
@@ -76,11 +76,20 @@ export function usePhysics({ ...props}, fn, deps = [], name){
             body.onWake()
           }
         }
-        //referenced threejs object position set to corresponding cannon phys object
+        //referenced threejs object position set to match corresponding cannon phys object
         ref.current.position.copy(body.position)
         ref.current.quaternion.copy(body.quaternion)
+
         if(firstRun){
-          console.log('first run - setting visibility after phys position coppied')
+          /*
+          this prevents a Flash of Unpositioned Model, 
+          as three renders one frame of a just-mounted model 
+          before the position syncs with the physics body
+          unfortunately it also runs for static bodies right now - 
+          some kind of booleans could be used, but even dynamic bodies 
+          toggle between dynamic / static depending on selection state etc. 
+          */
+          // console.log('first run', body.name)
           ref.current.visible = true
           firstRun = false
         }
