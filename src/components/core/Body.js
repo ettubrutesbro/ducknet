@@ -15,6 +15,7 @@ export function Body({
   shapeParams = [{size: [2,2,2], offset: [0,0,0]}], //matching objects specify size and offset [add rot later] for shapes
   position=[0,0,0], rotation=[0,0,0], visible = true, 
   forced={position: null, rotation: null},
+  onForceFinish = (v) => {console.log('fuckyou',v)},
   inScene = true, //controls whether usePhys will run again; toggle when no need to render (i.e. it fell out of view)
   falling,
   children,
@@ -103,6 +104,7 @@ export function Body({
         .onComplete(()=>{
           console.log('body done moving')
           phys.body.allowSleep = true
+          onForceFinish(true)
         })
         .start()
     }
@@ -112,6 +114,8 @@ export function Body({
       phys.body.wakeUp()
       phys.body.mass = 100
       phys.body.updateMassProperties()
+
+      onForceFinish(false)
     }
 
   }, [forced])

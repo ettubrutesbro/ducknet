@@ -1,7 +1,7 @@
 import React, {Suspense, useEffect, useState} from 'react'
 import {useLoader} from 'react-three-fiber'
 import * as THREE from 'three'
-import {a, useSprings} from 'react-spring/three'
+import {a, useSprings, useSpring} from 'react-spring/three'
 import useInterval from 'use-interval'
 import chroma from 'chroma-js'
 
@@ -15,7 +15,7 @@ import {toRads} from '../../utils/3d'
 
 
 function Scorecard({
-    onClick = () => console.log('clicked eclipse'), 
+    onClick = () => console.log('clicked project'), 
     selected = false,
     onSelect,
     showBody = false,
@@ -25,15 +25,16 @@ function Scorecard({
 
     const offsetFromPhys = [0.15,0,-0.4]
 
+    const dracoLoader = new DRACOLoader()
+    dracoLoader.setDecoderPath('/draco-gltf/')
     const ca = useLoader(GLTFLoader, '/scorecard/resplit.gltf', loader => {
-      const dracoLoader = new DRACOLoader()
-      dracoLoader.setDecoderPath('/draco-gltf/')
       loader.setDRACOLoader(dracoLoader)
     })
+    const left = useLoader(OBJLoader, '/scorecard/lefttest3.obj')
 
     const [projectCamera, changeView] = useState({
         position: [4, 7.5, 8],
-        rotation: [toRads(-8), toRads(0), toRads(0)],
+        rotation: [toRads(0), toRads(0), toRads(0)],
         fov: 85,
     })
 
@@ -45,8 +46,8 @@ function Scorecard({
     useEffect(()=>{
         if(selected){
             forceTo({
-                position: [-1.25,6,0],
-                rotation: [0,78,0]
+                position: [1,6,0],
+                rotation: [0,60,0]
             })
             onSelect(projectCamera)
         }
@@ -58,23 +59,17 @@ function Scorecard({
         }
     }, [selected])
 
-    // useInterval(()=>{
-    //     changeVis(vis < 5? vis+1 : 0)
-    // }, 3500)
-
-    const d = ['dental', 'breastfeeding', 'meals', null, 'madeupshit']
+    const d = ['dental', 'breastfeeding', 'meals', ]
     const [vis, changeVis] = useState(0)
 
-
-     const loadedNameOrder = ca.__$.map(c => c.name)
-     console.log(loadedNameOrder)
+    const loadedNameOrder = ca.__$.map(c => c.name)
 
     const [springs, setSprings] = useSprings(13, i => ({
         scale: [1,1,1],
         color: '#dedede',
         config: { mass: 1, tension: 120, friction: 32 }
     }))
-
+    const greyRange = chroma.scale(['#ededed', '#dedede', '#c1c1c1']).domain([0, 1.5])
     const pcts = {
         dental: { 
             modoc: 0.75,
@@ -123,26 +118,41 @@ function Scorecard({
         },
     }
 
-    useInterval(()=>{
-        changeVis(vis < 2? vis+1 : 0)
-    }, 5500)
+    const [leftstuff, setLeft, stop] = useSpring(()=>({
+        opacity: 0, scale: [0.1,0.1,0.1], position: [0,0,0]
+    }))
+
+    //tracks whether forced motion on a body is done (the body component will use the callback when its own tween finishes)
+    const [doneForcing, changeDoneForcing] = useState(false)
 
     useEffect(()=>{
+        //animations herein
         if(d[vis]){
             const currentVis = d[vis]
             setSprings(i => {
-                // console.log(i, ca.__$[i].name)
                 const cty = ca.__$[i].name
                     const cv = pcts[currentVis][cty]
                     return {
                         scale: [1,1, cv || pcts[currentVis].baseZ], 
-                        color: pcts[currentVis].colorRange(cv || pcts[currentVis].baseZ).hex(),
-                        delay: 25 * i
+                        color: selected? pcts[currentVis].colorRange(cv || pcts[currentVis].baseZ).hex() 
+                            : greyRange(cv || pcts[currentVis].baseZ).hex(),
+                        delay: 25 * i,
+                        onRest: () => {if(i===12){
+                            //janky way to tell when all counties are done if i need it
+                            changeVis(vis < 2? vis+1 : 0)
+                        }}
                     }
                 
             })
         }
-    }, [vis])
+        if(selected && doneForcing){
+            setLeft({opacity: 1, position: [-2, -1, 0], scale: [0.1,0.1,0.1] })
+        }
+        else{
+            setLeft({opacity: 0, position: [0,0,0], scale: [0.01, 0.01,0.01] })
+        }
+    }, [vis, selected, doneForcing])
+
 
     return( <Body 
         name = 'scorecard'
@@ -155,6 +165,9 @@ function Scorecard({
         forced = {forced}
         visible = {showBody}
         falling = {falling}
+
+        onForceFinish = {changeDoneForcing}
+
         {...props}
     >
         
@@ -179,11 +192,6 @@ function Scorecard({
                             color = {color}
                             attach ='material'
                             map = {texture}
-                            // alphaMap = {alpha}
-                            // visible = {child.name === 'restofca'}
-                            transparent
-                            opacity = {1}
-                            needsUpdate
                         />
 
 
@@ -193,6 +201,28 @@ function Scorecard({
 
  
         </group>
+
+        <a.group 
+            scale = {leftstuff.scale}
+            // position = {leftstuff.position}
+            position = {[-3, 2, 0]}
+        >
+            {/* left data thing... */}
+            {left.children.map((child) => {
+                return <mesh key = {child.name}>
+                    <bufferGeometry attach = 'geometry' {...child.geometry} />
+                    <a.meshBasicMaterial 
+                        attach = 'material' 
+                        color = {0xff0000}
+                        opacity = {leftstuff.opacity}
+                        transparent
+                        needsUpdate
+                    />
+                </mesh>
+            })}
+
+        </a.group>
+
     
     </Body>)
 }
