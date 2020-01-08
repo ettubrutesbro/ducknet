@@ -14,13 +14,13 @@ function Projects({children}){
 
     const {select, selected, abyss, setProjectCamera} = useContext(WorldFunctions)
 
-    const [alone, setAlone] = useState(null) //for telling a project when the others are all in abyss
+    const [alone, projectIsAlone] = useState(null) //for telling a project when the others are all in abyss
     //check if abyss has every project but the selected one
     useEffect(()=>{
         if(abyss.length === children.length-1 && selected){ //need a way to get actual # of projects
-          setAlone(selected)
+          projectIsAlone(selected)
         }
-        else setAlone(null)
+        else projectIsAlone(null)
     }, [abyss, selected])
 
     return(

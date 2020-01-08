@@ -47,8 +47,8 @@ function Scorecard({
     useEffect(()=>{
         if(selected){
             forceTo({
-                position: [1,6,0],
-                rotation: [0,60,0]
+                position: [1,7,0],
+                rotation: [0,65,0]
             })
             onSelect(projectCamera)
         }
@@ -151,7 +151,7 @@ function Scorecard({
             && doneForcing 
             && alone //with one other project its awk
         ){
-            setLeft({opacity: 1, position: [-2, -1, 0], scale: [0.1,0.1,0.1] })
+            setLeft({opacity: 1, position: [-3.35, 1.75, 0.1], scale: [0.075,0.075,0.075] })
         }
         else{
             setLeft({opacity: 0, position: [0,0,0], scale: [0.01, 0.01,0.01] })
@@ -209,16 +209,15 @@ function Scorecard({
 
         <a.group 
             scale = {leftstuff.scale}
-            // position = {leftstuff.position}
-            position = {[-3, 2, 0]}
+            position = {leftstuff.position}
         >
             {/* left data thing... */}
             {left.children.map((child) => {
                 return <mesh key = {child.name}>
                     <bufferGeometry attach = 'geometry' {...child.geometry} />
-                    <a.meshBasicMaterial 
+                    <a.meshNormalMaterial 
                         attach = 'material' 
-                        color = {0xff0000}
+                        color = {0xdedede}
                         opacity = {leftstuff.opacity}
                         transparent
                         needsUpdate
