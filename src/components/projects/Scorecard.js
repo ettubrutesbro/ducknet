@@ -70,7 +70,7 @@ function Scorecard({
 
     const loadedNameOrder = ca.__$.map(c => c.name)
 
-    const [springs, setSprings] = useSprings(13, i => ({
+    const [springs, setSprings, stopCounties] = useSprings(13, i => ({
         scale: [1,1,1],
         color: '#dedede',
         config: { mass: 1, tension: 120, friction: 32 }

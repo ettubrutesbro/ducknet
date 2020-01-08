@@ -3,6 +3,7 @@ import {useThree, useFrame, useRender, extend} from 'react-three-fiber'
 import {OrbitControls} from 'three/examples/jsm/controls/OrbitControls'
 import TWEEN from '@tweenjs/tween.js'
 
+import {a, useSpring} from 'react-spring/three'
 import {toRads, xyzArray} from '../../utils/3d'
 
 //orbit controls for debug only
@@ -31,7 +32,12 @@ function Camera({
 }) {
   const ref = useRef()
   //set attributes according to projects, or back to default
-  const [camdata, setCam] = useState(defaults)
+  const [camdata, setCam] = useSpring(()=>({
+    position: defaults.position,
+    rotation: defaults.rotation,
+    fov: defaults.fov,
+    // config: { mass: 1, tension: 120, friction: 32 }
+  }))
   // Make the camera known to the system
   const { setDefaultCamera } = useThree()
   useEffect(() => {
@@ -40,23 +46,14 @@ function Camera({
   }, [isDefault])
   useEffect(()=>{
     console.log('moving camera')
-    const current = xyzArray(camdata)
     const target = xyzArray(projectCamera || defaults)
+    setCam({
+      position: target.position,
+      rotation: target.rotation,
+      fov: target.fov
+    })
 
-    const camTween = new TWEEN.Tween(current)
-      .to(target, 550)
-      .easing(current.fov < target.fov? TWEEN.Easing.Quintic.Out : TWEEN.Easing.Quadratic.InOut)
-      .onUpdate(function(){
-        setCam({
-          position: [current.x, current.y, current.z],
-          rotation: [current.rx, current.ry, current.rz],
-          fov: current.fov
-        })
-      })
-      .onComplete(()=>{
-        console.log('camera done')
-      })
-      .start()
+
     
   }, [projectCamera])
   // Updates per-frame might not help? paul put in updateMatrixWorld
@@ -69,7 +66,7 @@ function Camera({
   // console.log(camdata)
 
   return <React.Fragment> 
-    <perspectiveCamera 
+    <a.perspectiveCamera 
       ref={ref} 
       position = {camdata.position}
       rotation = {camdata.rotation}
