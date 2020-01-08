@@ -39,7 +39,8 @@ function App() {
   const [projectCamera, setProjectCamera] = useState(null)
   const [selected, select] = useState(null)
   const [abyss, admitToAbyss] = useState([]) //for removing projects as they fall out of view 
-  
+  const [camStatus, setCamStatus] = useState(null)
+
   useEffect(()=>{
     if(isInitialMount.current){
       isInitialMount.current = false
@@ -50,7 +51,9 @@ function App() {
     }
   }, [selected])
 
-
+  useEffect(()=>{
+    console.log('cam status changed: ', camStatus)
+  }, [camStatus])
 
   return (
     <animated.div className = 'full'>
@@ -63,19 +66,22 @@ function App() {
         <directionalLight args = {[0xffffff, 0.4]} castShadow />
         */}
         <PhysicsProvider>
-          <Camera 
-            projectCamera = {projectCamera}
-          />
-          <Enclosure
-            active = {!selected} 
-          /> 
+          
             <WorldFunctions.Provider value = {{
               select: select,
               selected: selected,
               setProjectCamera: setProjectCamera,
+              camStatus: camStatus,
+              setCamStatus: setCamStatus,
               abyss: abyss,
               admitToAbyss: admitToAbyss,
             }}>
+            <Camera 
+              projectCamera = {projectCamera}
+            />
+            <Enclosure
+              active = {!selected} 
+            /> 
             <Projects>
               <Scorecard
                 name = 'scorecard'

@@ -1,8 +1,9 @@
-import React, {Suspense, useEffect, useState} from 'react'
+import React, {Suspense, useEffect, useState, useContext} from 'react'
 import {useLoader} from 'react-three-fiber'
 import * as THREE from 'three'
 import {a, useSprings, useSpring} from 'react-spring/three'
 import useInterval from 'use-interval'
+import useTimeout from 'use-timeout'
 import chroma from 'chroma-js'
 
 import {Body} from '../core/Body'
@@ -12,7 +13,33 @@ import { DRACOLoader } from 'three/examples/jsm/loaders/DRACOLoader'
 
 import {toRads} from '../../utils/3d'
 
+import {WorldFunctions} from '../../App'
 
+const camSprings = [
+    {
+        name: 'sc start',
+        position: [1, 7.5, 8],
+        rotation: [toRads(-0), toRads(0), toRads(0)],
+        fov: 85,
+    },
+    {
+        name: 'dolly1',
+        position: [1.125, 7.5, 7.4],
+        // position: [1.75, 7.5, 5.75],
+        rotation: [0,toRads(3),0],
+        // rotation: [0,toRads(12),0],
+        fov: 85,
+        config: {mass: 1, tension: 10, friction: 100, duration: 3500},
+
+    },
+    {
+        name: 'pos2closeup',
+        position: [3, 9.25, 0],
+        rotation: [toRads(0), toRads(50), toRads(90)],
+        fov: 85
+        //set CA in a 90 degree 
+    }
+]
 
 function Scorecard({
     onClick = () => console.log('clicked project'), 
@@ -36,26 +63,22 @@ function Scorecard({
     const raceui = useLoader(OBJLoader, '/scorecard/raceui.obj')
     const demoui = useLoader(OBJLoader, '/scorecard/demoui.obj')
 
-    const [projectCamera, changeView] = useState({
-        position: [1, 7.5, 8],
-        rotation: [toRads(-0), toRads(0), toRads(0)],
-        fov: 85,
-    })
+    const [projectCamera, setCamDestination] = useState(camSprings[0])
 
     const texture = useLoader(THREE.TextureLoader, '/scorecard/peelshade.png' )
     texture.flipY = false
 
     const [forced, forceTo] = useState(null)
 
+    const {camStatus} = useContext(WorldFunctions)
+
     useEffect(()=>{
         if(selected){
             forceTo({
-                // position: [4,7,0],
                 position: [0,7,0],
-                // rotation: [0,0,0]
                 rotation: [0,50,0]
             })
-            onSelect(projectCamera)
+            setCamDestination(camSprings[0])
         }
         else{
             console.log('unpicked sc')
@@ -65,12 +88,27 @@ function Scorecard({
         }
     }, [selected])
 
-    const d = ['dental', 'breastfeeding', 'meals', ]
+    useEffect(()=>{
+        console.log(camStatus)
+        if(camStatus === 'sc start'){
+            console.log('changing view and submitting new shit ')
+            setCamDestination(camSprings[1])
+            
+        }
+        if(camStatus === 'dolly1'){
+            setCamDestination(camSprings[2])
+            //this is bad hopefully it doesnt come to this
+        }
+    }, [camStatus, selected])
+
+    useEffect(()=>{if(selected) onSelect(projectCamera)}, [selected, projectCamera])
+
+    const d = ['dental', 'breastfeeding', 'meals']
     const [vis, changeVis] = useState(0)
 
     const loadedNameOrder = ca.__$.map(c => c.name)
 
-    const [springs, setSprings, stopCounties] = useSprings(13, i => ({
+    const [springs, setSprings] = useSprings(13, i => ({
         scale: [1,1,1],
         color: '#dedede',
         config: { mass: 1, tension: 120, friction: 32 }
@@ -154,7 +192,7 @@ function Scorecard({
         if(
             selected 
             && doneForcing 
-            && alone //with one other project its awk
+            // && alone //with one other project its awk
         ){
             setCountyUIAnim({opacity: 1, position: [-50, 35, 0.1], scale: [0.125,0.125,0.125] })
         }
