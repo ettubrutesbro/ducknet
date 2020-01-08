@@ -32,11 +32,13 @@ function Scorecard({
 
       loader.setDRACOLoader(dracoLoader)
     })
-    const left = useLoader(OBJLoader, '/scorecard/lefttest3.obj')
+    const countyui = useLoader(OBJLoader, '/scorecard/countyui.obj')
+    const raceui = useLoader(OBJLoader, '/scorecard/raceui.obj')
+    const demoui = useLoader(OBJLoader, '/scorecard/demoui.obj')
 
     const [projectCamera, changeView] = useState({
-        position: [4, 7.5, 8],
-        rotation: [toRads(0), toRads(0), toRads(0)],
+        position: [1, 7.5, 8],
+        rotation: [toRads(-0), toRads(0), toRads(0)],
         fov: 85,
     })
 
@@ -48,8 +50,10 @@ function Scorecard({
     useEffect(()=>{
         if(selected){
             forceTo({
-                position: [1,7,0],
-                rotation: [0,65,0]
+                // position: [4,7,0],
+                position: [0,7,0],
+                // rotation: [0,0,0]
+                rotation: [0,50,0]
             })
             onSelect(projectCamera)
         }
@@ -120,7 +124,7 @@ function Scorecard({
         },
     }
 
-    const [leftstuff, setLeft, stop] = useSpring(()=>({
+    const [countyUIanim, setCountyUIAnim, stop] = useSpring(()=>({
         opacity: 0, scale: [0.1,0.1,0.1], position: [0,0,0]
     }))
 
@@ -152,10 +156,10 @@ function Scorecard({
             && doneForcing 
             && alone //with one other project its awk
         ){
-            setLeft({opacity: 1, position: [-3.35, 1.75, 0.1], scale: [0.075,0.075,0.075] })
+            setCountyUIAnim({opacity: 1, position: [-50, 35, 0.1], scale: [0.125,0.125,0.125] })
         }
         else{
-            setLeft({opacity: 0, position: [0,0,0], scale: [0.01, 0.01,0.01] })
+            setCountyUIAnim({opacity: 0, position: [0,0,0], scale: [0.01, 0.01,0.01] })
         }
     }, [vis, selected, doneForcing, alone])
 
@@ -205,21 +209,18 @@ function Scorecard({
                 )           
             })}
 
- 
-        </group>
-
-        <a.group 
-            scale = {leftstuff.scale}
-            position = {leftstuff.position}
+       <a.group 
+            scale = {countyUIanim.scale}
+            position = {countyUIanim.position}
         >
             {/* left data thing... */}
-            {left.children.map((child) => {
+            {countyui.children.map((child) => {
                 return <mesh key = {child.name}>
                     <bufferGeometry attach = 'geometry' {...child.geometry} />
-                    <a.meshNormalMaterial 
+                    <a.meshBasicMaterial 
                         attach = 'material' 
                         color = {0xdedede}
-                        opacity = {leftstuff.opacity}
+                        opacity = {countyUIanim.opacity}
                         transparent
                         needsUpdate
                     />
@@ -227,6 +228,48 @@ function Scorecard({
             })}
 
         </a.group>
+       <a.group 
+            scale = {countyUIanim.scale}
+            // scale = {}
+            position = {countyUIanim.position}
+        >
+            {raceui.children.map((child) => {
+                return <mesh key = {child.name}>
+                    <bufferGeometry attach = 'geometry' {...child.geometry} />
+                    <a.meshBasicMaterial 
+                        attach = 'material' 
+                        color = {0xdedede}
+                        // opacity = {countyUIanim.opacity}
+                        transparent
+                        needsUpdate
+                    />
+                </mesh>
+            })}
+
+        </a.group>
+       <a.group 
+            scale = {countyUIanim.scale}
+            // scale = {}
+            position = {countyUIanim.position}
+        >
+            {demoui.children.map((child) => {
+                return <mesh key = {child.name}>
+                    <bufferGeometry attach = 'geometry' {...child.geometry} />
+                    <a.meshBasicMaterial 
+                        attach = 'material' 
+                        color = {0xdedede}
+                        // opacity = {countyUIanim.opacity}
+                        transparent
+                        needsUpdate
+                    />
+                </mesh>
+            })}
+
+        </a.group>
+ 
+        </group>
+
+
 
     
     </Body>)
