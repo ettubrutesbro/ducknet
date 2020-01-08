@@ -3,7 +3,6 @@ import * as CANNON from 'cannon'
 // import {animated, useSpring} from 'react-spring'
 import TWEEN from '@tweenjs/tween.js'
 
-
 import {usePhysics} from './Physics'
 import {toRads } from '../../utils/3d'
 
@@ -16,13 +15,15 @@ export function Body({
   shapeParams = [{size: [2,2,2], offset: [0,0,0]}], //matching objects specify size and offset [add rot later] for shapes
   position=[0,0,0], rotation=[0,0,0], visible = true, 
   forced={position: null, rotation: null},
+  onForceFinish = (v) => {console.log('fuckyou',v)},
   inScene = true, //controls whether usePhys will run again; toggle when no need to render (i.e. it fell out of view)
+  falling,
   children,
 }) {
 
-  const [isSleep, setSleepState] = useState(false)
+  const [isSleep, setSleepState] = useState(false) //for visualizing sleep
 
-  const phys = usePhysics({mass: 100}, body => {
+  const phys = usePhysics({mass: 100, position: new CANNON.Vec3(...position)}, body => {
 
     shapes.forEach((shape, i)=>{
         const Shape = shape.charAt(0).toUpperCase() + shape.slice(1)
@@ -62,13 +63,14 @@ export function Body({
     body.quaternion.setFromEuler(...rotation.map((r)=>toRads(r)),'XYZ')
     body.allowSleep = true
     body.onSleep = () => {
-      console.log('slept')
       setSleepState(true)
     }
-  }, [inScene]) //deps doesnt work here?
+    body.onWake = () => {
+      setSleepState(false)
+    }
+  }, [], name) 
 
   useEffect(()=>{
-    console.log('body useeffect')
 
     setSleepState(false)
 
@@ -102,23 +104,35 @@ export function Body({
         .onComplete(()=>{
           console.log('body done moving')
           phys.body.allowSleep = true
+          onForceFinish(true)
         })
         .start()
     }
     else{
       if(phys.body.moveTween) phys.body.moveTween.stop()
+      console.log('waking', phys.body.name)
       phys.body.wakeUp()
       phys.body.mass = 100
       phys.body.updateMassProperties()
+
+      onForceFinish(false)
     }
 
   }, [forced])
 
+  useEffect(()=>{
+    if(falling){
+      // console.log(phys.body.name, 'falling')
+      phys.body.wakeUp()
+    }
+
+  }, [falling])
+
   return (
-      <group ref = {phys.ref}>
+      <group ref = {phys.ref} visible = {false}>
         
         {shapes.map((shape, i)=>{
-          return <mesh key = {i} position = {shapeParams[i].offset || [0,0,0]} rotation = {shapeParams[i].rotation || [0,0,0]}>
+          return <mesh key = {i} position = {shapeParams[i].offset || [0,5,0]} rotation = {shapeParams[i].rotation || [0,0,0]}>
             {shape === 'box' && <boxGeometry attach = 'geometry' args = {shapeParams[i].size} />}
             {shape === 'cylinder' && <cylinderGeometry 
               attach = 'geometry' args = {shapeParams[i].size}
@@ -126,10 +140,11 @@ export function Body({
             {shape === 'sphere' && <sphereGeometry attach = 'geometry' args = {shapeParams[i].size} />}
            <meshBasicMaterial 
             attach = 'material' 
-            color = "#FF0000" 
+            color = {isSleep? '#ffffff' : '#ff0000'}
+            wireframe = {true}
             visible = {visible}
             transparent
-            opacity = {isSleep? 0.3 : 0.15}
+            opacity = {0.4}
           />
           </mesh>
         })}
@@ -147,5 +162,5 @@ export const LoadingProject = (props) => {
       console.log(`${props.name} loaded`)
     }
   })
-  return <mesh> <sphereGeometry attach = 'geometry' /> </mesh>
+  return <mesh> </mesh>
 }

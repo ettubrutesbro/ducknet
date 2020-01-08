@@ -4,6 +4,10 @@
 		"selected_items":
 		[
 			[
+				"world",
+				"worldFuncContext"
+			],
+			[
 				"seseme",
 				"Seseme"
 			],
@@ -510,55 +514,80 @@
 			[
 				"semanticTitl",
 				"semanticTitleString"
-			],
-			[
-				"out",
-				"outputregion"
 			]
 		]
 	},
 	"buffers":
 	[
 		{
-			"file": "src/components/projects/seseme.js",
+			"file": "src/App.js",
 			"settings":
 			{
-				"buffer_size": 2392,
+				"buffer_size": 3952,
 				"encoding": "UTF-8",
-				"line_ending": "Unix"
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"contents": "import React, {useState, useEffect, Suspense} from 'react'\nimport * as CANNON from 'cannon'\n// import {animated, useSpring} from 'react-spring'\nimport TWEEN from '@tweenjs/tween.js'\n\nimport {usePhysics} from './Physics'\nimport {toRads } from '../../utils/3d'\n\nconsole.log(TWEEN)\n\n//box only, subsequent bodies will use parameters to construct compound bodies / other shapes\n\n\nexport const LoadingProject = (props) => {\n  useEffect(()=>{\n    return () => {\n      //insert some callback to let app know one model is done\n      console.log(`${props.name} loaded`)\n    }\n  })\n  return <mesh> </mesh>\n}",
+			"file": "src/components/core/Body.js",
+			"file_size": 5689,
+			"file_write_time": 132222103974052652,
+			"settings":
+			{
+				"buffer_size": 597,
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"file": "src/components/core/Camera.js",
+			"settings":
+			{
+				"buffer_size": 2273,
+				"encoding": "UTF-8",
+				"line_ending": "Windows"
 			}
 		},
 		{
 			"file": "src/components/core/Wall.js",
 			"settings":
 			{
-				"buffer_size": 776,
-				"line_ending": "Windows"
-			}
-		},
-		{
-			"file": "src/components/core/Body.js",
-			"settings":
-			{
-				"buffer_size": 1927,
-				"line_ending": "Windows"
-			}
-		},
-		{
-			"file": "src/App.js",
-			"settings":
-			{
-				"buffer_size": 2958,
+				"buffer_size": 2411,
 				"encoding": "UTF-8",
 				"line_ending": "Windows"
 			}
 		},
 		{
-			"file": "src/components/Debug.js",
+			"file": "src/components/projects/seseme.js",
 			"settings":
 			{
-				"buffer_size": 4203,
+				"buffer_size": 3697,
 				"encoding": "UTF-8",
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "public/scorecard/state.gltf",
+			"settings":
+			{
+				"buffer_size": 21923,
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"file": "src/components/projects/Scorecard.js",
+			"settings":
+			{
+				"buffer_size": 3286,
+				"encoding": "UTF-8",
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"file": "src/components/core/Physics.js",
+			"settings":
+			{
+				"buffer_size": 2895,
 				"line_ending": "Windows"
 			}
 		}
@@ -614,36 +643,38 @@
 		"/C/Users/jalk/ducknet",
 		"/C/Users/jalk/ducknet/public",
 		"/C/Users/jalk/ducknet/src",
-		"/C/Users/jalk/ducknet/src/components",
 		"/C/Users/jalk/ducknet/src/stories",
-		"/C/Users/jalk/ducknet/src/utils",
-		"/C/Users/jalk/portfolio-react",
-		"/C/Users/jalk/portfolio-react/src",
-		"/C/Users/jalk/portfolio-react/src/components",
-		"/C/Users/jalk/portfolio-react/src/components/core",
-		"/C/Users/jalk/portfolio-react/src/helpers"
+		"/C/Users/jalk/ducknet/src/utils"
 	],
 	"file_history":
 	[
-		"/C/Users/jalk/ducknet/src/components/core/Body.js",
-		"/C/Users/jalk/ducknet/src/components/Debug.js",
-		"/C/Users/jalk/ducknet/src/components/core/Physics.js",
-		"/C/Users/jalk/ducknet/src/components/projects/Proteus.js",
+		"/C/Users/jalk/ducknet/.gitignore",
+		"/C/Users/jalk/ducknet/src/components/projects/Eclipse.js",
+		"/C/Users/jalk/ducknet/src/components/projects/seseme.js",
+		"/C/Users/jalk/ducknet/src/components/projects/Scorecard.js",
 		"/C/Users/jalk/ducknet/src/App.js",
+		"/C/Users/jalk/ducknet/public/seseme.gltf",
+		"/C/Users/jalk/ducknet/src/components/core/Body.js",
+		"/C/Users/jalk/ducknet/src/components/core/Wall.js",
+		"/C/Users/jalk/ducknet/src/components/Debug.js",
+		"/C/Users/jalk/ducknet/public/scorecard-ss.gltf",
+		"/C/Users/jalk/ducknet/src/components/projects/Proteus.js",
+		"/C/Users/jalk/ducknet/src/components/core/Physics.js",
+		"/C/Users/jalk/ducknet/package.json",
+		"/C/Users/jalk/ducknet/src/components/core/Camera.js",
+		"/C/Users/jalk/ducknet/public/scorecard.gltf",
+		"/C/Users/jalk/ducknet/node_modules/cannon/docs/files/src_collision_ObjectCollisionMatrix.js.html",
+		"/C/Users/jalk/ducknet/node_modules/cannon/test/Body.js",
+		"/C/Users/jalk/ducknet/src/components/core/selection.js",
 		"/C/Users/jalk/ducknet/src/stories/test.stories.js",
 		"/C/Users/jalk/ducknet/src/App.css",
-		"/C/Users/jalk/ducknet/src/components/projects/seseme.js",
-		"/C/Users/jalk/ducknet/src/components/core/Camera.js",
 		"/C/Users/jalk/portfolio-react/src/helpers/utilities.js",
 		"/C/Users/jalk/ducknet/src/utils/3d.js",
-		"/C/Users/jalk/ducknet/src/components/core/Wall.js",
 		"/C/Users/jalk/ducknet/public/wot.bin",
 		"/C/Users/jalk/ducknet/public/wot.gltf",
 		"/C/Users/jalk/ducknet/public/seseme.glb",
-		"/C/Users/jalk/ducknet/node_modules/cannon/test/Body.js",
 		"/C/Users/jalk/portfolio-react/node_modules/oimo/examples/js/docs.js",
 		"/C/Users/jalk/ducknet/src/components/Debug2.js",
-		"/C/Users/jalk/ducknet/package.json",
 		"/C/Users/jalk/ducknet/src/index.js",
 		"/C/Users/jalk/ducknet/src/components/debug/range.js",
 		"/C/Users/jalk/ducknet/public/sese-dd.gltf",
@@ -744,19 +775,11 @@
 		"/C/Users/Duck/scorecard/stories/workflows.stories.js",
 		"/C/Users/Duck/scorecard/stories/breakdowns.stories.js",
 		"/C/Users/Duck/scorecard/src/data/demographicsAndPopulation.json",
-		"/C/Users/Duck/scorecard/node_modules/axobject-query/lib/etc/objects/AlertDialogRole.js",
-		"/C/Users/Duck/scorecard/src/data/indicators/healthInsurance.json",
-		"/C/Users/Duck/scorecard/src/assets/x.svg",
-		"/C/Users/Duck/scorecard/src/assets/icons/minigraph.svg",
-		"/C/Users/Duck/scorecard/src/components/ExpandBox2.jsx",
-		"/C/Users/Duck/scorecard/node_modules/cssstyle/lib/properties/backgroundAttachment.js",
-		"/C/Users/Duck/scorecard/src/components/core/InteractiveMap.jsx",
-		"/C/Users/Duck/scorecard/src/components/Toggle.jsx",
-		"/C/Users/Duck/scorecard/node_modules/react-treebeard/example/app.js"
+		"/C/Users/Duck/scorecard/node_modules/axobject-query/lib/etc/objects/AlertDialogRole.js"
 	],
 	"find":
 	{
-		"height": 39.0
+		"height": 27.0
 	},
 	"find_in_files":
 	{
@@ -774,6 +797,39 @@
 		"case_sensitive": false,
 		"find_history":
 		[
+			"OBJLoader",
+			"GLTFLoader",
+			"assign",
+			"<meshMatcapMaterial matcap = {texture} attach = 'material'",
+			"Lambert",
+			"Basic",
+			"meshNormalMaterial",
+			"A0",
+			"vis",
+			"countyColors[d[vis]]",
+			": '#898989'",
+			"d[vis]?",
+			"2",
+			"__$",
+			"a,b",
+			"sides",
+			"sd_sides",
+			"sides",
+			",",
+			"0",
+			"[0,0,0]",
+			"0,",
+			"0",
+			"div",
+			"mesh",
+			"THREE",
+			"StoreProvider",
+			"StateContext",
+			"UIStateProvider",
+			"Buffer",
+			"size",
+			"props.plrHts",
+			"-",
 			"Pos",
 			"[0,0,0]",
 			"true",
@@ -868,40 +924,7 @@
 			"mask",
 			" 2s",
 			"2s",
-			"faintest",
-			"peachbganim",
-			"position: absolute",
-			"fade",
-			"animation:",
-			"animation: ",
-			"check",
-			"const val",
-			"faintpeach",
-			"justcomplet",
-			"saveheadericon",
-			"headerbtnicon",
-			"colorscale",
-			"window.innerWidth",
-			"'100%'",
-			"this.lastSection",
-			"this.currentSection",
-			"content",
-			"has no data",
-			"'right'",
-			"'left'",
-			"left",
-			"leftOrigin",
-			"rightOrigin = {",
-			"demographic",
-			"sources",
-			"Accent",
-			"=== ''",
-			"<Accent\n                            active = {this",
-			"ctive = {this.currentSecti",
-			"&& indicator && !this.navOpen?",
-			"DemoTogContainer",
-			"36",
-			"pointer-events"
+			"faintest"
 		],
 		"highlight": true,
 		"in_selection": false,
@@ -920,24 +943,24 @@
 	"groups":
 	[
 		{
-			"selected": 2,
+			"selected": 1,
 			"sheets":
 			[
 				{
 					"buffer": 0,
-					"file": "src/components/projects/seseme.js",
+					"file": "src/App.js",
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 2392,
+						"buffer_size": 3952,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								748,
-								748
+								1392,
+								1392
 							]
 						],
 						"settings":
@@ -946,28 +969,28 @@
 							"tab_size": 2,
 							"translate_tabs_to_spaces": true
 						},
-						"translation.x": 22.0,
-						"translation.y": 95.0,
+						"translation.x": 0.0,
+						"translation.y": 810.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 4,
+					"stack_index": 3,
 					"type": "text"
 				},
 				{
 					"buffer": 1,
-					"file": "src/components/core/Wall.js",
+					"file": "src/components/core/Body.js",
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 776,
+						"buffer_size": 597,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								572,
-								572
+								374,
+								374
 							]
 						],
 						"settings":
@@ -980,51 +1003,202 @@
 						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 1,
+					"stack_index": 0,
 					"type": "text"
 				},
 				{
 					"buffer": 2,
-					"file": "src/components/core/Body.js",
+					"file": "src/components/core/Camera.js",
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 1927,
+						"buffer_size": 2273,
 						"regions":
 						{
-							"col_FF0000FF":
-							{
-								"flags": 16,
-								"regions":
-								[
-									[
-										681,
-										688
-									],
-									[
-										1488,
-										1495
-									]
-								],
-								"scope": "col_FF0000FF"
-							},
-							"col_FF0000FF_icon":
-							{
-								"flags": 16,
-								"icon": "Packages/User/Color Highlight.cache/col_FF0000FF_circle.png",
-								"regions":
-								[
-									[
-										626,
-										626
-									],
-									[
-										1469,
-										1469
-									]
-								],
-								"scope": "col_gutter"
-							}
+						},
+						"selection":
+						[
+							[
+								1308,
+								1308
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/Babel/JavaScript (Babel).sublime-syntax",
+							"tab_size": 2,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 4,
+					"type": "text"
+				},
+				{
+					"buffer": 3,
+					"file": "src/components/core/Wall.js",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 2411,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								332,
+								332
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/Babel/JavaScript (Babel).sublime-syntax",
+							"tab_size": 2,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 9,
+					"type": "text"
+				}
+			]
+		},
+		{
+			"selected": 3,
+			"sheets":
+			[
+				{
+					"buffer": 2,
+					"file": "src/components/core/Camera.js",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 2273,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								650,
+								650
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/Babel/JavaScript (Babel).sublime-syntax",
+							"tab_size": 2,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 6,
+					"type": "text"
+				},
+				{
+					"buffer": 4,
+					"file": "src/components/projects/seseme.js",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 3697,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								1731,
+								1731
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/Babel/JavaScript (Babel).sublime-syntax",
+							"tab_size": 2,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 367.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 5,
+					"type": "text"
+				},
+				{
+					"buffer": 5,
+					"file": "public/scorecard/state.gltf",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 21923,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								0,
+								0
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/Text/Plain text.tmLanguage"
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 11,
+					"type": "text"
+				},
+				{
+					"buffer": 6,
+					"file": "src/components/projects/Scorecard.js",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 3286,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								0,
+								0
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/Babel/JavaScript (Babel).sublime-syntax",
+							"tab_size": 4,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 151.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 1,
+					"type": "text"
+				},
+				{
+					"buffer": 3,
+					"file": "src/components/core/Wall.js",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 2411,
+						"regions":
+						{
 						},
 						"selection":
 						[
@@ -1043,30 +1217,24 @@
 						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 0,
+					"stack_index": 2,
 					"type": "text"
-				}
-			]
-		},
-		{
-			"selected": 0,
-			"sheets":
-			[
+				},
 				{
-					"buffer": 3,
-					"file": "src/App.js",
+					"buffer": 7,
+					"file": "src/components/core/Physics.js",
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 2958,
+						"buffer_size": 2895,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								613,
-								613
+								0,
+								0
 							]
 						],
 						"settings":
@@ -1076,104 +1244,70 @@
 							"translate_tabs_to_spaces": true
 						},
 						"translation.x": 0.0,
-						"translation.y": 0.0,
+						"translation.y": 292.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 2,
+					"stack_index": 7,
 					"type": "text"
-				}
-			]
-		},
-		{
-			"selected": 0,
-			"sheets":
-			[
+				},
 				{
-					"buffer": 4,
-					"file": "src/components/Debug.js",
+					"buffer": 0,
+					"file": "src/App.js",
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 4203,
+						"buffer_size": 3952,
 						"regions":
 						{
-							"col_898989FF":
-							{
-								"flags": 16,
-								"regions":
-								[
-									[
-										1604,
-										1611
-									],
-									[
-										3474,
-										3481
-									]
-								],
-								"scope": "col_898989FF"
-							},
-							"col_898989FF_icon":
-							{
-								"flags": 16,
-								"icon": "Packages/User/Color Highlight.cache/col_898989FF_circle.png",
-								"regions":
-								[
-									[
-										1575,
-										1575
-									],
-									[
-										3452,
-										3452
-									]
-								],
-								"scope": "col_gutter"
-							},
-							"col_FFFFFF7F":
-							{
-								"flags": 16,
-								"regions":
-								[
-									[
-										3429,
-										3450
-									]
-								],
-								"scope": "col_FFFFFF7F"
-							},
-							"col_FFFFFF7F_icon":
-							{
-								"flags": 16,
-								"icon": "Packages/User/Color Highlight.cache/col_FFFFFF7F_circle.png",
-								"regions":
-								[
-									[
-										3413,
-										3413
-									]
-								],
-								"scope": "col_gutter"
-							}
 						},
 						"selection":
 						[
 							[
-								4112,
-								4112
+								2506,
+								2506
 							]
 						],
 						"settings":
 						{
 							"syntax": "Packages/Babel/JavaScript (Babel).sublime-syntax",
-							"tab_size": 4,
+							"tab_size": 2,
 							"translate_tabs_to_spaces": true
 						},
 						"translation.x": 0.0,
-						"translation.y": 2070.0,
+						"translation.y": 907.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 3,
+					"stack_index": 8,
+					"type": "text"
+				},
+				{
+					"buffer": 1,
+					"file": "src/components/core/Body.js",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 597,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								0,
+								0
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/Babel/JavaScript (Babel).sublime-syntax",
+							"tab_size": 2,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 78.0,
+						"translation.y": 379.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 10,
 					"type": "text"
 				}
 			]
@@ -1201,25 +1335,18 @@
 				1,
 				0,
 				2,
-				2
-			],
-			[
-				0,
-				1,
-				1,
-				2
+				1
 			]
 		],
 		"cols":
 		[
 			0.0,
-			0.520680453636,
+			0.5,
 			1.0
 		],
 		"rows":
 		[
 			0.0,
-			0.719457013575,
 			1.0
 		]
 	},
@@ -1246,32 +1373,88 @@
 		"selected_items":
 		[
 			[
-				"body.js",
-				"ducknet\\src\\components\\core\\Body.js"
+				"wall.js",
+				"src\\components\\core\\Wall.js"
 			],
 			[
-				"wall.js",
-				"ducknet\\src\\components\\core\\Wall.js"
+				"scorecard",
+				"src\\components\\projects\\Scorecard.js"
+			],
+			[
+				"camera",
+				"src\\components\\core\\Camera.js"
+			],
+			[
+				"app.j",
+				"src\\App.js"
+			],
+			[
+				"physics.js",
+				"src\\components\\core\\Physics.js"
+			],
+			[
+				"body.js",
+				"src\\components\\core\\Body.js"
+			],
+			[
+				".gitignore",
+				".gitignore"
+			],
+			[
+				"state.gltf",
+				"public\\scorecard\\state.gltf"
+			],
+			[
+				"seseme.js",
+				"src\\components\\projects\\seseme.js"
+			],
+			[
+				"app.js",
+				"src\\App.js"
+			],
+			[
+				"seseme",
+				"public\\seseme.gltf"
+			],
+			[
+				"eclipse",
+				"src\\components\\projects\\Eclipse.js"
+			],
+			[
+				"scorecard-ss",
+				"public\\scorecard-ss.gltf"
+			],
+			[
+				"package.json",
+				"package.json"
+			],
+			[
+				"sco",
+				"node_modules\\cannon\\docs\\files\\src_collision_ObjectCollisionMatrix.js.html"
+			],
+			[
+				"camera.js",
+				"src\\components\\core\\Camera.js"
+			],
+			[
+				"debug",
+				"src\\components\\Debug.js"
+			],
+			[
+				"eclipse.js",
+				"src\\components\\projects\\Eclipse.js"
+			],
+			[
+				"proteus",
+				"src\\components\\projects\\Proteus.js"
 			],
 			[
 				"debug.js",
 				"ducknet\\src\\components\\Debug.js"
 			],
 			[
-				"app.js",
-				"ducknet\\src\\App.js"
-			],
-			[
-				"seseme",
-				"ducknet\\src\\components\\projects\\seseme.js"
-			],
-			[
 				"test.stories",
 				"ducknet\\src\\stories\\test.stories.js"
-			],
-			[
-				"physics.js",
-				"ducknet\\src\\components\\core\\Physics.js"
 			],
 			[
 				"cannonprovid",
@@ -1302,10 +1485,6 @@
 				"learnwithjason\\src\\App.js"
 			],
 			[
-				"seseme.js",
-				"ducknet\\src\\assets\\seseme.js"
-			],
-			[
 				"pack",
 				"ducknet\\package.json"
 			],
@@ -1320,10 +1499,6 @@
 			[
 				"package",
 				"ducknet\\package.json"
-			],
-			[
-				"package.json",
-				"learnwithjason\\package.json"
 			],
 			[
 				"draco",
@@ -1708,54 +1883,6 @@
 			[
 				"sanitycheck",
 				"src\\components\\generic\\SanityCheckTip.jsx"
-			],
-			[
-				"indicatorlist",
-				"src\\components\\IndicatorList.jsx"
-			],
-			[
-				"responsivesc",
-				"src\\ResponsiveScorecard.jsx"
-			],
-			[
-				"legend.jsx",
-				"src\\components\\Legend.jsx"
-			],
-			[
-				"indicatorlit",
-				"src\\components\\IndicatorList.jsx"
-			],
-			[
-				"indicatorli",
-				"src\\components\\IndicatorList.jsx"
-			],
-			[
-				"breakdown",
-				"src\\components\\Breakdown.jsx"
-			],
-			[
-				"searchzoom",
-				"src\\assets\\searchzoom.svg"
-			],
-			[
-				"searchinp",
-				"src\\components\\SearchInput.jsx"
-			],
-			[
-				"respon",
-				"src\\ResponsiveNav.jsx"
-			],
-			[
-				"trung",
-				"src\\utilities\\trungCombo.js"
-			],
-			[
-				"trungcombo",
-				"src\\utilities\\trungCombo.js"
-			],
-			[
-				"experime",
-				"stories\\experiments.stories.js"
 			]
 		],
 		"width": 0.0
@@ -1782,7 +1909,7 @@
 		],
 		"width": 0.0
 	},
-	"selected_group": 1,
+	"selected_group": 0,
 	"settings":
 	{
 	},

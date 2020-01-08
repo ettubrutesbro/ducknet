@@ -23,15 +23,33 @@ import Scorecard from './components/projects/Scorecard'
 import {Debug, Range, TinkerGroup} from './components/Debug'
 import Camera from './components/core/Camera'
 
+import Projects from './components/core/Projects'
+
 import {toRads, toDegs} from './utils/3d'
 
 
-export const SelectionContext = React.createContext()
+export const WorldFunctions = React.createContext({
+  //insert functions that every child of the world should have? 
+})
 
 function App() {
 
+  const isInitialMount = useRef(true)
+
   const [projectCamera, setProjectCamera] = useState(null)
   const [selected, select] = useState(null)
+  const [abyss, admitToAbyss] = useState([]) //for removing projects as they fall out of view 
+  
+  useEffect(()=>{
+    if(isInitialMount.current){
+      isInitialMount.current = false
+    }
+    else if(!selected){
+      console.log('clearing abyss')
+      admitToAbyss([])
+    }
+  }, [selected])
+
 
 
   return (
@@ -39,43 +57,49 @@ function App() {
       <Canvas 
         invalidateFrameloop = {false}
         onPointerMissed = {()=> select(null)}
+        props = {{antialias: false}}
       >
+        {/* <fog attach="fog" args={['#ffffff', 55, 85]} /> 
         <directionalLight args = {[0xffffff, 0.4]} castShadow />
+        */}
         <PhysicsProvider>
           <Camera 
             projectCamera = {projectCamera}
           />
-          <Enclosure /> 
+          <Enclosure
+            active = {!selected} 
+          /> 
+            <WorldFunctions.Provider value = {{
+              select: select,
+              selected: selected,
+              setProjectCamera: setProjectCamera,
+              abyss: abyss,
+              admitToAbyss: admitToAbyss,
+            }}>
+            <Projects>
+              <Scorecard
+                name = 'scorecard'
+                key = 'scorecard'
+                position = {[-1,35,0]}
+                rotation = {[0,10,0]}
+              />
             
-            <Scorecard
-              position = {[-1,35,0]}
-              rotation = {[0,10,0]}
-
-              onClick = {() => select('scorecard')}
-              selected = {selected === 'scorecard'}
-
-              onSelect = {setProjectCamera}
-            />
-            {/* 
-            <Seseme 
-              position = {[-1.5,18,0]} 
-              rotation = {[0,35,0]} 
-              onClick = {()=>select('seseme')}
-              //onClick, selected and onSelect should be distributed
-              //automatically via some kind of React.children map..? or <Project />
-              selected = {selected==='seseme'}
-              onSelect = {setProjectCamera}
-          
-            /> 
-            <Eclipse 
-              position = {[2,5,0]} 
-              rotation = {[0,0,0]} 
-              onClick = {()=>select('eclipse')}
-
-              selected = {selected==='eclipse'}
-              onSelect = {setProjectCamera}
-            /> 
-            */}
+              <Seseme 
+                name = 'seseme'
+                key = 'seseme'
+                position = {[-1.5,18,0]} 
+                rotation = {[0,35,0]} 
+              /> 
+            
+              <Eclipse 
+                name = 'eclipse'
+                key = 'eclipse'
+                position = {[2,5,0]} 
+                rotation = {[0,0,0]}
+              /> 
+            
+            </Projects>
+            </WorldFunctions.Provider>
             
 
         </PhysicsProvider>

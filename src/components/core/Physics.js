@@ -2,6 +2,9 @@ import React, {useState, useEffect, useContext, useRef} from 'react'
 import {useRender} from 'react-three-fiber'
 import * as CANNON from 'cannon'
 import TWEEN from '@tweenjs/tween.js'
+
+import {WorldFunctions} from '../../App'
+
 const physicsContext = React.createContext()
 
 export function PhysicsProvider({children}){
@@ -28,8 +31,12 @@ export function PhysicsProvider({children}){
 
 //cannon hook for tracking/updating a physics obj
 //usePhysics(cannon properties, a function to call on the body created herein, deps????)
-export function usePhysics({ ...props}, fn, deps = []){
+export function usePhysics({ ...props}, fn, deps = [], name){
+
+  const worldFuncContext = useContext(WorldFunctions)
+
   let isSleep
+  let firstRun = true
   const ref = useRef()
 
   //use provided context: will get value (world info) from nearest parent cannonProvider
@@ -39,8 +46,7 @@ export function usePhysics({ ...props}, fn, deps = []){
   const [body] = useState(()=> new CANNON.Body(props))
   useEffect(()=>{
     if(body.mass > 0){ 
-      console.log('usePhysics useEffect fired for dynamic body')
-      console.log(deps)
+      console.log(name, 'added to world')
     }
     fn(body)
     world.addBody(body)
@@ -49,16 +55,44 @@ export function usePhysics({ ...props}, fn, deps = []){
   
   useRender(()=>{    
     if(ref.current){ 
+        if(body.position.y< -20 && !worldFuncContext.abyss.includes(name)){
+          console.log('admitting', name, 'to abyss')
+          worldFuncContext.admitToAbyss([...worldFuncContext.abyss, name])
+          if(!worldFuncContext.selected){
+            console.log('rapid undo: reinserting object')
+            worldFuncContext.admitToAbyss([])
+          }
+          return
+        }
+
         if(body.sleepState===2){
           if(!isSleep){
             body.onSleep()
             isSleep = true
           }
-          return 
+          return
+        }else{
+          if(isSleep && body.sleepState!==2){
+            body.onWake()
+          }
         }
-        //referenced threejs object position set to corresponding cannon phys object
+        //referenced threejs object position set to match corresponding cannon phys object
         ref.current.position.copy(body.position)
         ref.current.quaternion.copy(body.quaternion)
+
+        if(firstRun){
+          /*
+          this prevents a Flash of Unpositioned Model, 
+          as three renders one frame of a just-mounted model 
+          before the position syncs with the physics body
+          unfortunately it also runs for static bodies right now - 
+          some kind of booleans could be used, but even dynamic bodies 
+          toggle between dynamic / static depending on selection state etc. 
+          */
+          // console.log('first run', body.name)
+          ref.current.visible = true
+          firstRun = false
+        }
     }
   })
 
