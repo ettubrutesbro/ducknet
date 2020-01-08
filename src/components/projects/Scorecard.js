@@ -29,6 +29,7 @@ function Scorecard({
     const dracoLoader = new DRACOLoader()
     dracoLoader.setDecoderPath('/draco-gltf/')
     const ca = useLoader(GLTFLoader, '/scorecard/resplit.gltf', loader => {
+
       loader.setDRACOLoader(dracoLoader)
     })
     const left = useLoader(OBJLoader, '/scorecard/lefttest3.obj')
