@@ -34,8 +34,8 @@ const camSprings = [
     },
     {
         name: 'pos2closeup',
-        position: [3, 9.25, 0],
-        rotation: [toRads(0), toRads(50), toRads(90)],
+        position: [10, 7.5, 2],
+        rotation: [toRads(0), toRads(50), toRads(0)],
         fov: 85
         //set CA in a 90 degree 
     }
@@ -78,7 +78,6 @@ function Scorecard({
                 position: [0,7,0],
                 rotation: [0,50,0]
             })
-            setCamDestination(camSprings[0])
         }
         else{
             console.log('unpicked sc')
@@ -89,7 +88,9 @@ function Scorecard({
     }, [selected])
 
     useEffect(()=>{
-        console.log(camStatus)
+        if(!camStatus){
+            setCamDestination(camSprings[0])
+        }
         if(camStatus === 'sc start'){
             console.log('changing view and submitting new shit ')
             setCamDestination(camSprings[1])
@@ -97,7 +98,6 @@ function Scorecard({
         }
         if(camStatus === 'dolly1'){
             setCamDestination(camSprings[2])
-            //this is bad hopefully it doesnt come to this
         }
     }, [camStatus, selected])
 
