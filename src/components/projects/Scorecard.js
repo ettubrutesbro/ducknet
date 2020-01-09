@@ -32,13 +32,28 @@ const camSprings = [
         config: {mass: 1, tension: 10, friction: 100, duration: 3500},
 
     },
+
     {
         name: 'pos2closeup',
-        position: [3, 7.5, 0],
-        rotation: [toRads(105), toRads(54), toRads(-29)],
-        fov: 85
+        position: [3, 7.25, 0],
+        rotation: [toRads(100), toRads(48), toRads(-32)],
+        fov: 85,
+        config: {clamp: true}
         //set CA in a 90 degree 
-    }
+    },
+    {
+        name: 'dollyfrompos2',
+        position: [3, 7.4, 0],
+        rotation: [toRads(103), toRads(50.5), toRads(-30)],
+        fov: 85,
+        config: {mass: 1, tension: 10, friction: 100, duration: 5000},
+    },
+    {
+        name: 'mobile',
+        position: [18, 7, -4],
+        rotation: [toRads(9), toRads(95), toRads(9)],
+        fov: 47,
+    },
 ]
 
 function Scorecard({
@@ -97,6 +112,12 @@ function Scorecard({
         }
         if(camStatus === 'dolly1'){
             setCamDestination(camSprings[2])
+        }
+        if(camStatus === 'pos2closeup'){
+            setCamDestination(camSprings[3])
+        }
+        if(camStatus === 'dollyfrompos2'){
+            setCamDestination(camSprings[4])
         }
     }, [camStatus, selected])
 

@@ -25,7 +25,7 @@ const defaults = {
     rotation: [0, 0, 0],
     zoom: 1,
     fov: 25,
-    orbit: false
+    orbit: false,
     //maybe set a really gentle config so the transitions from selection > default
     //aren't as jarring...
 }
