@@ -4,7 +4,6 @@ import { Canvas, useFrame, useRender, useLoader } from 'react-three-fiber'
 import styled from 'styled-components'
 
 import * as CANNON from 'cannon'
-import {animated, useSpring} from 'react-spring'
 
 
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader'
@@ -21,7 +20,7 @@ import Scorecard from './components/projects/Scorecard'
 
 
 import {Debug, Range, TinkerGroup} from './components/Debug'
-import Camera from './components/core/Camera'
+import Camera, {AdjustCamera} from './components/core/Camera'
 
 import Projects from './components/core/Projects'
 
@@ -55,8 +54,13 @@ function App() {
     console.log('cam status changed: ', camStatus)
   }, [camStatus])
 
+  const [useCamera, chooseCamera] = useState('default')
+  const [adjustOffset, changeAdjOffset] = useState({
+    position: [0,0,0], rotation: [0,0,0], fov: 0
+  })
+
   return (
-    <animated.div className = 'full'>
+    <div className = 'full'>
       <Canvas 
         invalidateFrameloop = {false}
         onPointerMissed = {()=> select(null)}
@@ -78,7 +82,15 @@ function App() {
             }}>
             <Camera 
               projectCamera = {projectCamera}
+              useThis = {useCamera === 'default'}
             />
+            {/* Debug cameras follow */}
+            <AdjustCamera
+              projectCamera = {projectCamera}
+              useThis = {useCamera === 'adjust'}
+              offsets = {adjustOffset}
+            />
+
             <Enclosure
               active = {!selected} 
             /> 
@@ -118,10 +130,86 @@ function App() {
         
       </Debug>
       */}
-    </animated.div>
+      <DebugDialog>
+        <input 
+          type = 'radio' id = 'default' 
+          value = 'default' name = 'cameraChoice' 
+          onChange = {e=>chooseCamera(e.target.value)}
+        /> 
+        default
+        <input 
+          type = 'radio' id = 'adjust' 
+          value = 'adjust' name = 'cameraChoice' 
+          onChange = {e=>chooseCamera(e.target.value)}
+        /> 
+        adjust
+        <input 
+          type = 'radio' id = 'orbital' 
+          value = 'orbital' name = 'cameraChoice' 
+          onChange = {e=>chooseCamera(e.target.value)}
+        /> 
+        orbital
+        <input 
+          type = 'radio' id = 'preset' 
+          value = 'preset' name = 'cameraChoice' 
+          onChange = {e=>chooseCamera(e.target.value)}
+        /> 
+        preset
+        {projectCamera && <div>
+            {projectCamera.name}
+            {projectCamera.position.join(',')}
+        </div>}
+
+        {useCamera === 'adjust' && projectCamera && 
+          <div>
+            <input 
+              type = 'number' 
+              value = {Number(projectCamera.position[0]) + Number(adjustOffset.position[0])} 
+              onChange = {e => changeAdjOffset({...adjustOffset, position: [e.target.value - projectCamera.position[0] , adjustOffset.position[1], adjustOffset.position[2]]})}
+            />
+            <input 
+              type = 'number' 
+              value = {Number(projectCamera.position[1]) + Number(adjustOffset.position[1])} 
+              onChange = {e => changeAdjOffset({...adjustOffset, position: [adjustOffset.position[0], e.target.value - projectCamera.position[1] , adjustOffset.position[2]]})}
+            />
+            <input 
+              type = 'number' 
+              value = {Number(projectCamera.position[2]) + Number(adjustOffset.position[2])} 
+              onChange = {e => changeAdjOffset({...adjustOffset, position: [adjustOffset.position[0], adjustOffset.position[1], e.target.value - projectCamera.position[2]]})}
+            />
+
+            <input 
+              type = 'number' 
+              value = {toDegs(Number(projectCamera.rotation[0])) + toDegs(Number(adjustOffset.rotation[0]))} 
+              onChange = {e => changeAdjOffset({...adjustOffset, rotation: [toRads(e.target.value) - projectCamera.rotation[0] , adjustOffset.rotation[1], adjustOffset.rotation[2]]})}
+            />
+            <input 
+              type = 'number' 
+              value = {toDegs(Number(projectCamera.rotation[1])) + toDegs(Number(adjustOffset.rotation[1]))} 
+              onChange = {e => changeAdjOffset({...adjustOffset, rotation: [adjustOffset.rotation[0], toRads(e.target.value) - projectCamera.rotation[1] , adjustOffset.rotation[2]]})}
+            />
+            <input 
+              type = 'number' 
+              value = {toDegs(Number(projectCamera.rotation[2])) + toDegs(Number(adjustOffset.rotation[2]))} 
+              onChange = {e => changeAdjOffset({...adjustOffset, rotation: [adjustOffset.rotation[0], adjustOffset.rotation[1], toRads(e.target.value) - projectCamera.rotation[2]]})}
+            />
+          </div>
+        }
+
+      </DebugDialog>
+    </div>
   );
 }
 
 
 
 export default App;
+
+const DebugDialog = styled.div`
+  position: absolute;
+  right: 0;
+  top: 0;
+  width: 320px;
+  height: 600px;
+  border: 1px solid black;
+`

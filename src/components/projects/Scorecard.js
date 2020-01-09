@@ -34,8 +34,8 @@ const camSprings = [
     },
     {
         name: 'pos2closeup',
-        position: [10, 7.5, 2],
-        rotation: [toRads(0), toRads(50), toRads(0)],
+        position: [3, 7.5, 0],
+        rotation: [toRads(105), toRads(54), toRads(-29)],
         fov: 85
         //set CA in a 90 degree 
     }
@@ -56,7 +56,6 @@ function Scorecard({
     const dracoLoader = new DRACOLoader()
     dracoLoader.setDecoderPath('/draco-gltf/')
     const ca = useLoader(GLTFLoader, '/scorecard/resplit.gltf', loader => {
-
       loader.setDRACOLoader(dracoLoader)
     })
     const countyui = useLoader(OBJLoader, '/scorecard/countyui.obj')

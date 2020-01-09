@@ -7,6 +7,8 @@ import {toRads, xyzArray} from '../../utils/3d'
 
 import {WorldFunctions} from '../../App'
 
+import ReactDOM from 'react-dom'
+
 //orbit controls for debug only
 extend({OrbitControls})
 const Controls = props => {
@@ -24,16 +26,19 @@ const defaults = {
     zoom: 1,
     fov: 25,
     orbit: false
+    //maybe set a really gentle config so the transitions from selection > default
+    //aren't as jarring...
 }
 
 function Camera({
   projectCamera, 
-  isDefault = true,
+  useThis = true,
   ...props
 }) {
   const {setCamStatus} = useContext(WorldFunctions)
+
   const ref = useRef()
-  //set attributes according to projects, or back to default
+
   const [camdata, setCam, stop] = useSpring(()=>({
     position: defaults.position,
     rotation: defaults.rotation,
@@ -41,10 +46,12 @@ function Camera({
   }))
   // Make the camera known to the system
   const { setDefaultCamera } = useThree()
+
   useEffect(() => {
-    void setDefaultCamera(ref.current)
-    console.log('mount: camera set as default')
-  }, [isDefault])
+    if(useThis) void setDefaultCamera(ref.current)
+  }, [useThis])
+
+
   useEffect(()=>{
     console.log('moving camera')
     const target = xyzArray(projectCamera || defaults)
@@ -84,3 +91,63 @@ function Camera({
 }
 
 export default Camera
+
+/*
+  Debug cameras for adjusting ProjectCameras, orbiting, and checking presets
+*/
+
+export function AdjustCamera({
+  useThis = false,
+  projectCamera,
+  domNode, //DOM node where the controls'll be rendered into
+  offsets, 
+  ...props
+}){
+  const ref = useRef()
+  const { setDefaultCamera } = useThree()
+  const [attrs, setAttrs] = useState(defaults)
+  useEffect(() => {
+    if(useThis){
+      console.log(`adjustcam activated, ${projectCamera}`)
+      void setDefaultCamera(ref.current)
+    }
+  }, [useThis])
+
+  useEffect(()=>{
+    if(projectCamera){
+      setAttrs(projectCamera)
+    }
+    else setAttrs(defaults)
+  }, [projectCamera, useThis])
+  // const {setCamStatus} = useContext(WorldFunctions)
+
+  useEffect(()=>{
+    if(offsets && projectCamera){
+      setAttrs({
+        ...projectCamera,
+        position: [
+          projectCamera.position[0] + offsets.position[0],
+          projectCamera.position[1] + offsets.position[1],
+          projectCamera.position[2] + offsets.position[2],
+        ],
+        rotation: [
+          projectCamera.rotation[0] + offsets.rotation[0],
+          projectCamera.rotation[1] + offsets.rotation[1],
+          projectCamera.rotation[2] + offsets.rotation[2],
+        ]
+      })
+    }
+  }, [offsets])
+
+  useFrame(() => {
+    ref.current.updateMatrixWorld()
+    if(useThis) ref.current.updateProjectionMatrix()
+  })
+
+  return <perspectiveCamera 
+    ref = {ref}
+    position = {attrs.position}
+    rotation = {attrs.rotation}
+    fov = {attrs.fov}
+  />
+}
