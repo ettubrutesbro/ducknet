@@ -53,7 +53,7 @@ export function Seseme({
           onSelect(projectCamera)
       }
       else{
-          console.log('unpicked seseme')
+          // console.log('unpicked seseme')
           forceTo(null)
           onSelect(null)
       }

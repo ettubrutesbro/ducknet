@@ -37,7 +37,7 @@ export function Eclipse({
             onSelect(projectCamera)
         }
         else{
-            console.log('unpicked eclipse')
+            // console.log('unpicked eclipse')
             forceTo(null)
             onSelect(null)
         }

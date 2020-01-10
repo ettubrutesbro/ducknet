@@ -15,7 +15,7 @@ export function Body({
   shapeParams = [{size: [2,2,2], offset: [0,0,0]}], //matching objects specify size and offset [add rot later] for shapes
   position=[0,0,0], rotation=[0,0,0], visible = true, 
   forced={position: null, rotation: null},
-  onForceFinish = (v) => {console.log('fuckyou',v)},
+  onForceFinish = (v) => {},
   inScene = true, //controls whether usePhys will run again; toggle when no need to render (i.e. it fell out of view)
   falling,
   children,
@@ -102,7 +102,7 @@ export function Body({
           phys.body.quaternion.set(current.rx, current.ry, current.rz, current.rw)
         })
         .onComplete(()=>{
-          console.log('body done moving')
+          // console.log('body done moving')
           phys.body.allowSleep = true
           onForceFinish(true)
         })
@@ -159,7 +159,7 @@ export const LoadingProject = (props) => {
   useEffect(()=>{
     return () => {
       //insert some callback to let app know one model is done
-      console.log(`${props.name} loaded`)
+      // console.log(`${props.name} loaded`)
     }
   })
   return <mesh> </mesh>

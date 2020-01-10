@@ -23,7 +23,7 @@ import {Debug, Range, TinkerGroup} from './components/Debug'
 import Camera, {AdjustCamera} from './components/core/Camera'
 
 import Projects from './components/core/Projects'
-
+ 
 import {toRads, toDegs} from './utils/3d'
 
 
@@ -134,24 +134,28 @@ function App() {
         <input 
           type = 'radio' id = 'default' 
           value = 'default' name = 'cameraChoice' 
+          checked = {useCamera === 'default'}
           onChange = {e=>chooseCamera(e.target.value)}
         /> 
         default
         <input 
           type = 'radio' id = 'adjust' 
           value = 'adjust' name = 'cameraChoice' 
+          checked = {useCamera === 'adjust'}
           onChange = {e=>chooseCamera(e.target.value)}
         /> 
         adjust
         <input 
           type = 'radio' id = 'orbital' 
           value = 'orbital' name = 'cameraChoice' 
+          checked = {useCamera === 'orbital'}
           onChange = {e=>chooseCamera(e.target.value)}
         /> 
         orbital
         <input 
           type = 'radio' id = 'preset' 
           value = 'preset' name = 'cameraChoice' 
+          checked = {useCamera === 'preset'}
           onChange = {e=>chooseCamera(e.target.value)}
         /> 
         preset

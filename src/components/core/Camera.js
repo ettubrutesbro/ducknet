@@ -56,7 +56,10 @@ function Camera({
     console.log('moving camera')
     const target = xyzArray(projectCamera || defaults)
     stop()
-    if(!projectCamera) setCamStatus(null)
+    if(!projectCamera){
+      // console.log('no project camera, erasing cam status')
+      setCamStatus(null)
+    }
     setCam({
       position: target.position,
       rotation: target.rotation,

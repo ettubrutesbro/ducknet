@@ -46,7 +46,7 @@ export function usePhysics({ ...props}, fn, deps = [], name){
   const [body] = useState(()=> new CANNON.Body(props))
   useEffect(()=>{
     if(body.mass > 0){ 
-      console.log(name, 'added to world')
+      console.log(name, 'ADDED')
     }
     fn(body)
     world.addBody(body)
@@ -56,10 +56,10 @@ export function usePhysics({ ...props}, fn, deps = [], name){
   useRender(()=>{    
     if(ref.current){ 
         if(body.position.y< -20 && !worldFuncContext.abyss.includes(name)){
-          console.log('admitting', name, 'to abyss')
+          // console.log('admitting', name, 'to abyss')
           worldFuncContext.admitToAbyss([...worldFuncContext.abyss, name])
           if(!worldFuncContext.selected){
-            console.log('rapid undo: reinserting object')
+            // console.log('rapid undo: reinserting object')
             worldFuncContext.admitToAbyss([])
           }
           return
