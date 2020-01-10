@@ -74,6 +74,7 @@ function Scorecard({
     const countyui = useLoader(OBJLoader, '/scorecard/countyui.obj')
     const raceui = useLoader(OBJLoader, '/scorecard/raceui.obj')
     const demoui = useLoader(OBJLoader, '/scorecard/demoui.obj')
+    const blurb = useLoader(OBJLoader, '/scorecard/blurb.obj')
 
     const [projectCamera, setCamDestination] = useState(camSprings[0])
 
@@ -213,10 +214,10 @@ function Scorecard({
             && doneForcing 
             // && alone //with one other project its awk
         ){
-            // setCountyUIAnim({opacity: 1, position: [-50, 35, 0.1], scale: [0.125,0.125,0.125] })
+            setCountyUIAnim({opacity: 1, position: [-50, 35, 0.1], scale: [0.125,0.125,0.125] })
         }
         else{
-            // setCountyUIAnim({opacity: 0, position: [0,0,0], scale: [0.01, 0.01,0.01] })
+            setCountyUIAnim({opacity: 0, position: [0,0,0], scale: [0.01, 0.01,0.01] })
         }
     }, [vis, selected, doneForcing, alone])
 
