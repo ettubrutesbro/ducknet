@@ -74,7 +74,7 @@ function Scorecard({
     const countyui = useLoader(OBJLoader, '/scorecard/countyui.obj')
     const raceui = useLoader(OBJLoader, '/scorecard/raceui.obj')
     const demoui = useLoader(OBJLoader, '/scorecard/demoui.obj')
-    const blurb = useLoader(OBJLoader, '/scorecard/blurb.obj')
+    // const blurb = useLoader(OBJLoader, '/scorecard/blurb.obj')
 
     const [projectCamera, setCamDestination] = useState(camSprings[0])
 
