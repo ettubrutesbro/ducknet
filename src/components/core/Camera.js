@@ -35,7 +35,7 @@ function Camera({
   useThis = true,
   ...props
 }) {
-  const {setCamStatus} = useContext(WorldFunctions)
+  // const {setCamStatus} = useContext(WorldFunctions)
 
   const ref = useRef()
 
@@ -58,7 +58,7 @@ function Camera({
     stop()
     if(!projectCamera){
       // console.log('no project camera, erasing cam status')
-      setCamStatus(null)
+      // setCamStatus(null)
     }
     setCam({
       position: target.position,
@@ -68,7 +68,7 @@ function Camera({
       onStart: target.onStart,
       onRest: () => {
         console.log('camera completed motion')
-        if(target.name) setCamStatus(target.name)
+        // if(target.name) setCamStatus(target.name)
       }
     })
   }, [projectCamera])

@@ -8,6 +8,8 @@ import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader'
 import { OBJLoader } from 'three/examples/jsm/loaders/OBJLoader'
 import { DRACOLoader } from 'three/examples/jsm/loaders/DRACOLoader'
 
+import {Spring} from '../../../utils/spring'
+
 export default function SCModel({
     selected,
     onClick = () => {console.log('clicked model')}, //archaic? the model is what must register the click...
@@ -19,7 +21,7 @@ export default function SCModel({
     const ca = useLoader(GLTFLoader, '/scorecard/resplit.gltf', loader => {
       loader.setDRACOLoader(dracoLoader)
     })
-    const phonebldg = useLoader(GLTFLoader, '/scorecard/phonebldg-notexopt.gltf', loader => {
+    const phonebldg = useLoader(GLTFLoader, '/scorecard/phonebldg2.gltf', loader => {
       loader.setDRACOLoader(dracoLoader)
     })
 
@@ -152,14 +154,17 @@ export default function SCModel({
         // },
     ]
 
-    const [pseudo, setPseudo] = useSpring(()=>({
-        opacity: 0, scale: [0.08, 0.08, 0.08], position: [-35, 20, 0]
-    }))
+    const pseudo = Spring([
+        {opacity: 0, scale: [0.08, 0.08, 0.08], position: [-35, 20, 0]},
+        {opacity: 1, scale: [0.15, 0.15, 0.15], position: [-54, 41, 5]}
+    ], props.showPseudo? 1 : 0)
 
-    useEffect(()=>{
-        if(!props.showPseudo) setPseudo({opacity: 0, scale: [0.08, 0.08, 0.08], position: [-35, 20, 0]})
-        else setPseudo({opacity: 1, scale: [0.15, 0.15, 0.15], position: [-54, 41, 5]})
-    }, [pseudo])
+    const bldg = Spring([{position: [0,0,0]}, {position: [0,550,0]}], props.showBldg? 1 : 0)
+
+    const bldgshadow = Spring([
+        {scale: [1,1,0.2], position: [0,0,850], opacity: -0.5 }, 
+        {scale: [1,1,1], position: [0,0,0], opacity: 1, delay: 50}
+    ], props.showBldg? 1 : 0)
 
 
     return(
@@ -204,27 +209,71 @@ export default function SCModel({
                 })}
             </a.group>
         
-
+        {/* 
             <a.group 
                 scale = {[0.175,0.175,0.175]}
                 position = {[-60, 65, -60]}
             >
-                {phonebldg.__$.filter(child => !child.name.includes('WOB')).map((child) => {
-                    return <mesh 
-                        key = {child.name} 
+                {phonebldg.__$.filter(c => c.name === 'hand').map((child) => {
+                    return <mesh name = 'hand' key = 'hand'>
+                        <bufferGeometry attach = 'geometry' {...child.geometry} />
+                        <meshBasicMaterial 
+                            attach = 'material' 
+                            map = {phonebldgTexture}
+                            color = {0xdedede}
+                        />
+                    </mesh>
+                })}
+                {phonebldg.__$.filter(c => c.name === 'WOBhand').map((child) => {
+                    return <mesh name = 'wobhand' key = 'wobhand'>
+                        <bufferGeometry attach = 'geometry' {...child.geometry} />
+                        <meshNormalMaterial 
+                            attach = 'material' 
+                            color = {0xffffff}
+                            transparent
+                            opacity = {0.5}
+                        />
+                    </mesh>
+                })}
+                {phonebldg.__$.filter(c => c.name === 'bldg').map((child) => {
+                    return <a.mesh name = 'bldg' key = 'bldg'
+                        position = {bldg.position}
                     >
                         <bufferGeometry attach = 'geometry' {...child.geometry} />
                         <meshBasicMaterial 
                             attach = 'material' 
                             map = {phonebldgTexture}
-                            // opacity = {child.name.includes('WOB')? 0.1 : 1}
+                            color = {0xdedede}
+                        />
+                    </a.mesh>
+                })}
+                {phonebldg.__$.filter(c => c.name === 'bldgshadow').map((child) => {
+                    return <a.mesh name = 'bldgshadow' key = 'bldgshadow'
+                        scale = {bldgshadow.scale}
+                        position = {bldgshadow.position}
+                    >
+                        <bufferGeometry attach = 'geometry' {...child.geometry} />
+                        <a.meshBasicMaterial 
+                            attach = 'material' 
+                            map = {phonebldgTexture}
+                            color = {0xdedede}
+                            opacity = {bldgshadow.opacity}
                             transparent
-                            needsUpdate
+                        />
+                    </a.mesh>
+                })}
+                {phonebldg.__$.filter(c => c.name === 'WOBbldg').map((child) => {
+                    return <mesh name = 'wobbldg' key = 'wobbldg'>
+                        <bufferGeometry attach = 'geometry' {...child.geometry} />
+                        <meshBasicMaterial 
+                            attach = 'material' 
+                            color = {0xffffff}
                         />
                     </mesh>
                 })}
 
             </a.group>
+            */}
             
 
         </group>

@@ -27,16 +27,23 @@ export const scorecard = () => {
 
     const select = boolean('selected', false)
     const pseudoToggle = boolean('pseudo UI', false)
+    const bldgToggle = boolean('bldg', false)
 
     return(
         <Container>
             <Canvas>
                 <Camera 
                     debugWithOrbit
+                    projectCamera = {{
+                        fov: 65,
+                        position: [0,10,40],
+                        rotation: [0,toRads(5),0]
+                    }}
                 />
                 <Suspense fallback = {<React.Fragment />}>
                     <SCModel 
                         showPseudo = {pseudoToggle}
+                        showBldg = {bldgToggle}
                         selected = {select}
                     />
                 </Suspense>
