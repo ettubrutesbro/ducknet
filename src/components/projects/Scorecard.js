@@ -48,9 +48,9 @@ const camSprings = [
     },
     {
         name: 'mobile',
-        position: [18, 7, -4],
-        rotation: [toRads(9), toRads(95), toRads(9)],
-        fov: 47,
+        position: [44, 5, 7],
+        rotation: [toRads(-9), toRads(67), toRads(9)],
+        fov: 35,
     },
 ]
 
@@ -71,6 +71,9 @@ function Scorecard({
     const ca = useLoader(GLTFLoader, '/scorecard/resplit.gltf', loader => {
       loader.setDRACOLoader(dracoLoader)
     })
+    const phonebldg = useLoader(GLTFLoader, '/scorecard/phonebldg-notexopt.gltf', loader => {
+      loader.setDRACOLoader(dracoLoader)
+    })
     const countyui = useLoader(OBJLoader, '/scorecard/countyui.obj')
     const raceui = useLoader(OBJLoader, '/scorecard/raceui.obj')
     const demoui = useLoader(OBJLoader, '/scorecard/demoui.obj')
@@ -80,6 +83,14 @@ function Scorecard({
 
     const texture = useLoader(THREE.TextureLoader, '/scorecard/peelshade.png' )
     texture.flipY = false
+    const pbtex = useLoader(THREE.TextureLoader, '/scorecard/phonebldgbake-16.png' )
+    pbtex.flipY = false
+    // pbtex.flipX = false
+    console.log(pbtex.offset)
+    // pbtex.anisotropy = 16
+    // pbtex.offset.y = 0.005
+    // pbtex.offset.x = 0.0025
+    console.log(pbtex.anisotropy)
 
     const [forced, forceTo] = useState(null)
 
@@ -240,6 +251,7 @@ function Scorecard({
     >
         
         <group 
+            name = 'scorecard'
             scale = {[.075,.075,.075]} 
             position = {offsetFromPhys} 
             // rotation = {[toRads(90),0,0]} 
@@ -317,6 +329,30 @@ function Scorecard({
                         attach = 'material' 
                         color = {0xdedede}
                         // opacity = {countyUIanim.opacity}
+                        transparent
+                        needsUpdate
+                    />
+                </mesh>
+            })}
+
+        </a.group>
+       <a.group 
+            // scale = {countyUIanim.scale}
+            // scale = {}
+            // position = {countyUIanim.position}
+            scale = {[0.175,0.175,0.175]}
+            position = {[-60, 65, -60]}
+        >
+            {phonebldg.__$.filter(child => !child.name.includes('WOB')).map((child) => {
+                console.log(child.name)
+                return <mesh 
+                    key = {child.name} 
+                >
+                    <bufferGeometry attach = 'geometry' {...child.geometry} />
+                    <meshBasicMaterial 
+                        attach = 'material' 
+                        map = {pbtex}
+                        // opacity = {child.name.includes('WOB')? 0.1 : 1}
                         transparent
                         needsUpdate
                     />

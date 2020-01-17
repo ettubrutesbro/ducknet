@@ -131,28 +131,28 @@ function App() {
       </Debug>
       */}
       <DebugDialog>
-        <input 
+        <input
           type = 'radio' id = 'default' 
           value = 'default' name = 'cameraChoice' 
           checked = {useCamera === 'default'}
           onChange = {e=>chooseCamera(e.target.value)}
         /> 
         default
-        <input 
+        <input
           type = 'radio' id = 'adjust' 
           value = 'adjust' name = 'cameraChoice' 
           checked = {useCamera === 'adjust'}
           onChange = {e=>chooseCamera(e.target.value)}
         /> 
         adjust
-        <input 
+        <input
           type = 'radio' id = 'orbital' 
           value = 'orbital' name = 'cameraChoice' 
           checked = {useCamera === 'orbital'}
           onChange = {e=>chooseCamera(e.target.value)}
         /> 
         orbital
-        <input 
+        <input
           type = 'radio' id = 'preset' 
           value = 'preset' name = 'cameraChoice' 
           checked = {useCamera === 'preset'}
@@ -166,33 +166,39 @@ function App() {
 
         {useCamera === 'adjust' && projectCamera && 
           <div>
-            <input 
+            <input
+              autocomplete = {'fuckyou'}
               type = 'number' 
               value = {Number(projectCamera.position[0]) + Number(adjustOffset.position[0])} 
               onChange = {e => changeAdjOffset({...adjustOffset, position: [e.target.value - projectCamera.position[0] , adjustOffset.position[1], adjustOffset.position[2]]})}
             />
-            <input 
+            <input
+              autocomplete = {'fuckyou'}
               type = 'number' 
               value = {Number(projectCamera.position[1]) + Number(adjustOffset.position[1])} 
               onChange = {e => changeAdjOffset({...adjustOffset, position: [adjustOffset.position[0], e.target.value - projectCamera.position[1] , adjustOffset.position[2]]})}
             />
-            <input 
+            <input
+              autocomplete = {'fuckyou'}
               type = 'number' 
               value = {Number(projectCamera.position[2]) + Number(adjustOffset.position[2])} 
               onChange = {e => changeAdjOffset({...adjustOffset, position: [adjustOffset.position[0], adjustOffset.position[1], e.target.value - projectCamera.position[2]]})}
             />
 
-            <input 
+            <input
+              autocomplete = {'fuckyou'}
               type = 'number' 
               value = {toDegs(Number(projectCamera.rotation[0])) + toDegs(Number(adjustOffset.rotation[0]))} 
               onChange = {e => changeAdjOffset({...adjustOffset, rotation: [toRads(e.target.value) - projectCamera.rotation[0] , adjustOffset.rotation[1], adjustOffset.rotation[2]]})}
             />
-            <input 
+            <input
+              autocomplete = {'fuckyou'}
               type = 'number' 
               value = {toDegs(Number(projectCamera.rotation[1])) + toDegs(Number(adjustOffset.rotation[1]))} 
               onChange = {e => changeAdjOffset({...adjustOffset, rotation: [adjustOffset.rotation[0], toRads(e.target.value) - projectCamera.rotation[1] , adjustOffset.rotation[2]]})}
             />
-            <input 
+            <input
+              autocomplete = {'fuckyou'}
               type = 'number' 
               value = {toDegs(Number(projectCamera.rotation[2])) + toDegs(Number(adjustOffset.rotation[2]))} 
               onChange = {e => changeAdjOffset({...adjustOffset, rotation: [adjustOffset.rotation[0], adjustOffset.rotation[1], toRads(e.target.value) - projectCamera.rotation[2]]})}
