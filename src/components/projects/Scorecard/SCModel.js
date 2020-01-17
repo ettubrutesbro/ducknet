@@ -209,10 +209,11 @@ export default function SCModel({
                 })}
             </a.group>
         
-        {/* 
+        
             <a.group 
                 scale = {[0.175,0.175,0.175]}
                 position = {[-60, 65, -60]}
+                //visible only when alone (otherwise WOB will destroy the heap)
             >
                 {phonebldg.__$.filter(c => c.name === 'hand').map((child) => {
                     return <mesh name = 'hand' key = 'hand'>
@@ -273,7 +274,7 @@ export default function SCModel({
                 })}
 
             </a.group>
-            */}
+            
             
 
         </group>
