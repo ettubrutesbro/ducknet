@@ -129,7 +129,7 @@ export function Body({
 
   return (
       <group ref = {phys.ref} 
-      // visible = {false}
+      visible = {false}
       >
         
         {shapes.map((shape, i)=>{

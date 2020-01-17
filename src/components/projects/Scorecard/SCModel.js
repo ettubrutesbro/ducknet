@@ -8,7 +8,7 @@ import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader'
 import { OBJLoader } from 'three/examples/jsm/loaders/OBJLoader'
 import { DRACOLoader } from 'three/examples/jsm/loaders/DRACOLoader'
 
-function SCModel({
+export default function SCModel({
     selected,
     onClick = () => {console.log('clicked model')}, //archaic? the model is what must register the click...
     ...props
@@ -118,7 +118,7 @@ function SCModel({
 
 
     return(
-        <group name = 'scorecard'
+        <group 
             scale = {[.075, .075, .075]}
             position = {[0.15, 0, -0.4]}
             onClick = {onClick}
@@ -140,6 +140,7 @@ function SCModel({
                         </mesh>
                     )           
                 })}
+
             {/* NOTE: All this pseudo UI could probably just be in one model, reducing lines here...*/}
         {/* 
             <group name = 'countyui'>
@@ -204,6 +205,3 @@ function SCModel({
         </group>
     )
 }
-
-
-export default SCModel

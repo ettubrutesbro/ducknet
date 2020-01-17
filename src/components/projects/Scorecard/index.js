@@ -51,7 +51,7 @@ import Model from './SCModel'
 //     },
 // ]
 
-function Scorecard({
+export default function Scorecard({
     onClick = () => console.log('clicked project'), 
     selected = false,
     onSelect,
@@ -158,19 +158,14 @@ function Scorecard({
         onForceFinish = {changeDoneForcing}
         {...props}
     >
-        <group key = 'what' name = 'fuckyou'>
-            <mesh>
-                <boxBufferGeometry attach = 'geometry' args = {[1,1,1]} />
-                <meshNormalMaterial />
-            </mesh>
+        <Suspense fallback = {<React.Fragment />} >
+            <Model 
+                selected = {selected}
+                onClick = {onClick}
+            />
+        </Suspense>
 
-        </group>
 
     
     </Body>)
-}
-
-// this might get cumbersome but it's what i have rn
-export default function ScorecardWrapped(props){
-  return <Suspense fallback = {<React.Fragment />}><Scorecard {...props} /></Suspense>
 }
