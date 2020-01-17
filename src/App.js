@@ -15,7 +15,7 @@ import {Enclosure} from './components/core/Wall'
 
 import Seseme from './components/projects/seseme'
 import Eclipse from './components/projects/Eclipse'
-import Scorecard from './components/projects/Scorecard'
+import Scorecard from './components/projects/Scorecard/'
 
 
 

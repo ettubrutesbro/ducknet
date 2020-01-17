@@ -47,6 +47,7 @@ export function usePhysics({ ...props}, fn, deps = [], name){
   useEffect(()=>{
     if(body.mass > 0){ 
       console.log(name, 'ADDED')
+      firstRun = true
     }
     fn(body)
     world.addBody(body)
@@ -93,6 +94,8 @@ export function usePhysics({ ...props}, fn, deps = [], name){
           ref.current.visible = true
           firstRun = false
         }
+
+        // console.log(body.name, ref.current.visible)
     }
   })
 
