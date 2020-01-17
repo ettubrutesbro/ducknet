@@ -4,7 +4,7 @@ import { useLoader, useFrame } from 'react-three-fiber'
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader'
 import { DRACOLoader } from 'three/examples/jsm/loaders/DRACOLoader'
 
-import {Body, LoadingProject} from '../core/Body'
+import {Body} from '../core/Body'
 import {toRads} from '../../utils/3d'
   
 export function Seseme({
@@ -120,5 +120,5 @@ function Material(){
 
 // this might get cumbersome but it's what i have rn
 export default function SesemeWrapped(props){
-  return <Suspense fallback = {<LoadingProject name = 'seseme' />}><Seseme {...props} /></Suspense>
+  return <Suspense fallback = {<React.Fragment />}><Seseme {...props} /></Suspense>
 }

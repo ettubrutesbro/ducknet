@@ -23,9 +23,7 @@ export default function SCModel({
       loader.setDRACOLoader(dracoLoader)
     })
 
-    const countyui = useLoader(OBJLoader, '/scorecard/countyui.obj')
-    const raceui = useLoader(OBJLoader, '/scorecard/raceui.obj')
-    const demoui = useLoader(OBJLoader, '/scorecard/demoui.obj')
+    const pseudoui = useLoader(OBJLoader, '/scorecard/pseudoui.obj')
 
     const caTexture = useLoader(THREE.TextureLoader, '/scorecard/peelshade.png' )
     caTexture.flipY = false
@@ -89,7 +87,7 @@ export default function SCModel({
             colorRange: chroma.scale(['#87D0BC', '#54b88e', '#0E855A']).mode('lab').domain([.88, 1.1, 1.35])
         },
     }
-    const greyRange = chroma.scale(['#ededed', '#dedede', '#9a9a9a']).domain([0, 1.5])  
+    const greyRange = chroma.scale(['#ededed', '#dedede', '#9f9f9f']).domain([0, 1.5])  
 
     useEffect(()=>{
         const currentVis = d[vis]
@@ -116,73 +114,100 @@ export default function SCModel({
     app might be intended to be used
     */
 
+    const poses = [
+        // {
+        //     name: 'sc start',
+        //     position: [1, 7.5, 8],
+        //     rotation: [toRads(-0), toRads(0), toRads(0)],
+        //     fov: 85,
+        // },
+        // {
+        //     name: 'dolly1',
+        //     position: [1.125, 7.5, 7.4],
+        //     rotation: [0,toRads(3),0],
+        //     fov: 85,
+        //     config: {mass: 1, tension: 10, friction: 100, duration: 3500},
+
+        // },
+        // {
+        //     name: 'pos2closeup',
+        //     position: [3, 7.25, 0],
+        //     rotation: [toRads(100), toRads(48), toRads(-32)],
+        //     fov: 85,
+        //     config: {clamp: true}
+        //     //set CA in a 90 degree 
+        // },
+        // {
+        //     name: 'dollyfrompos2',
+        //     position: [3, 7.4, 0],
+        //     rotation: [toRads(103), toRads(50.5), toRads(-30)],
+        //     fov: 85,
+        //     config: {mass: 1, tension: 10, friction: 100, duration: 5000},
+        // },
+        // {
+        //     name: 'mobile',
+        //     position: [44, 5, 7],
+        //     rotation: [toRads(-9), toRads(67), toRads(9)],
+        //     fov: 35,
+        // },
+    ]
+
+    const [pseudo, setPseudo] = useSpring(()=>({
+        opacity: 0, scale: [0.08, 0.08, 0.08], position: [-35, 20, 0]
+    }))
+
+    useEffect(()=>{
+        if(!props.showPseudo) setPseudo({opacity: 0, scale: [0.08, 0.08, 0.08], position: [-35, 20, 0]})
+        else setPseudo({opacity: 1, scale: [0.15, 0.15, 0.15], position: [-54, 41, 5]})
+    }, [pseudo])
+
 
     return(
         <group 
             scale = {[.075, .075, .075]}
-            position = {[0.15, 0, -0.4]}
+            // position = {[0.15, 0, -0.4]}
             onClick = {onClick}
+            {...props}
         >
                 {springs.map(({scale,color}, i)=>{
                     const county = ca.__$[i]
                     return(
-                        <mesh 
+                        <a.mesh 
                             key = {county.name}
                             name = {county.name}
-                            // scale = {scale}
+                            scale = {scale}
                         >
                             <bufferGeometry attach = 'geometry' {...county.geometry} />
-                            <meshBasicMaterial
-                                // color = {color}
+                            <a.meshBasicMaterial
+                                color = {color}
                                 attach ='material'
                                 map = {caTexture}
                             />
-                        </mesh>
+                        </a.mesh>
                     )           
                 })}
 
-            {/* NOTE: All this pseudo UI could probably just be in one model, reducing lines here...*/}
-        {/* 
-            <group name = 'countyui'>
-                {countyui.children.map((child) => {
-                    return <mesh key = {child.name}>
+            <a.group name = 'pseudoui'
+                position = {pseudo.position}
+                scale = {pseudo.scale}
+            >
+                {pseudoui.children.map((child) => {
+                    return <mesh key = {child.name} >
                         <bufferGeometry attach = 'geometry' {...child.geometry} />
                         <a.meshBasicMaterial 
                             attach = 'material' 
                             color = {0xdedede}
+                            opacity = {pseudo.opacity}
+                            transparent
                         />
                     </mesh>
                 })}
-            </group>
-
-            <group name = 'raceui'>
-                {countyui.children.map((child) => {
-                    return <mesh key = {child.name}>
-                        <bufferGeometry attach = 'geometry' {...child.geometry} />
-                        <a.meshBasicMaterial 
-                            attach = 'material' 
-                            color = {0xdedede}
-                        />
-                    </mesh>
-                })}
-            </group>
-
-            <group name = 'demoui'>
-                {demoui.children.map((child) => {
-                    return <mesh key = {child.name}>
-                        <bufferGeometry attach = 'geometry' {...child.geometry} />
-                        <a.meshBasicMaterial 
-                            attach = 'material' 
-                            color = {0xdedede}
-                        />
-                    </mesh>
-                })}
-            </group> 
+            </a.group>
+        
 
             <a.group 
                 scale = {[0.175,0.175,0.175]}
                 position = {[-60, 65, -60]}
-                visible = {false}
             >
                 {phonebldg.__$.filter(child => !child.name.includes('WOB')).map((child) => {
                     return <mesh 
@@ -200,7 +225,7 @@ export default function SCModel({
                 })}
 
             </a.group>
-            */}
+            
 
         </group>
     )

@@ -1,8 +1,17 @@
-import React from 'react'
+import React, {Suspense} from 'react'
+
+import {withKnobs, text, boolean, number} from '@storybook/addon-knobs'
+
 import styled from 'styled-components'
 import {useSpring, animated} from 'react-spring'
 import {Canvas, useFrame, useRender} from 'react-three-fiber'
 import * as CANNON from 'cannon'
+
+
+import {toRads} from '../utils/3d'
+
+import SCModel from '../components/projects/Scorecard/SCModel'
+import Camera from '../components/core/Camera'
 
 
 
@@ -10,41 +19,43 @@ import * as CANNON from 'cannon'
 import { withContexts } from '@storybook/addon-contexts/react';
  
 export default { 
-    title: 'POC',
-
+    title: 'Project models',
+    decorators: [withKnobs]
 }
 
-export const wtf = () => <div> fuck you </div>
+export const scorecard = () => {
 
-wtf.story = {
-    name: 'POC1'
-}
+    const select = boolean('selected', false)
+    const pseudoToggle = boolean('pseudo UI', false)
 
-export const r3ftest = () => {
     return(
         <Container>
             <Canvas>
-                <mesh>
-                    <boxGeometry attach = 'geometry' args = {[1,1,1]} />
-                    <meshNormalMaterial attach = 'material' />
-                </mesh>
+                <Camera 
+                    debugWithOrbit
+                />
+                <Suspense fallback = {<React.Fragment />}>
+                    <SCModel 
+                        showPseudo = {pseudoToggle}
+                        selected = {select}
+                    />
+                </Suspense>
             </Canvas>
         </Container>
     )
 }
 
-export const springTest = () => {
-    const what = useSpring({v: 10, from: {v: 0}})
-    console.log(what.v)
-    return(
-        <animated.div>
-            {what.v}
-        </animated.div>
-    )
-}
-
-
-
 const Container = styled.div`
     border: 1px solid black;
+    height: 720px;
+    width: 100%;
 `
+
+const xyz = (label, defaults = [0,0,0]) => {
+    let xyz = {
+        x: number(`${label} x`, defaults[0], label+'group'),
+        y: number(`${label} y`, defaults[1], label+'group'),
+        z: number(`${label} z`, defaults[2], label+'group'),
+    }
+    return xyz
+}

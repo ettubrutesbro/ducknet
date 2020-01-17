@@ -155,13 +155,3 @@ export function Body({
       </group>
   )
 }
-
-export const LoadingProject = (props) => {
-  useEffect(()=>{
-    return () => {
-      //insert some callback to let app know one model is done
-      // console.log(`${props.name} loaded`)
-    }
-  })
-  return <mesh> </mesh>
-}

@@ -13,44 +13,6 @@ import {WorldFunctions} from '../../../App'
 import {Body} from '../../core/Body'
 import Model from './SCModel'
 
-// const camSprings = [
-//     {
-//         name: 'sc start',
-//         position: [1, 7.5, 8],
-//         rotation: [toRads(-0), toRads(0), toRads(0)],
-//         fov: 85,
-//     },
-//     {
-//         name: 'dolly1',
-//         position: [1.125, 7.5, 7.4],
-//         rotation: [0,toRads(3),0],
-//         fov: 85,
-//         config: {mass: 1, tension: 10, friction: 100, duration: 3500},
-
-//     },
-//     {
-//         name: 'pos2closeup',
-//         position: [3, 7.25, 0],
-//         rotation: [toRads(100), toRads(48), toRads(-32)],
-//         fov: 85,
-//         config: {clamp: true}
-//         //set CA in a 90 degree 
-//     },
-//     {
-//         name: 'dollyfrompos2',
-//         position: [3, 7.4, 0],
-//         rotation: [toRads(103), toRads(50.5), toRads(-30)],
-//         fov: 85,
-//         config: {mass: 1, tension: 10, friction: 100, duration: 5000},
-//     },
-//     {
-//         name: 'mobile',
-//         position: [44, 5, 7],
-//         rotation: [toRads(-9), toRads(67), toRads(9)],
-//         fov: 35,
-//     },
-// ]
-
 export default function Scorecard({
     onClick = () => console.log('clicked project'), 
     selected = false,
@@ -112,24 +74,6 @@ export default function Scorecard({
 
     // useEffect(()=>{
     //     //animations herein
-    //     if(d[vis]){
-    //         const currentVis = d[vis]
-    //         setSprings(i => {
-    //             const cty = ca.__$[i].name
-    //                 const cv = pcts[currentVis][cty]
-    //                 return {
-    //                     scale: [1,1, cv || pcts[currentVis].baseZ], 
-    //                     color: selected? pcts[currentVis].colorRange(cv || pcts[currentVis].baseZ).hex() 
-    //                         : greyRange(cv || pcts[currentVis].baseZ).hex(),
-    //                     delay: 25 * i,
-    //                     onRest: () => {if(i===12){
-    //                         //janky way to tell when all counties are done if i need it
-    //                         changeVis(vis < 2? vis+1 : 0)
-    //                     }}
-    //                 }
-                
-    //         })
-    //     }
     //     if(
     //         selected 
     //         && doneForcing 
@@ -153,7 +97,7 @@ export default function Scorecard({
             {size: [1.7,1.5,1.7], offset: [-1,1.8,0]}
         ]}
         forced = {forced}
-        visible = {true}
+        // visible = {true}
         falling = {falling}
         onForceFinish = {changeDoneForcing}
         {...props}
