@@ -1,7 +1,7 @@
 import React, {Suspense, useEffect, useState, useContext} from 'react'
 import {useLoader} from 'react-three-fiber'
 import * as THREE from 'three'
-import {a, useSprings, useSpring} from 'react-spring/three'
+import {a, useSprings, useSpring, config} from 'react-spring/three'
 import chroma from 'chroma-js'
 
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader'
@@ -21,7 +21,7 @@ export default function SCModel({
     const ca = useLoader(GLTFLoader, '/scorecard/resplit.gltf', loader => {
       loader.setDRACOLoader(dracoLoader)
     })
-    const phonebldg = useLoader(GLTFLoader, '/scorecard/phonebldg2.gltf', loader => {
+    const phonebldg = useLoader(GLTFLoader, '/scorecard/phonebldg4.gltf', loader => {
       loader.setDRACOLoader(dracoLoader)
     })
 
@@ -29,7 +29,7 @@ export default function SCModel({
 
     const caTexture = useLoader(THREE.TextureLoader, '/scorecard/peelshade.png' )
     caTexture.flipY = false
-    const phonebldgTexture = useLoader(THREE.TextureLoader, '/scorecard/phonebldgbake-16.png' )
+    const phonebldgTexture = useLoader(THREE.TextureLoader, '/scorecard/phonebldgbake-12-shift.png' )
     phonebldgTexture.flipY = false
 
     //ANIMATION: AMBIENT
@@ -159,6 +159,9 @@ export default function SCModel({
         {opacity: 1, scale: [0.15, 0.15, 0.15], position: [-54, 41, 5]}
     ], props.showPseudo? 1 : 0)
 
+    const hand = Spring([{position: [0,0,-135]}, {position: [0,0,0], config: config.slow}], props.showBldg? 1 : 0)
+    const wobhand = Spring([{position: [0,0,-135]}, {position: [0,0,-1200], config: config.slow}], props.showBldg? 1 : 0)
+
     const bldg = Spring([{position: [0,0,0]}, {position: [0,550,0]}], props.showBldg? 1 : 0)
 
     const bldgshadow = Spring([
@@ -170,7 +173,6 @@ export default function SCModel({
     return(
         <group 
             scale = {[.075, .075, .075]}
-            // position = {[0.15, 0, -0.4]}
             onClick = {onClick}
             {...props}
         >
@@ -216,25 +218,27 @@ export default function SCModel({
                 //visible only when alone (otherwise WOB will destroy the heap)
             >
                 {phonebldg.__$.filter(c => c.name === 'hand').map((child) => {
-                    return <mesh name = 'hand' key = 'hand'>
+                    return <a.mesh name = 'hand' key = 'hand'
+                        position = {hand.position}
+                    >
                         <bufferGeometry attach = 'geometry' {...child.geometry} />
                         <meshBasicMaterial 
                             attach = 'material' 
                             map = {phonebldgTexture}
-                            color = {0xdedede}
+                            // color = {0xdedede}
                         />
-                    </mesh>
+                    </a.mesh>
                 })}
                 {phonebldg.__$.filter(c => c.name === 'WOBhand').map((child) => {
-                    return <mesh name = 'wobhand' key = 'wobhand'>
+                    return <a.mesh name = 'wobhand' key = 'wobhand'
+                        position = {wobhand.position}
+                    >
                         <bufferGeometry attach = 'geometry' {...child.geometry} />
-                        <meshNormalMaterial 
+                        <meshBasicMaterial 
                             attach = 'material' 
                             color = {0xffffff}
-                            transparent
-                            opacity = {0.5}
                         />
-                    </mesh>
+                    </a.mesh>
                 })}
                 {phonebldg.__$.filter(c => c.name === 'bldg').map((child) => {
                     return <a.mesh name = 'bldg' key = 'bldg'
@@ -244,7 +248,7 @@ export default function SCModel({
                         <meshBasicMaterial 
                             attach = 'material' 
                             map = {phonebldgTexture}
-                            color = {0xdedede}
+                            color = {0xF6FFFE}
                         />
                     </a.mesh>
                 })}
@@ -257,14 +261,16 @@ export default function SCModel({
                         <a.meshBasicMaterial 
                             attach = 'material' 
                             map = {phonebldgTexture}
-                            color = {0xdedede}
                             opacity = {bldgshadow.opacity}
                             transparent
                         />
                     </a.mesh>
                 })}
+
                 {phonebldg.__$.filter(c => c.name === 'WOBbldg').map((child) => {
-                    return <mesh name = 'wobbldg' key = 'wobbldg'>
+                    return <mesh name = 'wobbldg' key = 'wobbldg'
+                        
+                    >
                         <bufferGeometry attach = 'geometry' {...child.geometry} />
                         <meshBasicMaterial 
                             attach = 'material' 

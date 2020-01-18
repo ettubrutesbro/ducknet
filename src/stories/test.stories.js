@@ -35,8 +35,8 @@ export const scorecard = () => {
                 <Camera 
                     debugWithOrbit
                     projectCamera = {{
-                        fov: 65,
-                        position: [0,10,40],
+                        fov: 35,
+                        position: [0,8,70],
                         rotation: [0,toRads(5),0]
                     }}
                 />
@@ -45,6 +45,7 @@ export const scorecard = () => {
                         showPseudo = {pseudoToggle}
                         showBldg = {bldgToggle}
                         selected = {select}
+                        rotation = {[toRads(0),toRads(-45),0]}
                     />
                 </Suspense>
             </Canvas>
@@ -54,7 +55,7 @@ export const scorecard = () => {
 
 const Container = styled.div`
     border: 1px solid black;
-    height: 720px;
+    height: 1080px;
     width: 100%;
 `
 

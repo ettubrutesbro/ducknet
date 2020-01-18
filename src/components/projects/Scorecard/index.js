@@ -104,6 +104,7 @@ export default function Scorecard({
     >
         <Suspense fallback = {<React.Fragment />} >
             <Model 
+                position = {[0.15, 0, -0.4]}
                 selected = {selected}
                 onClick = {onClick}
             />
