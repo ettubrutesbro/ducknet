@@ -35,7 +35,7 @@ export const scorecard = () => {
                 <Camera 
                     debugWithOrbit
                     projectCamera = {{
-                        fov: 27,
+                        fov: 29,
                         position: [0,3,70],
                         rotation: [0,toRads(7),0]
                     }}
@@ -45,7 +45,7 @@ export const scorecard = () => {
                         showPseudo = {pseudoToggle}
                         showBldg = {bldgToggle}
                         selected = {select}
-                        rotation = {[toRads(0),toRads(-30),0]}
+                        rotation = {[toRads(0),toRads(-15),0]}
                     />
                 </Suspense>
             </Canvas>

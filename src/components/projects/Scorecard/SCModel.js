@@ -274,7 +274,7 @@ export default function SCModel({
 
                 <group
                     rotation = {[0, toRads(-13), 0]}
-                    position = {[100, 0, -100]}
+                    position = {[100, 0, 80]}
                 >
                     {phonebldg.__$.filter(c => c.name === 'bldg').map((child) => {
                         return <a.mesh name = 'bldg' key = 'bldg'
