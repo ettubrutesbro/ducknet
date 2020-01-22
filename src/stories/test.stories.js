@@ -35,9 +35,9 @@ export const scorecard = () => {
                 <Camera 
                     debugWithOrbit
                     projectCamera = {{
-                        fov: 35,
-                        position: [0,8,70],
-                        rotation: [0,toRads(5),0]
+                        fov: 27,
+                        position: [0,3,70],
+                        rotation: [0,toRads(7),0]
                     }}
                 />
                 <Suspense fallback = {<React.Fragment />}>
@@ -45,7 +45,7 @@ export const scorecard = () => {
                         showPseudo = {pseudoToggle}
                         showBldg = {bldgToggle}
                         selected = {select}
-                        rotation = {[toRads(0),toRads(-45),0]}
+                        rotation = {[toRads(0),toRads(-30),0]}
                     />
                 </Suspense>
             </Canvas>

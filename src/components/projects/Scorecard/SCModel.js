@@ -9,6 +9,7 @@ import { OBJLoader } from 'three/examples/jsm/loaders/OBJLoader'
 import { DRACOLoader } from 'three/examples/jsm/loaders/DRACOLoader'
 
 import {Spring} from '../../../utils/spring'
+import {toRads} from '../../../utils/3d'
 
 export default function SCModel({
     selected,
@@ -31,6 +32,9 @@ export default function SCModel({
     caTexture.flipY = false
     const phonebldgTexture = useLoader(THREE.TextureLoader, '/scorecard/phonebldgbake-12-shift.png' )
     phonebldgTexture.flipY = false
+
+    const phonebldgAlpha = useLoader(THREE.TextureLoader, '/scorecard/phonebldgalpha.png' )
+    phonebldgAlpha.flipY = false
 
     //ANIMATION: AMBIENT
     //at all times, percentages are being passed to the county geometries, causing them to 
@@ -213,10 +217,25 @@ export default function SCModel({
         
         
             <a.group 
-                scale = {[0.175,0.175,0.175]}
-                position = {[-60, 65, -60]}
+                scale = {[0.179,0.179,0.179]}
+                position = {[-60, 75, -63]}
                 //visible only when alone (otherwise WOB will destroy the heap)
             >
+                <a.group name = 'swatchgroup' position = {hand.position}>
+                    {[1,2,3,4].map((c,i)=>{
+                        return <mesh name = {'swatch'+i}
+                            position = {[395, -350 + ((i*22) + (i*11)), 369]}
+                        >
+                            <planeBufferGeometry attach = 'geometry' args = {[15,22]} />
+                            <a.meshBasicMaterial attach = 'material'
+                                color = {selected? pcts[d[vis]].colorRange((i+1)*0.6).hex()
+                                    : greyRange((i+1)*0.5).hex()
+                                }
+                             />
+                        </mesh>
+                    })}
+                </a.group>
+
                 {phonebldg.__$.filter(c => c.name === 'hand').map((child) => {
                     return <a.mesh name = 'hand' key = 'hand'
                         position = {hand.position}
@@ -225,6 +244,7 @@ export default function SCModel({
                         <meshBasicMaterial 
                             attach = 'material' 
                             map = {phonebldgTexture}
+                            alphaMap = {phonebldgAlpha}
                             // color = {0xdedede}
                         />
                     </a.mesh>
@@ -236,48 +256,68 @@ export default function SCModel({
                         <bufferGeometry attach = 'geometry' {...child.geometry} />
                         <meshBasicMaterial 
                             attach = 'material' 
-                            color = {0xffffff}
+                            color = {0xffffff}                      
                         />
                     </a.mesh>
                 })}
-                {phonebldg.__$.filter(c => c.name === 'bldg').map((child) => {
-                    return <a.mesh name = 'bldg' key = 'bldg'
-                        position = {bldg.position}
-                    >
-                        <bufferGeometry attach = 'geometry' {...child.geometry} />
-                        <meshBasicMaterial 
-                            attach = 'material' 
-                            map = {phonebldgTexture}
-                            color = {0xF6FFFE}
-                        />
-                    </a.mesh>
-                })}
-                {phonebldg.__$.filter(c => c.name === 'bldgshadow').map((child) => {
-                    return <a.mesh name = 'bldgshadow' key = 'bldgshadow'
-                        scale = {bldgshadow.scale}
-                        position = {bldgshadow.position}
-                    >
-                        <bufferGeometry attach = 'geometry' {...child.geometry} />
-                        <a.meshBasicMaterial 
-                            attach = 'material' 
-                            map = {phonebldgTexture}
-                            opacity = {bldgshadow.opacity}
-                            transparent
-                        />
-                    </a.mesh>
-                })}
-
-                {phonebldg.__$.filter(c => c.name === 'WOBbldg').map((child) => {
-                    return <mesh name = 'wobbldg' key = 'wobbldg'
-                        
-                    >
-                        <bufferGeometry attach = 'geometry' {...child.geometry} />
-                        <meshBasicMaterial 
-                            attach = 'material' 
-                            color = {0xffffff}
-                        />
+                <group position = {[250,-400,400]} >
+                    <pointLight 
+                        color = {0x9AFFE3} 
+                        // color = {0xffffff}
+                        intensity = {0.5} 
+                    />
+                    <mesh visible = {false}>
+                        <boxBufferGeometry attach = 'geometry' args = {[100,100,100]} />
+                        <meshNormalMaterial attach = 'material' />
                     </mesh>
-                })}
+                </group>
+
+                <group
+                    rotation = {[0, toRads(-13), 0]}
+                    position = {[100, 0, -100]}
+                >
+                    {phonebldg.__$.filter(c => c.name === 'bldg').map((child) => {
+                        return <a.mesh name = 'bldg' key = 'bldg'
+                            position = {bldg.position}
+                        >
+                            <bufferGeometry attach = 'geometry' {...child.geometry} />
+                            <meshLambertMaterial 
+                                attach = 'material' 
+                                emissiveMap = {phonebldgTexture}
+                                emissiveIntensity = {0.75}
+                                color = {0xdedede}
+                                emissive = {0xffffff}
+                            />
+                        </a.mesh>
+                    })}
+                    {phonebldg.__$.filter(c => c.name === 'bldgshadow').map((child) => {
+                        return <a.mesh name = 'bldgshadow' key = 'bldgshadow'
+                            scale = {bldgshadow.scale}
+                            position = {bldgshadow.position}
+                        >
+                            <bufferGeometry attach = 'geometry' {...child.geometry} />
+                            <a.meshBasicMaterial 
+                                attach = 'material' 
+                                map = {phonebldgTexture}
+                                opacity = {bldgshadow.opacity}
+                                transparent
+                            />
+                        </a.mesh>
+                    })}
+
+                    {phonebldg.__$.filter(c => c.name === 'WOBbldg').map((child) => {
+                        return <mesh name = 'wobbldg' key = 'wobbldg'
+                            
+                        >
+                            <bufferGeometry attach = 'geometry' {...child.geometry} />
+                            <meshBasicMaterial 
+                                attach = 'material' 
+                                color = {0xffffff}
+                            />
+                        </mesh>
+                    })}
+
+                </group>
 
             </a.group>
             
