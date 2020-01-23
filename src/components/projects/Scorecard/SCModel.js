@@ -120,7 +120,7 @@ export default function SCModel({
     app might be intended to be used
     */
 
-    const poses = [
+    const camposes = [
         // {
         //     name: 'sc start',
         //     position: [1, 7.5, 8],
@@ -176,8 +176,10 @@ export default function SCModel({
 
     return(
         <group 
+            name = 'scorecardmodel'
             scale = {[.075, .075, .075]}
             onClick = {onClick}
+
             {...props}
         >
                 {springs.map(({scale,color}, i)=>{

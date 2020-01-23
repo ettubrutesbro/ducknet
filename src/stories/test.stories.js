@@ -29,15 +29,26 @@ export const scorecard = () => {
     const pseudoToggle = boolean('pseudo UI', false)
     const bldgToggle = boolean('bldg', false)
 
+    const camX = number('camera X', 0, 'cam')
+    const camY = number('camera Y', 3, 'cam')
+    const camZ = number('camera Z', 70, 'cam')
+    const camRX = number('cam rot X', 0, 'cam')
+    const camRY = number('cam rot Y', 7, 'cam')
+    const camRZ = number('cam rot Z', 0, 'cam')
+
+    const modelRX = number('model rot X', 0, 'model')
+    const modelRY = number('model rot Y', 0, 'model')
+    const modelRZ = number('model rot Z', 0, 'model')
+
     return(
         <Container>
             <Canvas>
                 <Camera 
-                    debugWithOrbit
+                    // debugWithOrbit
                     projectCamera = {{
                         fov: 29,
-                        position: [0,3,70],
-                        rotation: [0,toRads(7),0]
+                        position: [camX,camY,camZ],
+                        rotation: [toRads(camRX),toRads(camRY),toRads(camRZ)]
                     }}
                 />
                 <Suspense fallback = {<React.Fragment />}>
@@ -45,7 +56,7 @@ export const scorecard = () => {
                         showPseudo = {pseudoToggle}
                         showBldg = {bldgToggle}
                         selected = {select}
-                        rotation = {[toRads(0),toRads(-15),0]}
+                        rotation = {[toRads(modelRX),toRads(modelRY),toRads(modelRZ)]}
                     />
                 </Suspense>
             </Canvas>
