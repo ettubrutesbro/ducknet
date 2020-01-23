@@ -5,7 +5,8 @@ import {OrbitControls} from 'three/examples/jsm/controls/OrbitControls'
 import {a, useSpring} from 'react-spring/three'
 import {toRads, xyzArray} from '../../utils/3d'
 
-import {WorldFunctions} from '../../App'
+// import {WorldFunctions} from '../../App'
+import {CamContext} from '../PreviewCanvas'
 
 import ReactDOM from 'react-dom'
 
@@ -30,12 +31,13 @@ const defaults = {
     //aren't as jarring...
 }
 
+
 function Camera({
-  projectCamera, 
+  // projectCamera, 
   useThis = true,
   ...props
 }) {
-  // const {setCamStatus} = useContext(WorldFunctions)
+  const projectCamera = useContext(CamContext).cam
 
   const ref = useRef()
 
@@ -154,3 +156,4 @@ export function AdjustCamera({
     fov = {attrs.fov}
   />
 }
+

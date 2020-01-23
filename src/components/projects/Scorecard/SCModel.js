@@ -11,8 +11,11 @@ import { DRACOLoader } from 'three/examples/jsm/loaders/DRACOLoader'
 import {Spring} from '../../../utils/spring'
 import {toRads} from '../../../utils/3d'
 
+import {CamContext} from '../../PreviewCanvas'
+
 export default function SCModel({
-    selected,
+    pose,
+    selected, //only here bc colors vary depending on selection - selection/pose handled by proj
     onClick = () => {console.log('clicked model')}, //archaic? the model is what must register the click...
     ...props
 }){
@@ -120,21 +123,35 @@ export default function SCModel({
     app might be intended to be used
     */
 
-    const camposes = [
-        // {
-        //     name: 'sc start',
-        //     position: [1, 7.5, 8],
-        //     rotation: [toRads(-0), toRads(0), toRads(0)],
-        //     fov: 85,
-        // },
-        // {
-        //     name: 'dolly1',
-        //     position: [1.125, 7.5, 7.4],
-        //     rotation: [0,toRads(3),0],
-        //     fov: 85,
-        //     config: {mass: 1, tension: 10, friction: 100, duration: 3500},
+    const {cam, setCam} = useContext(CamContext)
 
-        // },
+    useEffect(()=>{ //when POSE changes, set cosmetic rotation group & camera accordingly
+        console.log(pose)
+        if(pose || pose === 0){
+            setCam(camposes[pose])
+        }
+        else{
+            setCam(null)
+        }
+    }, [pose])
+
+    const modelPoses = [
+
+    ]
+    const camposes = [
+        {
+            name: 'sc start',
+            position: [1, 7.5, 8],
+            rotation: [toRads(-0), toRads(0), toRads(0)],
+            fov: 85,
+        },
+        {
+            name: 'dolly1',
+            position: [1.125, 7.5, 7.4],
+            rotation: [0,toRads(3),0],
+            fov: 85,
+            config: {mass: 1, tension: 10, friction: 100, duration: 3500},
+        },
         // {
         //     name: 'pos2closeup',
         //     position: [3, 7.25, 0],
@@ -157,6 +174,8 @@ export default function SCModel({
         //     fov: 35,
         // },
     ]
+
+    //ANIMS: individual items 
 
     const pseudo = Spring([
         {opacity: 0, scale: [0.08, 0.08, 0.08], position: [-35, 20, 0]},
@@ -225,7 +244,7 @@ export default function SCModel({
             >
                 <a.group name = 'swatchgroup' position = {hand.position}>
                     {[1,2,3,4].map((c,i)=>{
-                        return <mesh name = {'swatch'+i}
+                        return <mesh name = {'swatch'+i} key = {'swatch'+i}
                             position = {[395, -350 + ((i*22) + (i*11)), 369]}
                         >
                             <planeBufferGeometry attach = 'geometry' args = {[15,22]} />
