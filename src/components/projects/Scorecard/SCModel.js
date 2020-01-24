@@ -178,10 +178,11 @@ export default function SCModel({
     //ANIMS: individual items, by "group"
 
     const rotation = Spring([
+        {rotation: [toRads(0), toRads(0), toRads(0)]}, //idle
         {rotation: [toRads(0), toRads(50), toRads(0)]},
         {rotation: [toRads(100), toRads(50), toRads(0)]},
         {rotation: [toRads(0), toRads(70), toRads(0)]},
-    ], pose)
+    ], pose || pose === 0? pose+1 : 0)
 
     const pseudo = Spring([
         {opacity: 0, scale: [0.08, 0.08, 0.08], position: [-35, 20, 0]},
