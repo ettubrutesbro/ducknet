@@ -135,9 +135,6 @@ export default function SCModel({
         }
     }, [pose])
 
-    const modelPoses = [
-
-    ]
     const camposes = [
         {
             name: 'sc start',
@@ -175,8 +172,9 @@ export default function SCModel({
         // },
     ]
 
-    //ANIMS: individual items, by "group"
+    //ANIMS: groups of individual springs for diff. geometries
 
+    //0-4: 'global' rotations
     const rotation = Spring([
         {rotation: [toRads(0), toRads(0), toRads(0)]}, //idle
         {rotation: [toRads(0), toRads(50), toRads(0)]},
@@ -184,20 +182,22 @@ export default function SCModel({
         {rotation: [toRads(0), toRads(70), toRads(0)]},
     ], pose || pose === 0? pose+1 : 0)
 
+    //1: pseudo UI
     const pseudo = Spring([
         {opacity: 0, scale: [0.08, 0.08, 0.08], position: [-35, 20, 0]},
         {opacity: 1, scale: [0.15, 0.15, 0.15], position: [-54, 41, 5]}
-    ], props.showPseudo? 1 : 0)
+    ], pose === 1? 1 : 0)
 
-    const hand = Spring([{position: [0,0,-135]}, {position: [0,0,0], config: config.slow}], props.showBldg? 1 : 0)
-    const wobhand = Spring([{position: [0,0,-135]}, {position: [0,0,-1200], config: config.slow}], props.showBldg? 1 : 0)
+    //2: blurbs
 
-    const bldg = Spring([{position: [0,0,0]}, {position: [0,550,0]}], props.showBldg? 1 : 0)
-
+    //3: hand, phone, bldg
+    const hand = Spring([{position: [0,0,-135]}, {position: [0,0,0], config: config.slow}], pose === 3? 1 : 0)
+    const wobhand = Spring([{position: [0,0,-135]}, {position: [0,0,-1200], config: config.slow}], pose === 3? 1 : 0)
+    const bldg = Spring([{position: [0,0,0]}, {position: [0,550,0]}], pose === 3? 1 : 0)
     const bldgshadow = Spring([
         {scale: [1,1,0.2], position: [0,0,850], opacity: -0.5 }, 
         {scale: [1,1,1], position: [0,0,0], opacity: 1, delay: 50}
-    ], props.showBldg? 1 : 0)
+    ], pose === 3? 1 : 0)
 
 
     return(
