@@ -128,10 +128,10 @@ export default function SCModel({
     useEffect(()=>{ //when POSE changes, set cosmetic rotation group & camera accordingly
         console.log(pose)
         if(pose || pose === 0){
-            setCam(camposes[pose])
+            // setCam(camposes[pose])
         }
         else{
-            setCam(null)
+            // setCam(null)
         }
     }, [pose])
 
@@ -141,7 +141,7 @@ export default function SCModel({
     const camposes = [
         {
             name: 'sc start',
-            position: [1, 7.5, 8],
+            position: [0,0,45],
             rotation: [toRads(-0), toRads(0), toRads(0)],
             fov: 85,
         },
@@ -175,7 +175,13 @@ export default function SCModel({
         // },
     ]
 
-    //ANIMS: individual items 
+    //ANIMS: individual items, by "group"
+
+    const rotation = Spring([
+        {rotation: [toRads(0), toRads(50), toRads(0)]},
+        {rotation: [toRads(100), toRads(50), toRads(0)]},
+        {rotation: [toRads(0), toRads(70), toRads(0)]},
+    ], pose)
 
     const pseudo = Spring([
         {opacity: 0, scale: [0.08, 0.08, 0.08], position: [-35, 20, 0]},
@@ -194,10 +200,12 @@ export default function SCModel({
 
 
     return(
-        <group 
+        <a.group 
             name = 'scorecardmodel'
             scale = {[.075, .075, .075]}
             onClick = {onClick}
+
+            rotation = {rotation.rotation}
 
             {...props}
         >
@@ -344,6 +352,6 @@ export default function SCModel({
             
             
 
-        </group>
+        </a.group>
     )
 }

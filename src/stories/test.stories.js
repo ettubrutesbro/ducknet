@@ -58,7 +58,7 @@ export const scorecard = () => {
                         showBldg = {bldgToggle}
 
                         selected = {select}
-                        rotation = {[toRads(modelRX),toRads(modelRY),toRads(modelRZ)]}
+                        // rotation = {[toRads(modelRX),toRads(modelRY),toRads(modelRZ)]}
                     />
                 </Suspense>
             </PreviewCanvas>

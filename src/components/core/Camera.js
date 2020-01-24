@@ -24,9 +24,7 @@ const Controls = props => {
 const defaults = {
     position: [0, 0, 45],
     rotation: [0, 0, 0],
-    zoom: 1,
     fov: 25,
-    orbit: false,
     //maybe set a really gentle config so the transitions from selection > default
     //aren't as jarring...
 }
@@ -37,9 +35,12 @@ function Camera({
   useThis = true,
   ...props
 }) {
-  const projectCamera = useContext(CamContext).cam
+
+  const {cam} = useContext(CamContext)
+  const projectCamera = cam
 
   const ref = useRef()
+
 
   const [camdata, setCam, stop] = useSpring(()=>({
     position: defaults.position,
