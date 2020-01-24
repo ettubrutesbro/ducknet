@@ -179,8 +179,8 @@ export default function SCModel({
         {rotation: [toRads(0), toRads(0), toRads(0)]}, //idle
         {rotation: [toRads(0), toRads(50), toRads(0)]},
         {rotation: [toRads(100), toRads(50), toRads(0)]},
-        {rotation: [toRads(0), toRads(70), toRads(0)]},
-    ], pose || pose === 0? pose+1 : 0)
+        {rotation: [toRads(0), toRads(-12), toRads(0)]},
+    ], pose || pose === 0? pose : 0)
 
     //1: pseudo UI
     const pseudo = Spring([
