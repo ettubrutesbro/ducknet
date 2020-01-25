@@ -27,7 +27,6 @@ export const scorecard = () => {
 
     const posed = boolean('pose? (is selected)', false, 'pose')
     const pose = number('pose #', 0, {}, 'pose')
-    const select = boolean('selected', false, 'pose')
 
     const debugCam = boolean('debug cam?', false, 'cam')
     const camX = number('camera X', 0, {}, 'cam')
@@ -49,12 +48,16 @@ export const scorecard = () => {
             <PreviewCanvas
                 debugCamera = {debugCam? {position: [camX, camY, camZ], rotation: [toRads(camRX), toRads(camRY), toRads(camRZ)], fov: camFOV} : null}
             >
+
                 <Suspense fallback = {<React.Fragment />}>
+                    <group rotation = {[toRads(modelRX),toRads(modelRY),toRads(modelRZ)]} >
                     <SCModel 
+                        position = {[0,0,0]}
                         pose = {posed? pose: null} //should soon supersede the 'showX' stuff below
-                        selected = {select}
-                        // rotation = {[toRads(modelRX),toRads(modelRY),toRads(modelRZ)]}
+                        selected = {posed? pose: false}
+                        
                     />
+                    </group>
                 </Suspense>
             </PreviewCanvas>
         </Container>

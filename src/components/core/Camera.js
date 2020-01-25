@@ -36,60 +36,47 @@ function Camera({
   ...props
 }) {
 
-  const {cam} = useContext(CamContext)
-  const projectCamera = cam
-
+  //set camera as default
   const ref = useRef()
+  const { setDefaultCamera } = useThree()
+  useEffect(() => {
+    void setDefaultCamera(ref.current)
+  }, [useThis])
 
+  
 
-  const [camdata, setCam, stop] = useSpring(()=>({
+  const {cam, setCam} = useContext(CamContext)
+
+  const [data, setSpring, stop] = useSpring(()=>({
     position: defaults.position,
     rotation: defaults.rotation,
     fov: defaults.fov,
   }))
-  // Make the camera known to the system
-  const { setDefaultCamera } = useThree()
 
-  useEffect(() => {
-    if(useThis) void setDefaultCamera(ref.current)
-  }, [useThis])
+
 
 
   useEffect(()=>{
     console.log('moving camera')
-    const target = xyzArray(projectCamera || defaults)
     stop()
-    if(!projectCamera){
-      // console.log('no project camera, erasing cam status')
-      // setCamStatus(null)
-    }
-    setCam({
-      position: target.position,
-      rotation: target.rotation,
-      fov: target.fov,
-      config: target.config,
-      onStart: target.onStart,
-      onRest: () => {
-        console.log('camera completed motion')
-        // if(target.name) setCamStatus(target.name)
-      }
-    })
-  }, [projectCamera])
-  // Updates per-frame might not help? paul put in updateMatrixWorld
+    if(!cam) setSpring(defaults)
+    else setSpring(cam)
+  }, [cam])
+
+  // Updates per-frame might not help? example used updateMatrixWorld
   // but only updProjMatrix works for zoom changes [test for rotation]
   useFrame(() => {
     // ref.current.updateMatrixWorld()
     ref.current.updateProjectionMatrix()
   })
 
-  // console.log(camdata)
 
   return <React.Fragment> 
     <a.perspectiveCamera 
       ref={ref} 
-      position = {camdata.position}
-      rotation = {camdata.rotation}
-      fov = {camdata.fov}
+      position = {data.position}
+      rotation = {data.rotation}
+      fov = {data.fov}
       // {...props} 
     />
     {props.debugWithOrbit && <Controls/>}

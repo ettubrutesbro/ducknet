@@ -128,57 +128,49 @@ export default function SCModel({
     useEffect(()=>{ //when POSE changes, set cosmetic rotation group & camera accordingly
         console.log(pose)
         if(pose || pose === 0){
-            // setCam(camposes[pose])
+            setCam(camposes[pose])
         }
         else{
-            // setCam(null)
+            setCam(null)
         }
     }, [pose])
 
     const camposes = [
         {
-            name: 'sc start',
+            name: 'idle', //idle
             position: [0,0,45],
             rotation: [toRads(-0), toRads(0), toRads(0)],
             fov: 85,
         },
         {
-            name: 'dolly1',
-            position: [1.125, 7.5, 7.4],
-            rotation: [0,toRads(3),0],
+            name: 'pseudo',
+            position: [0,0,15],
+            rotation: [toRads(-0), toRads(0), toRads(0)],
             fov: 85,
-            config: {mass: 1, tension: 10, friction: 100, duration: 3500},
         },
-        // {
-        //     name: 'pos2closeup',
-        //     position: [3, 7.25, 0],
-        //     rotation: [toRads(100), toRads(48), toRads(-32)],
-        //     fov: 85,
-        //     config: {clamp: true}
-        //     //set CA in a 90 degree 
-        // },
-        // {
-        //     name: 'dollyfrompos2',
-        //     position: [3, 7.4, 0],
-        //     rotation: [toRads(103), toRads(50.5), toRads(-30)],
-        //     fov: 85,
-        //     config: {mass: 1, tension: 10, friction: 100, duration: 5000},
-        // },
-        // {
-        //     name: 'mobile',
-        //     position: [44, 5, 7],
-        //     rotation: [toRads(-9), toRads(67), toRads(9)],
-        //     fov: 35,
-        // },
+        {
+            name: 'blurb',
+            position: [2,1.4,3],
+            rotation: [toRads(-10),toRads(0),toRads(0)],
+            fov: 90,
+            // config: {mass: 1, tension: 10, friction: 100, duration: 3500},
+        },
+        {
+            name: 'mobile',
+            position: [0,10,100],
+            rotation: [toRads(-10),toRads(0),0],
+            fov: 20,
+            // config: {mass: 1, tension: 10, friction: 100, duration: 3500},
+        },
     ]
 
     //ANIMS: groups of individual springs for diff. geometries
 
-    //0-4: 'global' rotations
+    //0-3: 'global' rotations
     const rotation = Spring([
         {rotation: [toRads(0), toRads(0), toRads(0)]}, //idle
         {rotation: [toRads(0), toRads(50), toRads(0)]},
-        {rotation: [toRads(100), toRads(50), toRads(0)]},
+        {rotation: [toRads(-70), toRads(0), toRads(-90)]},
         {rotation: [toRads(0), toRads(-12), toRads(0)]},
     ], pose || pose === 0? pose : 0)
 
@@ -191,7 +183,19 @@ export default function SCModel({
     //2: blurbs
 
     //3: hand, phone, bldg
-    const hand = Spring([{position: [0,0,-135]}, {position: [0,0,0], config: config.slow}], pose === 3? 1 : 0)
+    //this group requires extra logic for toggling WOB visibility / making sure they
+    //re not still present during unselect transition or other animations
+    const [wobs, toggleWobs] = useState(false)
+    useEffect(()=>{
+        if(pose===3) toggleWobs(true)
+        if(!selected) toggleWobs(false)
+        console.log('wobs:', wobs)
+    }, [pose, selected])
+
+    const hand = Spring([
+        {position: [0,0,-135], onRest: ()=> toggleWobs(false)}, 
+        {position: [0,0,0], config: config.slow, onRest: ()=>console.log('hand 1')}
+    ], pose === 3? 1 : 0)
     const wobhand = Spring([{position: [0,0,-135]}, {position: [0,0,-1200], config: config.slow}], pose === 3? 1 : 0)
     const bldg = Spring([{position: [0,0,0]}, {position: [0,550,0]}], pose === 3? 1 : 0)
     const bldgshadow = Spring([
@@ -247,6 +251,8 @@ export default function SCModel({
         
         
             <a.group 
+                name = 'wobvisibilitygroup' //contains all phone/bldg 
+                visible = {wobs}
                 scale = {[0.179,0.179,0.179]}
                 position = {[-60, 75, -63]}
                 //visible only when alone (otherwise WOB will destroy the heap)

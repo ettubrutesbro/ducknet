@@ -14,6 +14,8 @@ import React, {useContext, useState, useEffect} from 'react'
 import { Canvas } from 'react-three-fiber'
 import Camera from './core/Camera'
 
+import {toRads} from '../utils/3d'
+
 export const CamContext = React.createContext({
     cam: 'hello',
     setCam: (v)=>console.log(v)
@@ -36,6 +38,7 @@ function PreviewCanvas({debugCamera, children}) {
         <Camera />
         {children}
         </CamContext.Provider>
+
     </Canvas>
 
 }
