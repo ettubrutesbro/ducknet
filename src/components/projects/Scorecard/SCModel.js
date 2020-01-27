@@ -13,7 +13,6 @@ import {toRads} from '../../../utils/3d'
 
 import {CamContext} from '../../PreviewCanvas'
 
-import {easeCubic, easeCubicOut} from 'd3-ease'
 
 export default function SCModel({
     pose,
@@ -162,8 +161,7 @@ export default function SCModel({
             position: [-20,-1.5,50],
             rotation: [toRads(0),toRads(-20),toRads(0)],
             fov: 35,
-            // config: config.slow,
-            config: {duration: 850, easing: easeCubicOut}
+            config: {mass: 9, tension: 200, friction: 80},
         },
     ]
 
@@ -201,12 +199,12 @@ export default function SCModel({
     ], pose === 3? 1 : 0)
     const wobhand = Spring([
         {position: [0,0,-135]}, 
-        {position: [0,1350,-135], delay: 200, config: config.slow}
+        {position: [0,1350,-135], delay: 175, config: config.molasses}
     ], pose === 3? 1 : 0)
-    const bldg = Spring([{position: [0,0,0]}, {position: [0,550,0], delay: 350}], pose === 3? 1 : 0)
+    const bldg = Spring([{position: [0,0,0]}, {position: [0,550,0], delay: 550, config: config.slow}], pose === 3? 1 : 0)
     const bldgshadow = Spring([
         {scale: [1,1,0.2], position: [0,0,850], opacity: -0.5}, 
-        {scale: [1,1,1], position: [0,0,0], opacity: 1, delay: 450}
+        {scale: [1,1,1], position: [0,0,0], opacity: 1, delay: 600, config: config.slow}
     ], pose === 3? 1 : 0)
 
 
