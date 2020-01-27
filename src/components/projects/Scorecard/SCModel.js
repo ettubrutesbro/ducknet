@@ -197,16 +197,16 @@ export default function SCModel({
 
     const hand = Spring([
         {position: [0,0,-135], onRest: ()=> toggleWobs(false)}, 
-        {position: [0,0,0], delay: 600, onRest: ()=>console.log('hand 1')}
+        {position: [0,0,0], delay: 400, onRest: ()=>console.log('hand 1')}
     ], pose === 3? 1 : 0)
     const wobhand = Spring([
         {position: [0,0,-135]}, 
-        {position: [1100,0,-135], config: {duration: 600, easing: easeCubic}
-    }], pose === 3? 1 : 0)
-    const bldg = Spring([{position: [0,0,0]}, {position: [0,550,0], delay: 400, config: config.slow}], pose === 3? 1 : 0)
+        {position: [0,1350,-135], delay: 200, config: config.slow}
+    ], pose === 3? 1 : 0)
+    const bldg = Spring([{position: [0,0,0]}, {position: [0,550,0], delay: 350}], pose === 3? 1 : 0)
     const bldgshadow = Spring([
         {scale: [1,1,0.2], position: [0,0,850], opacity: -0.5}, 
-        {scale: [1,1,1], position: [0,0,0], opacity: 1, delay: 505}
+        {scale: [1,1,1], position: [0,0,0], opacity: 1, delay: 450}
     ], pose === 3? 1 : 0)
 
 
