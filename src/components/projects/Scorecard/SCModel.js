@@ -13,6 +13,8 @@ import {toRads} from '../../../utils/3d'
 
 import {CamContext} from '../../PreviewCanvas'
 
+import {easeCubic, easeCubicOut} from 'd3-ease'
+
 export default function SCModel({
     pose,
     selected, //only here bc colors vary depending on selection - selection/pose handled by proj
@@ -144,23 +146,24 @@ export default function SCModel({
         },
         {
             name: 'pseudo',
-            position: [0,0,15],
-            rotation: [toRads(-0), toRads(0), toRads(0)],
+            position: [-4.75,0.5,8],
+            rotation: [toRads(-0), toRads(-40), toRads(0)],
             fov: 85,
         },
         {
             name: 'blurb',
-            position: [2,1.4,3],
-            rotation: [toRads(-10),toRads(0),toRads(0)],
-            fov: 90,
+            position: [-3,-1,4.5],
+            rotation: [toRads(20),toRads(-45),toRads(-10)],
+            fov: 65,
             // config: {mass: 1, tension: 10, friction: 100, duration: 3500},
         },
         {
             name: 'mobile',
-            position: [0,10,100],
-            rotation: [toRads(-10),toRads(0),0],
-            fov: 20,
-            // config: {mass: 1, tension: 10, friction: 100, duration: 3500},
+            position: [-20,-1.5,50],
+            rotation: [toRads(0),toRads(-20),toRads(0)],
+            fov: 35,
+            // config: config.slow,
+            config: {duration: 850, easing: easeCubicOut}
         },
     ]
 
@@ -168,10 +171,10 @@ export default function SCModel({
 
     //0-3: 'global' rotations
     const rotation = Spring([
-        {rotation: [toRads(0), toRads(0), toRads(0)]}, //idle
-        {rotation: [toRads(0), toRads(50), toRads(0)]},
-        {rotation: [toRads(-70), toRads(0), toRads(-90)]},
-        {rotation: [toRads(0), toRads(-12), toRads(0)]},
+        {rotation: [toRads(0), toRads(15), toRads(0)]}, //idle
+        {rotation: [toRads(0), toRads(0), toRads(0)]}, //pseudo
+        {rotation: [toRads(-37), toRads(-16), toRads(-10)]}, //blurb
+        {rotation: [toRads(0), toRads(-40), toRads(0)]}, //mobile
     ], pose || pose === 0? pose : 0)
 
     //1: pseudo UI
@@ -194,13 +197,16 @@ export default function SCModel({
 
     const hand = Spring([
         {position: [0,0,-135], onRest: ()=> toggleWobs(false)}, 
-        {position: [0,0,0], config: config.slow, onRest: ()=>console.log('hand 1')}
+        {position: [0,0,0], delay: 600, onRest: ()=>console.log('hand 1')}
     ], pose === 3? 1 : 0)
-    const wobhand = Spring([{position: [0,0,-135]}, {position: [0,0,-1200], config: config.slow}], pose === 3? 1 : 0)
-    const bldg = Spring([{position: [0,0,0]}, {position: [0,550,0]}], pose === 3? 1 : 0)
+    const wobhand = Spring([
+        {position: [0,0,-135]}, 
+        {position: [1100,0,-135], config: {duration: 600, easing: easeCubic}
+    }], pose === 3? 1 : 0)
+    const bldg = Spring([{position: [0,0,0]}, {position: [0,550,0], delay: 400, config: config.slow}], pose === 3? 1 : 0)
     const bldgshadow = Spring([
-        {scale: [1,1,0.2], position: [0,0,850], opacity: -0.5 }, 
-        {scale: [1,1,1], position: [0,0,0], opacity: 1, delay: 50}
+        {scale: [1,1,0.2], position: [0,0,850], opacity: -0.5}, 
+        {scale: [1,1,1], position: [0,0,0], opacity: 1, delay: 505}
     ], pose === 3? 1 : 0)
 
 
@@ -292,7 +298,9 @@ export default function SCModel({
                         <bufferGeometry attach = 'geometry' {...child.geometry} />
                         <meshBasicMaterial 
                             attach = 'material' 
-                            color = {0xffffff}                      
+                            color = {0xffffff}
+                            // transparent
+                            // opacity = {0.7}                      
                         />
                     </a.mesh>
                 })}

@@ -1,4 +1,4 @@
-import React, {Suspense} from 'react'
+import React, {useEffect, Suspense} from 'react'
 
 import {withKnobs, text, boolean, number} from '@storybook/addon-knobs'
 
@@ -40,8 +40,6 @@ export const scorecard = () => {
     const modelRX = number('model rot X', 0, {}, 'model')
     const modelRY = number('model rot Y', 0, {}, 'model')
     const modelRZ = number('model rot Z', 0, {}, 'model')
-
-
 
     return(
         <Container>
