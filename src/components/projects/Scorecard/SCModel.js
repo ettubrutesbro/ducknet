@@ -158,10 +158,10 @@ export default function SCModel({
         },
         {
             name: 'mobile',
-            position: [-20,-1.5,50],
-            rotation: [toRads(0),toRads(-20),toRads(0)],
-            fov: 35,
-            config: {mass: 9, tension: 200, friction: 80},
+            position: [-24,2,53],
+            rotation: [toRads(-6),toRads(-32),toRads(-3)],
+            fov: 32,
+            config: {mass: 7, tension: 200, friction: 70},
         },
     ]
 
