@@ -53,7 +53,6 @@ export const scorecard = () => {
                         position = {[0,0,0]}
                         pose = {posed? pose: null} //should soon supersede the 'showX' stuff below
                         selected = {posed? pose: false}
-                        
                     />
                     </group>
                 </Suspense>
@@ -67,12 +66,3 @@ const Container = styled.div`
     height: 1080px;
     width: 100%;
 `
-
-const xyz = (label, defaults = [0,0,0]) => {
-    let xyz = {
-        x: number(`${label} x`, defaults[0], label+'group'),
-        y: number(`${label} y`, defaults[1], label+'group'),
-        z: number(`${label} z`, defaults[2], label+'group'),
-    }
-    return xyz
-}

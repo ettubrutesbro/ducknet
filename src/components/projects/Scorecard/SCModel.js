@@ -11,7 +11,7 @@ import { DRACOLoader } from 'three/examples/jsm/loaders/DRACOLoader'
 import {Spring} from '../../../utils/spring'
 import {toRads} from '../../../utils/3d'
 
-import {CamContext} from '../../PreviewCanvas'
+import {cameraContext} from '../../core/Camera'
 
 
 export default function SCModel({
@@ -47,7 +47,7 @@ export default function SCModel({
     const [vis, changeVis] = useState(0)
     const [springs, setSprings] = useSprings(13, i => ({
         scale: [1,1,1],
-        color: '#ff0000',
+        color: '#dedede',
         config: { mass: 1, tension: 120, friction: 32 }
     }))
     const pcts = {
@@ -131,7 +131,7 @@ export default function SCModel({
     app might be intended to be used
     */
 
-    const {cam, setCam} = useContext(CamContext)
+    const {cam, setCam} = useContext(cameraContext)
 
     useEffect(()=>{ //when POSE changes, set cosmetic rotation group & camera accordingly
         console.log(pose)

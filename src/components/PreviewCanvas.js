@@ -10,36 +10,18 @@ this could be the foundation for a slight refactor of how context / camera are h
 
 */
 
-import React, {useContext, useState, useEffect} from 'react'
+import React from 'react'
 import { Canvas } from 'react-three-fiber'
-import Camera from './core/Camera'
+import Camera, {CameraProvider} from './core/Camera'
 
-import {toRads} from '../utils/3d'
-
-export const CamContext = React.createContext({
-    cam: 'hello',
-    setCam: (v)=>console.log(v)
-})
 
 function PreviewCanvas({debugCamera, children}) {
 
-    const [cam, setCam] = useState(null)
-    useEffect(()=>{
-        if(debugCamera) setCam(debugCamera)
-    }, [debugCamera])
-
     return <Canvas>
-        <CamContext.Provider 
-            value = {{
-                cam: cam,
-                setCam: setCam
-            }}
-        >
-        <Camera />
-        {children}
-        </CamContext.Provider>
-
-    </Canvas>
+            <CameraProvider debugCamera = {debugCamera}>
+                {children}
+            </CameraProvider>
+        </Canvas>
 
 }
 
