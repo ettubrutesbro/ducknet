@@ -116,6 +116,12 @@ export default function SCModel({
                 
             })
     }, [vis])
+    //semi ambient anim: light color changes, but the light's only on if object is selected and in pose 3
+    const lightFromPhone = Spring([
+        {color: '#9AFFE3', intensity: 0.5},
+        {color: '#ABDCFF', intensity: 0.65}, 
+        {color: '#7EF9BE', intensity: 0.65} 
+    ], vis)
 
 
     //ANIMATION: POSES
@@ -303,10 +309,9 @@ export default function SCModel({
                     </a.mesh>
                 })}
                 <group position = {[250,-400,400]} >
-                    <pointLight 
-                        color = {0x9AFFE3} 
-                        // color = {0xffffff}
-                        intensity = {0.5} 
+                    <a.pointLight 
+                        color = {lightFromPhone.color}
+                        intensity = {lightFromPhone.intensity} 
                     />
                     <mesh visible = {false}>
                         <boxBufferGeometry attach = 'geometry' args = {[100,100,100]} />
