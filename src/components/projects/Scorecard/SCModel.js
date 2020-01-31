@@ -47,7 +47,7 @@ export default function SCModel({
     const [vis, changeVis] = useState(0)
     const [springs, setSprings] = useSprings(13, i => ({
         scale: [1,1,1],
-        color: '#dedede',
+        color: '#ff0000',
         config: { mass: 1, tension: 120, friction: 32 }
     }))
     const pcts = {
@@ -99,6 +99,7 @@ export default function SCModel({
     }
     const greyRange = chroma.scale(['#ededed', '#dedede', '#9f9f9f']).domain([0, 1.5])  
 
+    console.log('rerender scmodel?')
     useEffect(()=>{
         const currentVis = d[vis]
             setSprings(i => {
@@ -108,7 +109,7 @@ export default function SCModel({
                         scale: [1,1, cv || pcts[currentVis].baseZ], 
                         color: selected? pcts[currentVis].colorRange(cv || pcts[currentVis].baseZ).hex() 
                             : greyRange(cv || pcts[currentVis].baseZ).hex(),
-                        delay: 25 * i,
+                        // delay: 25 * i,
                         onRest: () => {if(i===12){
                             changeVis(vis < 2? vis+1 : 0)
                         }}
@@ -219,9 +220,7 @@ export default function SCModel({
             name = 'scorecardmodel'
             scale = {[.075, .075, .075]}
             onClick = {onClick}
-
             rotation = {rotation.rotation}
-
             {...props}
         >
                 {springs.map(({scale,color}, i)=>{
@@ -234,6 +233,7 @@ export default function SCModel({
                         >
                             <bufferGeometry attach = 'geometry' {...county.geometry} />
                             <a.meshBasicMaterial
+                                key = {county.name+'mtl'}
                                 color = {color}
                                 attach ='material'
                                 map = {caTexture}
