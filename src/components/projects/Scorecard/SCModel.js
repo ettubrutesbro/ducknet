@@ -8,7 +8,7 @@ import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader'
 import { OBJLoader } from 'three/examples/jsm/loaders/OBJLoader'
 import { DRACOLoader } from 'three/examples/jsm/loaders/DRACOLoader'
 
-import {Spring} from '../../../utils/spring'
+import Spring, {SpringEffect} from '../../../utils/spring'
 import {toRads} from '../../../utils/3d'
 
 import {cameraContext} from '../../core/Camera'
@@ -99,7 +99,6 @@ export default function SCModel({
     }
     const greyRange = chroma.scale(['#ededed', '#dedede', '#9f9f9f']).domain([0, 1.5])  
 
-    console.log('rerender scmodel?')
     useEffect(()=>{
         const currentVis = d[vis]
             setSprings(i => {
@@ -111,18 +110,18 @@ export default function SCModel({
                             : greyRange(cv || pcts[currentVis].baseZ).hex(),
                         // delay: 25 * i,
                         onRest: () => {if(i===12){
-                            changeVis(vis < 2? vis+1 : 0)
+                            // changeVis(vis < 2? vis+1 : 0)
                         }}
                     }
                 
             })
     }, [vis])
     //semi ambient anim: light color changes, but the light's only on if object is selected and in pose 3
-    const lightFromPhone = Spring([
-        {color: '#9AFFE3', intensity: 0.5},
-        {color: '#ABDCFF', intensity: 0.65}, 
-        {color: '#7EF9BE', intensity: 0.65} 
-    ], vis)
+    // const lightFromPhone = Spring([
+    //     {color: '#9AFFE3', intensity: 0.5},
+    //     {color: '#ABDCFF', intensity: 0.65}, 
+    //     {color: '#7EF9BE', intensity: 0.65} 
+    // ], vis)
 
 
     //ANIMATION: POSES
@@ -175,18 +174,62 @@ export default function SCModel({
     //ANIMS: groups of individual springs for diff. geometries
 
     //0-3: 'global' rotations
-    const rotation = Spring([
-        {rotation: [toRads(0), toRads(0), toRads(0)]}, //idle
-        {rotation: [toRads(0), toRads(15), toRads(0)]}, //pseudo
-        {rotation: [toRads(-37), toRads(-16), toRads(-10)]}, //blurb
-        {rotation: [toRads(0), toRads(-40), toRads(0)]}, //mobile
-    ], pose || pose === 0? pose : 0)
+
+    const [rotation, setRotation, stopRotation] = useSpring(()=> ({
+        rotation: [toRads(0), toRads(0), toRads(0)]
+    }))
+    const [pseudo, setPseudo] = useSpring(()=> ({
+        opacity: 0, scale: [0.08, 0.08, 0.08], position: [-35, 20, 0]
+    }))
+    const [hand, setHand] = useSpring(()=> ({
+        position: [0,0,0], delay: 400
+    }))
+    const [wobhand, setWOBHand] = useSpring(()=> ({
+        position: [0,0,-135]
+    }))
+    const [bldg, setBldg] = useSpring(()=>({position: [0,0,0]}))
+    const [bldgshadow, setBldgShadow] = useSpring(()=>({scale: [1,1,0.2], position: [0,0,850], opacity: -0.5}))
+    // const rotation = Spring([
+    //     {rotation: [toRads(0), toRads(0), toRads(0)]}, //idle
+    //     {rotation: [toRads(0), toRads(15), toRads(0)]}, //pseudo
+    //     {rotation: [toRads(-37), toRads(-16), toRads(-10)]}, //blurb
+    //     {rotation: [toRads(0), toRads(-40), toRads(0)]}, //mobile
+    // ], pose || pose === 0? pose : 0)
+
+    // const [rotation, setRotation, stop] = useSpring(()=>({
+    //     rotation: [toRads(0), toRads(45), toRads(0)]
+    // }))
+    useEffect(()=>{
+        if(pose === 1){
+            setRotation({rotation: [toRads(0), toRads(15), toRads(0)]})
+            setPseudo({opacity: 1, scale: [0.15, 0.15, 0.15], position: [-54, 41, 5]})
+        }
+        else if(pose === 2){
+            setRotation({rotation: [toRads(-37), toRads(-16), toRads(-10)]})
+        }
+        if(pose === 3){
+            setRotation({rotation: [toRads(0), toRads(-40), toRads(0)]})
+            setPseudo({opacity: 0, scale: [0.08, 0.08, 0.08], position: [-35, 20, 0]})
+            setHand({position: [0,0,0], delay: 400})
+            setWOBHand({position: [0,1350,-135], delay: 175, config: config.molasses})
+            setBldg({position: [0,550,0], delay: 550, config: config.slow})
+            setBldgShadow({scale: [1,1,1], position: [0,0,0], opacity: 1, delay: 600, config: config.slow})
+        }
+        else{
+            setHand({position: [0,0,-135], onRest: ()=> toggleWobs(false)})
+            setWOBHand({position: [0,0,-135]})
+            setBldg({position: [0,0,0]})
+            setBldgShadow({scale: [1,1,0.2], position: [0,0,850], opacity: -0.5})
+        }
+    }, [pose])
+
+    console.log(rotation)
 
     //1: pseudo UI
-    const pseudo = Spring([
-        {opacity: 0, scale: [0.08, 0.08, 0.08], position: [-35, 20, 0]},
-        {opacity: 1, scale: [0.15, 0.15, 0.15], position: [-54, 41, 5]}
-    ], pose === 1? 1 : 0)
+    // const pseudo = Spring([
+    //     {opacity: 0, scale: [0.08, 0.08, 0.08], position: [-35, 20, 0]},
+    //     {opacity: 1, scale: [0.15, 0.15, 0.15], position: [-54, 41, 5]}
+    // ], pose === 1? 1 : 0)
 
     //2: blurbs
 
@@ -200,19 +243,19 @@ export default function SCModel({
         console.log('wobs:', wobs)
     }, [pose, selected])
 
-    const hand = Spring([
-        {position: [0,0,-135], onRest: ()=> toggleWobs(false)}, 
-        {position: [0,0,0], delay: 400, onRest: ()=>console.log('hand 1')}
-    ], pose === 3? 1 : 0)
-    const wobhand = Spring([
-        {position: [0,0,-135]}, 
-        {position: [0,1350,-135], delay: 175, config: config.molasses}
-    ], pose === 3? 1 : 0)
-    const bldg = Spring([{position: [0,0,0]}, {position: [0,550,0], delay: 550, config: config.slow}], pose === 3? 1 : 0)
-    const bldgshadow = Spring([
-        {scale: [1,1,0.2], position: [0,0,850], opacity: -0.5}, 
-        {scale: [1,1,1], position: [0,0,0], opacity: 1, delay: 600, config: config.slow}
-    ], pose === 3? 1 : 0)
+    // const hand = Spring([
+    //     {position: [0,0,-135], onRest: ()=> toggleWobs(false)}, 
+    //     {position: [0,0,0], delay: 400, onRest: ()=>console.log('hand 1')}
+    // ], pose === 3? 1 : 0)
+    // const wobhand = Spring([
+    //     {position: [0,0,-135]}, 
+    //     {position: [0,1350,-135], delay: 175, config: config.molasses}
+    // ], pose === 3? 1 : 0)
+    // const bldg = Spring([{position: [0,0,0]}, {position: [0,550,0], delay: 550, config: config.slow}], pose === 3? 1 : 0)
+    // const bldgshadow = Spring([
+    //     {scale: [1,1,0.2], position: [0,0,850], opacity: -0.5}, 
+    //     {scale: [1,1,1], position: [0,0,0], opacity: 1, delay: 600, config: config.slow}
+    // ], pose === 3? 1 : 0)
 
     // console.log(rotation.rotation)
 
@@ -313,8 +356,8 @@ export default function SCModel({
                 })}
                 <group position = {[250,-400,400]} >
                     <a.pointLight 
-                        color = {lightFromPhone.color}
-                        intensity = {lightFromPhone.intensity} 
+                        color = {0xff0000}
+                        intensity = {1} 
                     />
                     <mesh visible = {false}>
                         <boxBufferGeometry attach = 'geometry' args = {[100,100,100]} />
