@@ -1,5 +1,5 @@
 import React, {useRef, useEffect, useState, useContext} from 'react'
-import {useThree, useFrame, useRender, extend} from 'react-three-fiber'
+import {useThree, useFrame, extend} from 'react-three-fiber'
 import {OrbitControls} from 'three/examples/jsm/controls/OrbitControls'
 
 import {a, useSpring} from 'react-spring/three'
@@ -79,7 +79,7 @@ extend({OrbitControls})
 const Controls = props => {
   const { gl, camera } = useThree()
   const ref = useRef()
-  useRender(()=> {
+  useFrame(()=> {
     ref.current.update()
   })
   return <orbitControls ref = {ref} args = {[camera, gl.domElement]} {...props} />

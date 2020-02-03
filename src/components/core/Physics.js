@@ -1,5 +1,5 @@
 import React, {useState, useEffect, useContext, useRef} from 'react'
-import {useRender} from 'react-three-fiber'
+import {useFrame} from 'react-three-fiber'
 import * as CANNON from 'cannon'
 import TWEEN from '@tweenjs/tween.js'
 
@@ -17,7 +17,7 @@ export function PhysicsProvider({children}){
     world.gravity.set(0,-20, 0)
   }, [world])
   //world stepper every frame
-  useRender(()=> {
+  useFrame(()=> {
     world.step(1/60)
     TWEEN.update() //kinda dangerous: this is not physics, though tween probably will only deal with it...
 
@@ -52,7 +52,7 @@ export function usePhysics({ ...props}, fn, deps = [], name){
     return () => world.removeBody(body)
   }, deps)
   
-  useRender(()=>{    
+  useFrame(()=>{    
     if(ref.current){ 
         if(body.position.y< -20 && !worldFuncContext.abyss.includes(name)){
           // console.log('admitting', name, 'to abyss')

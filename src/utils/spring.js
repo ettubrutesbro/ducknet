@@ -8,7 +8,7 @@ export const Spring = (keys, currentKey) => {
     const [key, setKey, stop] = useSpring(() => keys[currentKey])
 
     useEffect(()=>{
-        stop()
+        // stop()
         setKey(keys[currentKey])
     }, [currentKey])
 

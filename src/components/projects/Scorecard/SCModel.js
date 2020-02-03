@@ -176,8 +176,8 @@ export default function SCModel({
 
     //0-3: 'global' rotations
     const rotation = Spring([
-        {rotation: [toRads(0), toRads(15), toRads(0)]}, //idle
-        {rotation: [toRads(0), toRads(0), toRads(0)]}, //pseudo
+        {rotation: [toRads(0), toRads(0), toRads(0)]}, //idle
+        {rotation: [toRads(0), toRads(15), toRads(0)]}, //pseudo
         {rotation: [toRads(-37), toRads(-16), toRads(-10)]}, //blurb
         {rotation: [toRads(0), toRads(-40), toRads(0)]}, //mobile
     ], pose || pose === 0? pose : 0)
@@ -214,13 +214,16 @@ export default function SCModel({
         {scale: [1,1,1], position: [0,0,0], opacity: 1, delay: 600, config: config.slow}
     ], pose === 3? 1 : 0)
 
+    // console.log(rotation.rotation)
 
     return(
         <a.group 
             name = 'scorecardmodel'
             scale = {[.075, .075, .075]}
             onClick = {onClick}
+            // rotation = {[rotation.x, rotation.y, rotation.z]}
             rotation = {rotation.rotation}
+
             {...props}
         >
                 {springs.map(({scale,color}, i)=>{
