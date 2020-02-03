@@ -1,9 +1,9 @@
 //attempt at a basic animation hook
 
-import React, {useEffect} from 'react'
+import {useEffect} from 'react'
 import {useSpring} from 'react-spring'
 
-const Spring = (keys, currentKey) =>{
+const useMySpring = (keys, currentKey) =>{
 
     const [key, setKey, stop] = useSpring(() => keys[currentKey])
 
@@ -17,7 +17,7 @@ const Spring = (keys, currentKey) =>{
 }
 
 
-export default Spring
+export default useMySpring
 
 export const SpringEffect = (key, keys, setter, stopper) => 
     useEffect(()=>{
