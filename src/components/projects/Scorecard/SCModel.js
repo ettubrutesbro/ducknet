@@ -9,6 +9,7 @@ import { OBJLoader } from 'three/examples/jsm/loaders/OBJLoader'
 import { DRACOLoader } from 'three/examples/jsm/loaders/DRACOLoader'
 
 import {toRads} from '../../../utils/3d'
+import {randBtwn} from '../../../utils/basicMath'
 
 import {cameraContext} from '../../core/Camera'
 
@@ -99,23 +100,24 @@ export default function SCModel({
     const greyRange = chroma.scale(['#ededed', '#dedede', '#9f9f9f']).domain([0, 1.5])
     //calculate colors and lengths for bar graphs 
     const genericRangeQuartiles = [
-        [.38, .4, .85, 1.05], [1.1, 1.4, 1.6, 1.8], [.88, 1, 1.4, 1.5]
+        [.5, .525, .95, 1.3], [1.1, 1.4, 1.6, 1.8], [.88, 1, 1.4, 1.5]
     ]
     const countyBarColors = Object.keys(pcts).map((v, i)=>{
         return genericRangeQuartiles[i].map((q)=>pcts[v].colorRange(q).hex()) 
     })
     let countyBarLengths = genericRangeQuartiles.map((q)=>{
+        //the 2 enables each vis to differ in proportion instead of being %s of 100% (/q[3])
         return q.map((v)=> Number((v/2).toFixed(3)) )
     })
-    // countyBarLengths.reverse()
     let raceBarColors = genericRangeQuartiles.map(()=>[])
     const raceBarLengths = genericRangeQuartiles.map((q,i)=>{
         return [1,1,1].map(()=> {
-            const rand = Math.random() * (q[3] - q[0] + 1) + q[0] 
-            raceBarColors[i].push(pcts[Object.keys(pcts)[i]].colorRange(rand).hex())
-            return rand / q[3]
+            const rand = randBtwn(.4, .95)
+            raceBarColors[i].push(pcts[Object.keys(pcts)[i]].colorRange(rand*q[3]).hex())
+            return rand
         })
     })
+    console.log(raceBarLengths)
 
     const [bars, setBars] = useSprings(7, i => ({
         scale: [1,1,1],
@@ -145,9 +147,10 @@ export default function SCModel({
         setBars(i => {
             return{
                 // whichBar === 'county'? [((-230-54) * (1-countyBarLengths[vis][3-number])/2),0,0]
-                position: i < 4? [((-230 - 54) * (1-countyBarLengths[vis][3-i])) / 2, 0, 0] : [0,0,0],
-                scale: i < 4? [countyBarLengths[vis][3-i],1,1] : [raceBarLengths[vis][i],1,1],
-                color: i < 4? countyBarColors[vis][i] : raceBarColors[vis][i]
+                position: i < 4? [((-230 - 54) * (1-countyBarLengths[vis][3-i])) / 2, 0, 0] 
+                    : [((-160 - 54) * (1-raceBarLengths[vis][i-4]))/2,0,0],
+                scale: i < 4? [countyBarLengths[vis][3-i],1,1] : [raceBarLengths[vis][i-4],1,1],
+                color: i < 4? countyBarColors[vis][i] : raceBarColors[vis][i-4]
             }
         })
     }, [vis])
@@ -307,7 +310,7 @@ export default function SCModel({
                         <bufferGeometry attach = 'geometry' {...child.geometry} />
                         <a.meshBasicMaterial 
                             attach = 'material' 
-                            color = {whichBar === 'county'? countyBarColors[vis][3-number]: 0xff0000}
+                            color = {bars[number].color }
                             opacity = {pseudo.opacity}
                             transparent
                         />
