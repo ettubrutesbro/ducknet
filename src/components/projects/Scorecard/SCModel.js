@@ -96,24 +96,60 @@ export default function SCModel({
             colorRange: chroma.scale(['#87D0BC', '#54b88e', '#0E855A']).mode('lab').domain([.88, 1.1, 1.35])
         },
     }
-    const greyRange = chroma.scale(['#ededed', '#dedede', '#9f9f9f']).domain([0, 1.5])  
+    const greyRange = chroma.scale(['#ededed', '#dedede', '#9f9f9f']).domain([0, 1.5])
+    //calculate colors and lengths for bar graphs 
+    const genericRangeQuartiles = [
+        [.38, .4, .85, 1.05], [1.1, 1.4, 1.6, 1.8], [.88, 1, 1.4, 1.5]
+    ]
+    const countyBarColors = Object.keys(pcts).map((v, i)=>{
+        return genericRangeQuartiles[i].map((q)=>pcts[v].colorRange(q).hex()) 
+    })
+    let countyBarLengths = genericRangeQuartiles.map((q)=>{
+        return q.map((v)=> Number((v/2).toFixed(3)) )
+    })
+    // countyBarLengths.reverse()
+    let raceBarColors = genericRangeQuartiles.map(()=>[])
+    const raceBarLengths = genericRangeQuartiles.map((q,i)=>{
+        return [1,1,1].map(()=> {
+            const rand = Math.random() * (q[3] - q[0] + 1) + q[0] 
+            raceBarColors[i].push(pcts[Object.keys(pcts)[i]].colorRange(rand).hex())
+            return rand / q[3]
+        })
+    })
+
+    const [bars, setBars] = useSprings(7, i => ({
+        scale: [1,1,1],
+        color: '#dedede',
+    }))
+
+    // console.log(countyBarLengths)
+    // console.log(raceBarLengths)
+    // console.log(raceBarColors)
 
     useEffect(()=>{
         const currentVis = d[vis]
-            setSprings(i => {
-                const cty = ca.__$[i].name
-                    const cv = pcts[currentVis][cty]
-                    return {
-                        scale: [1,1, cv || pcts[currentVis].baseZ], 
-                        color: selected? pcts[currentVis].colorRange(cv || pcts[currentVis].baseZ).hex() 
-                            : greyRange(cv || pcts[currentVis].baseZ).hex(),
-                        delay: 25 * i,
-                        onRest: () => {if(i===12){
-                            changeVis(vis < 2? vis+1 : 0)
-                        }}
-                    }
-                
-            })
+        setSprings(i => {
+            const cty = ca.__$[i].name
+                const cv = pcts[currentVis][cty]
+                return {
+                    scale: [1,1, cv || pcts[currentVis].baseZ], 
+                    color: selected? pcts[currentVis].colorRange(cv || pcts[currentVis].baseZ).hex() 
+                        : greyRange(cv || pcts[currentVis].baseZ).hex(),
+                    delay: 25 * i,
+                    onRest: () => {if(i===12){
+                        changeVis(vis < 2? vis+1 : 0)
+                    }}
+                }
+            
+        })
+        setBars(i => {
+            return{
+                // whichBar === 'county'? [((-230-54) * (1-countyBarLengths[vis][3-number])/2),0,0]
+                position: i < 4? [((-230 - 54) * (1-countyBarLengths[vis][3-i])) / 2, 0, 0] : [0,0,0],
+                scale: i < 4? [countyBarLengths[vis][3-i],1,1] : [raceBarLengths[vis][i],1,1],
+                color: i < 4? countyBarColors[vis][i] : raceBarColors[vis][i]
+            }
+        })
     }, [vis])
     //semi ambient anim: light color changes, but the light's only on if object is selected and in pose 3
     const lightFromPhone = useSpringEffect([
@@ -204,7 +240,6 @@ export default function SCModel({
         {scale: [1,1,1], position: [0,0,0], opacity: 1, delay: 600, config: config.slow}
     ], pose === 3? 1 : 0)
 
-    console.log(rotation.rotation)
 
     return(
         <a.group 
@@ -239,17 +274,44 @@ export default function SCModel({
                 position = {pseudo.position}
                 scale = {pseudo.scale}
             >
-                {pseudoui.children.map((child) => {
-                    console.log(child.name)
+                {pseudoui.children.filter(c =>!c.name.includes('Box')).map(child => {
                     return <mesh key = {child.name} >
                         <bufferGeometry attach = 'geometry' {...child.geometry} />
                         <a.meshBasicMaterial 
                             attach = 'material' 
-                            color = {child.name.includes('Box')? 0xff0000 : 0xdedede}
+                            color = {0xdedede}
                             opacity = {pseudo.opacity}
                             transparent
                         />
                     </mesh>
+                })}
+                {pseudoui.children.filter(c =>c.name.includes('Box')).map((child, i) => {
+                    const number = Number(child.name.replace('Box',''))-1
+                    const whichBar = number > 3? 'race' : 'county'
+                    // console.log(countyBarLengths[vis][3-number])
+
+                    console.log(bars[i])
+
+                    return <a.mesh 
+                        key = {child.name} 
+                        scale = {bars[number].scale
+                            // whichBar === 'county'? [countyBarLengths[vis][3-number],1,1]
+                            // : [raceBarLengths[number-3],1,1]
+                        }
+                        //229 is the length of the bar, 54 is the final pseudo offset
+                        position = {bars[number].position
+                            // whichBar === 'county'? [((-230-54) * (1-countyBarLengths[vis][3-number])/2),0,0]
+                            // : [-114.5 * raceBarLengths[number-3],1,1]
+                        }
+                    >
+                        <bufferGeometry attach = 'geometry' {...child.geometry} />
+                        <a.meshBasicMaterial 
+                            attach = 'material' 
+                            color = {whichBar === 'county'? countyBarColors[vis][3-number]: 0xff0000}
+                            opacity = {pseudo.opacity}
+                            transparent
+                        />
+                    </a.mesh>
                 })}
             </a.group>
         
@@ -259,7 +321,7 @@ export default function SCModel({
                 visible = {wobs}
                 scale = {[0.179,0.179,0.179]}
                 position = {[-60, 75, -63]}
-                //visible only when alone (otherwise WOB will destroy the heap)
+                //visible only when alone (otherwise WOB will obscure the heap)
             >
                 <a.group name = 'swatchgroup' position = {hand.position}>
                     {[1,2,3,4].map((c,i)=>{
@@ -276,7 +338,7 @@ export default function SCModel({
                     })}
                 </a.group>
 
-                {phonebldg.__$.filter(c => c.name === 'hand').map((child) => {
+                {phonebldg.__$.filter(c => c.name === 'hand').map(child => {
                     return <a.mesh name = 'hand' key = 'hand'
                         position = {hand.position}
                     >
@@ -289,7 +351,7 @@ export default function SCModel({
                         />
                     </a.mesh>
                 })}
-                {phonebldg.__$.filter(c => c.name === 'WOBhand').map((child) => {
+                {phonebldg.__$.filter(c => c.name === 'WOBhand').map(child => {
                     return <a.mesh name = 'wobhand' key = 'wobhand'
                         position = {wobhand.position}
                     >
@@ -317,7 +379,7 @@ export default function SCModel({
                     rotation = {[0, toRads(-13), 0]}
                     position = {[100, 0, 80]}
                 >
-                    {phonebldg.__$.filter(c => c.name === 'bldg').map((child) => {
+                    {phonebldg.__$.filter(c => c.name === 'bldg').map(child => {
                         return <a.mesh name = 'bldg' key = 'bldg'
                             position = {bldg.position}
                         >
@@ -331,7 +393,7 @@ export default function SCModel({
                             />
                         </a.mesh>
                     })}
-                    {phonebldg.__$.filter(c => c.name === 'bldgshadow').map((child) => {
+                    {phonebldg.__$.filter(c => c.name === 'bldgshadow').map(child => {
                         return <a.mesh name = 'bldgshadow' key = 'bldgshadow'
                             scale = {bldgshadow.scale}
                             position = {bldgshadow.position}
@@ -346,7 +408,7 @@ export default function SCModel({
                         </a.mesh>
                     })}
 
-                    {phonebldg.__$.filter(c => c.name === 'WOBbldg').map((child) => {
+                    {phonebldg.__$.filter(c => c.name === 'WOBbldg').map(child => {
                         return <mesh name = 'wobbldg' key = 'wobbldg'
                             
                         >
