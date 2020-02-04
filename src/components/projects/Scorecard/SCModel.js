@@ -240,11 +240,12 @@ export default function SCModel({
                 scale = {pseudo.scale}
             >
                 {pseudoui.children.map((child) => {
+                    console.log(child.name)
                     return <mesh key = {child.name} >
                         <bufferGeometry attach = 'geometry' {...child.geometry} />
                         <a.meshBasicMaterial 
                             attach = 'material' 
-                            color = {0xdedede}
+                            color = {child.name.includes('Box')? 0xff0000 : 0xdedede}
                             opacity = {pseudo.opacity}
                             transparent
                         />
