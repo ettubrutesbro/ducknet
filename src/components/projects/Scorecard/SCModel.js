@@ -220,7 +220,7 @@ export default function SCModel({
     const pseudo = useSpringEffect([
         {opacity: 0, scale: [0.08, 0.08, 0.08], position: [-35, 20, 0]},
         {opacity: 1, scale: [0.15, 0.15, 0.15], position: [-54, 41, 5]}
-    ], pose === 1? 1 : 0)
+    ], pose < 3 && pose? 1 : 0)
 
     const [wobs, toggleWobs] = useState(false)
     useEffect(()=>{
