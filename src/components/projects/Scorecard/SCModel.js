@@ -29,16 +29,18 @@ export default function SCModel({
     const phonebldg = useLoader(GLTFLoader, '/scorecard/phonebldg4.gltf', loader => {
       loader.setDRACOLoader(dracoLoader)
     })
-
-    const pseudoui = useLoader(OBJLoader, '/scorecard/pseudoui.obj')
+    const pseudoui = useLoader(GLTFLoader, '/scorecard/pseudoblurb7.gltf', loader => {
+      loader.setDRACOLoader(dracoLoader)
+    })
 
     const caTexture = useLoader(THREE.TextureLoader, '/scorecard/peelshade.png' )
     caTexture.flipY = false
     const phonebldgTexture = useLoader(THREE.TextureLoader, '/scorecard/phonebldgbake-12-shift.png' )
     phonebldgTexture.flipY = false
-
     const phonebldgAlpha = useLoader(THREE.TextureLoader, '/scorecard/phonebldgalpha.png' )
     phonebldgAlpha.flipY = false
+    const pseudoTex = useLoader(THREE.TextureLoader, '/scorecard/pseudoblurb512.png' )
+    pseudoTex.flipY = false
 
     //ANIMATION: AMBIENT
     //at all times, percentages are being passed to the county geometries, causing them to 
@@ -120,7 +122,7 @@ export default function SCModel({
     console.log(raceBarLengths)
 
     const [bars, setBars] = useSprings(7, i => ({
-        scale: [1,1,1],
+        scale: [1,1.25,1],
         color: '#dedede',
     }))
 
@@ -149,8 +151,8 @@ export default function SCModel({
                 // whichBar === 'county'? [((-230-54) * (1-countyBarLengths[vis][3-number])/2),0,0]
                 position: i < 4? [((-230 - 54) * (1-countyBarLengths[vis][3-i])) / 2, 0, 0] 
                     : [((-160 - 54) * (1-raceBarLengths[vis][i-4]))/2,0,0],
-                scale: i < 4? [countyBarLengths[vis][3-i],1,1] : [raceBarLengths[vis][i-4],1,1],
-                color: i < 4? countyBarColors[vis][i] : raceBarColors[vis][i-4]
+                scale: i < 4? [countyBarLengths[vis][3-i],1.25,1] : [raceBarLengths[vis][i-4],1.25,1],
+                color: i < 4? countyBarColors[vis][3-i] : raceBarColors[vis][i-4]
             }
         })
     }, [vis])
@@ -219,7 +221,7 @@ export default function SCModel({
 
     const pseudo = useSpringEffect([
         {opacity: 0, scale: [0.08, 0.08, 0.08], position: [-35, 20, 0]},
-        {opacity: 1, scale: [0.15, 0.15, 0.15], position: [-54, 41, 5]}
+        {opacity: 1, scale: [0.15, 0.25, 0.15], position: [-54, 41, 5]}
     ], pose < 3 && pose? 1 : 0)
 
     const [wobs, toggleWobs] = useState(false)
@@ -275,20 +277,22 @@ export default function SCModel({
 
             <a.group name = 'pseudoui'
                 position = {pseudo.position}
+                rotation = {[toRads(-90),0,0]}
                 scale = {pseudo.scale}
             >
-                {pseudoui.children.filter(c =>!c.name.includes('Box')).map(child => {
+                {pseudoui.__$.filter(c =>!c.name.includes('Box')).map(child => {
                     return <mesh key = {child.name} >
                         <bufferGeometry attach = 'geometry' {...child.geometry} />
                         <a.meshBasicMaterial 
                             attach = 'material' 
-                            color = {0xdedede}
+                            color = {0xf9f9f9}
                             opacity = {pseudo.opacity}
+                            map = {pseudoTex}
                             transparent
                         />
                     </mesh>
                 })}
-                {pseudoui.children.filter(c =>c.name.includes('Box')).map((child, i) => {
+                {pseudoui.__$.filter(c =>c.name.includes('Box')).map((child, i) => {
                     const number = Number(child.name.replace('Box',''))-1
                     const whichBar = number > 3? 'race' : 'county'
                     // console.log(countyBarLengths[vis][3-number])
@@ -312,6 +316,7 @@ export default function SCModel({
                             attach = 'material' 
                             color = {bars[number].color }
                             opacity = {pseudo.opacity}
+                            map = {pseudoTex}
                             transparent
                         />
                     </a.mesh>
