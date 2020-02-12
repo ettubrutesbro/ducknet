@@ -32,6 +32,7 @@ export default function SCModel({
     const pseudoui = useLoader(GLTFLoader, '/scorecard/pseudoblurb7.gltf', loader => {
       loader.setDRACOLoader(dracoLoader)
     })
+    const blurbs = useLoader(OBJLoader, '/scorecard/blurbs3.obj')
 
     const caTexture = useLoader(THREE.TextureLoader, '/scorecard/peelshade.png' )
     caTexture.flipY = false
@@ -41,6 +42,8 @@ export default function SCModel({
     phonebldgAlpha.flipY = false
     const pseudoTex = useLoader(THREE.TextureLoader, '/scorecard/pseudoblurb512.png' )
     pseudoTex.flipY = false
+    const blurbShadows = useLoader(THREE.TextureLoader, '/scorecard/blurbshadows.png' )
+    blurbShadows.flipY = false
 
     //ANIMATION: AMBIENT
     //at all times, percentages are being passed to the county geometries, causing them to 
@@ -54,6 +57,7 @@ export default function SCModel({
     }))
     const pcts = {
         dental: { 
+            //mendo
             modoc: 0.75,
             pseudonorth: 0.8,
             lassen: .925, 
@@ -66,10 +70,11 @@ export default function SCModel({
             mendo: 1.05,
             inyo: .75,
             baseZ: 0.7,
-            colorRange: chroma.scale(['#d6f0ee', '#97D7C8',  '#3CA77A']).mode('lab').domain([.55, .7, 1.05])
+            colorRange: chroma.scale(['#d6f0ee', '#97D7C8',  '#3CA77A']).mode('lab').domain([.55, .7, 1.05]),
+            showBlurb: 'mendo'
         },
         breastfeeding: {
-            //this range is too big, adjust it so that the peaks aren't so much larger (80%!)
+            //modoc
             modoc: 1.8,
             siskiyou: 1.7, 
             lassen: 1.6,
@@ -82,9 +87,11 @@ export default function SCModel({
             sfsm: 1.7,
             mendo: 1.6, 
             baseZ: 1.325,
-            colorRange:chroma.scale(['#94B6D7', '#4998C5', '#056FAF', '#034E7A']).mode('lab').domain([1.1, 1.4, 1.6, 1.8]) 
+            colorRange:chroma.scale(['#94B6D7', '#4998C5', '#056FAF', '#034E7A']).mode('lab').domain([1.1, 1.4, 1.6, 1.8]) ,
+            showBlurb: 'modoc'
         },
         meals: { 
+            //central
             modoc: 1.15,
             mendo: 1,
             sanbernie: 1.17,
@@ -96,7 +103,8 @@ export default function SCModel({
             inyo: 0.88,
             lassen: 0.95,
             baseZ: 1.08,
-            colorRange: chroma.scale(['#87D0BC', '#54b88e', '#0E855A']).mode('lab').domain([.88, 1.1, 1.35])
+            colorRange: chroma.scale(['#87D0BC', '#54b88e', '#0E855A']).mode('lab').domain([.88, 1.1, 1.35]),
+            showBlurb: 'pseudocentral'
         },
     }
     const greyRange = chroma.scale(['#ededed', '#dedede', '#9f9f9f']).domain([0, 1.5])
@@ -119,16 +127,18 @@ export default function SCModel({
             return rand
         })
     })
-    console.log(raceBarLengths)
 
     const [bars, setBars] = useSprings(7, i => ({
-        scale: [1,1.25,1],
+        scale: [1,1,1],
         color: '#dedede',
     }))
 
-    // console.log(countyBarLengths)
-    // console.log(raceBarLengths)
-    // console.log(raceBarColors)
+    const [blurbAnims, setBlurbs] = useSprings(3, i => ({
+        opacity: 0,
+        position: [0,0,0],
+        scale: [1,1,0.01],
+        rotation: [toRads(-15), 0, 0]
+    }))
 
     useEffect(()=>{
         const currentVis = d[vis]
@@ -137,6 +147,7 @@ export default function SCModel({
                 const cv = pcts[currentVis][cty]
                 return {
                     scale: [1,1, cv || pcts[currentVis].baseZ], 
+                    // scale: [1,1,1], 
                     color: selected? pcts[currentVis].colorRange(cv || pcts[currentVis].baseZ).hex() 
                         : greyRange(cv || pcts[currentVis].baseZ).hex(),
                     delay: 25 * i,
@@ -151,8 +162,17 @@ export default function SCModel({
                 // whichBar === 'county'? [((-230-54) * (1-countyBarLengths[vis][3-number])/2),0,0]
                 position: i < 4? [((-230 - 54) * (1-countyBarLengths[vis][3-i])) / 2, 0, 0] 
                     : [((-160 - 54) * (1-raceBarLengths[vis][i-4]))/2,0,0],
-                scale: i < 4? [countyBarLengths[vis][3-i],1.25,1] : [raceBarLengths[vis][i-4],1.25,1],
+                scale: i < 4? [countyBarLengths[vis][3-i],1,1] : [raceBarLengths[vis][i-4],1,1],
                 color: i < 4? countyBarColors[vis][3-i] : raceBarColors[vis][i-4]
+            }
+        })
+        setBlurbs(i => {
+            return{
+                opacity: vis===i? 1 : 0,
+                position: vis === i? [0,0,0] : [0,0,17.5],
+                scale: [1,1,vis===i? 1 : 0.01],
+                rotation: [toRads(vis===i? 0 : -15), 0, 0],
+                delay: key => key === 'opacity'? 50 : 0,
             }
         })
     }, [vis])
@@ -162,6 +182,11 @@ export default function SCModel({
         {color: '#ABDCFF', intensity: 0.65}, 
         {color: '#7EF9BE', intensity: 0.65} 
     ], vis)
+
+
+    // const blurbLight = useSpringEffect([
+
+    // ])
 
 
     //ANIMATION: POSES
@@ -222,7 +247,9 @@ export default function SCModel({
     const pseudo = useSpringEffect([
         {opacity: 0, scale: [0.08, 0.08, 0.08], position: [-35, 20, 0]},
         {opacity: 1, scale: [0.15, 0.25, 0.15], position: [-54, 41, 5]}
-    ], pose < 3 && pose? 1 : 0)
+    ], pose ===1? 1 : 0)
+
+    // const blurbsAnim = 
 
     const [wobs, toggleWobs] = useState(false)
     useEffect(()=>{
@@ -256,24 +283,77 @@ export default function SCModel({
 
             {...props}
         >
-                {springs.map(({scale,color}, i)=>{
-                    const county = ca.__$[i]
-                    return(
-                        <a.mesh 
-                            key = {county.name}
-                            name = {county.name}
-                            scale = {scale}
-                        >
-                            <bufferGeometry attach = 'geometry' {...county.geometry} />
-                            <a.meshBasicMaterial
-                                key = {county.name+'mtl'}
-                                color = {color}
-                                attach ='material'
-                                map = {caTexture}
-                            />
-                        </a.mesh>
-                    )           
-                })}
+            <group
+                name = 'allblurbs'
+                position = {[0,0, vis === 1? 2.5 : vis === 2? .5 : 0]}
+                // position = {[0, 0, ((pcts[d[vis]][] - 1) * 7 + (county==='modoc'? 1.25 : county === 'pseudocentral'? 0.5 : 0))]}
+            >
+            <group 
+                name = 'blurblightgroup'
+                position = {[-3,-15,45]}
+            >
+            {pose === 2 &&
+                <pointLight intensity = {3} color = {lightFromPhone.color}/>
+            }
+                <mesh>
+                    <boxBufferGeometry attach = 'geometry' args = {[5,5,5]} />
+                    <meshNormalMaterial attach = 'material' />
+                </mesh>
+            </group>
+
+            {blurbs.children.map((child)=>{
+                const name = child.name
+                const county = child.name.includes('central')? 'pseudocentral' 
+                    : name.includes('mendo')? 'mendo' 
+                    : name.includes('modoc')? 'modoc'
+                    : ''
+                const isShadow = child.name.includes('shadow')
+                const shaded = child.name.includes('shpitz') || child.name.includes('box')
+                const index = county === 'mendo'? 0 : county === 'modoc'? 1 : 2
+
+                return <a.mesh
+                    name = {name} key = {name}
+                    position = {
+                        name.includes('box')? blurbAnims[index].position : [0,0,0]
+                    }
+                    scale = {name.includes('box')? blurbAnims[index].scale : [1,1,1] }
+                    // rotation = {blurbAnims[index].rotation}
+                    visible = {index === vis}
+                >
+                    <bufferGeometry attach = 'geometry' {...child.geometry} />
+                    {!shaded && 
+                        <a.meshBasicMaterial attach = 'material'
+                            color = {name.includes('subtext')? 0x666666 : name.includes('text')? 0xdedede : 0x000000}
+                            transparent
+                            opacity = {blurbAnims[index].opacity}
+                            alphaMap = {isShadow? blurbShadows : null}
+                            // visible = {false}
+                        />
+                    }
+                    {shaded && <meshLambertMaterial attach = 'material' color = {0x444444} emissive = {0x141414} /> }
+                </a.mesh>
+
+            })}
+            </group>
+
+            {springs.map(({scale,color}, i)=>{
+                const county = ca.__$[i]
+                return(
+                    <a.mesh 
+                        key = {county.name}
+                        name = {county.name}
+                        scale = {scale}
+                    >
+                        <bufferGeometry attach = 'geometry' {...county.geometry} />
+                        <a.meshBasicMaterial
+                            key = {county.name+'mtl'}
+                            color = {color}
+                            attach ='material'
+                            map = {caTexture}
+                        />
+                    </a.mesh>
+                )           
+            })}
 
             <a.group name = 'pseudoui'
                 position = {pseudo.position}
@@ -285,7 +365,7 @@ export default function SCModel({
                         <bufferGeometry attach = 'geometry' {...child.geometry} />
                         <a.meshBasicMaterial 
                             attach = 'material' 
-                            color = {0xf9f9f9}
+                            color = {0xdfdfdf}
                             opacity = {pseudo.opacity}
                             map = {pseudoTex}
                             transparent
