@@ -228,7 +228,8 @@ export default function SCModel({
         {
             name: 'blurb',
             position: [-3,-1,4.5],
-            rotation: [toRads(20),toRads(-45),toRads(-10)],
+            rotation: [toRads(26),toRads(-52),toRads(-4)],
+            // rotation: [toRads(20),toRads(-45),toRads(-10)], //old
             fov: 65,
             // config: {mass: 1, tension: 10, friction: 100, duration: 3500},
         },
