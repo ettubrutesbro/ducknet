@@ -140,6 +140,8 @@ export default function SCModel({
         rotation: [toRads(-15), 0, 0]
     }))
 
+    const [blurbVisibility, setBlurbVisibility] = useState(null)
+
     useEffect(()=>{
         const currentVis = d[vis]
         setSprings(i => {
@@ -167,12 +169,16 @@ export default function SCModel({
             }
         })
         setBlurbs(i => {
+            const heightOffset = i === 0? .5 : i===1? 4 : 0
             return{
                 opacity: vis===i? 1 : 0,
-                position: vis === i? [0,0,0] : [0,0,17.5],
+                position: vis === i? [0,0,heightOffset] : [0,0,17.5 + heightOffset],
                 scale: [1,1,vis===i? 1 : 0.01],
                 rotation: [toRads(vis===i? 0 : -15), 0, 0],
-                delay: key => key === 'opacity'? 50 : 0,
+                delay: key => key === 'opacity' && vis === i? 650 : vis === i? 400 : 0,
+                //
+                onStart: vis===i? () => {setBlurbVisibility(i)} : () => {},
+                // onRest: vis===i? () => {} : () => {setBlurbVisibility(null)}
             }
         })
     }, [vis])
@@ -285,22 +291,13 @@ export default function SCModel({
         >
             <group
                 name = 'allblurbs'
-                position = {[0,0, vis === 1? 2.5 : vis === 2? .5 : 0]}
+                visible = {pose === 2}
+                // position = {[0,0, vis === 1? 2.5 : vis === 2? .5 : 0]}
                 // position = {[0, 0, ((pcts[d[vis]][] - 1) * 7 + (county==='modoc'? 1.25 : county === 'pseudocentral'? 0.5 : 0))]}
             >
-            <group 
-                name = 'blurblightgroup'
-                position = {[-3,-15,45]}
-            >
             {pose === 2 &&
-                <pointLight intensity = {3} color = {lightFromPhone.color}/>
+                <pointLight intensity = {3} color = {lightFromPhone.color} position = {[-3,-15,45]} />
             }
-                <mesh>
-                    <boxBufferGeometry attach = 'geometry' args = {[5,5,5]} />
-                    <meshNormalMaterial attach = 'material' />
-                </mesh>
-            </group>
-
             {blurbs.children.map((child)=>{
                 const name = child.name
                 const county = child.name.includes('central')? 'pseudocentral' 
@@ -310,20 +307,26 @@ export default function SCModel({
                 const isShadow = child.name.includes('shadow')
                 const shaded = child.name.includes('shpitz') || child.name.includes('box')
                 const index = county === 'mendo'? 0 : county === 'modoc'? 1 : 2
+                const heightOffset = index === 0? .5 : index===1? 4 : 0
 
                 return <a.mesh
                     name = {name} key = {name}
                     position = {
-                        name.includes('box')? blurbAnims[index].position : [0,0,0]
+                        name.includes('box')? blurbAnims[index].position 
+                        : name.includes('shpitz')? [0, 0, heightOffset]
+                        : [0,0,heightOffset]
                     }
                     scale = {name.includes('box')? blurbAnims[index].scale : [1,1,1] }
-                    // rotation = {blurbAnims[index].rotation}
-                    visible = {index === vis}
+                    visible = {blurbVisibility === index}
                 >
                     <bufferGeometry attach = 'geometry' {...child.geometry} />
                     {!shaded && 
                         <a.meshBasicMaterial attach = 'material'
-                            color = {name.includes('subtext')? 0x666666 : name.includes('text')? 0xdedede : 0x000000}
+                            color = {
+                                name.includes('subtext')? 0x666666 
+                                : name.includes('text')? 0xdedede 
+                                : 0x000000
+                            }
                             transparent
                             opacity = {blurbAnims[index].opacity}
                             alphaMap = {isShadow? blurbShadows : null}
@@ -375,9 +378,6 @@ export default function SCModel({
                 {pseudoui.__$.filter(c =>c.name.includes('Box')).map((child, i) => {
                     const number = Number(child.name.replace('Box',''))-1
                     const whichBar = number > 3? 'race' : 'county'
-                    // console.log(countyBarLengths[vis][3-number])
-
-                    console.log(bars[i])
 
                     return <a.mesh 
                         key = {child.name} 
