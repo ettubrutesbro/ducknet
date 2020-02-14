@@ -8,8 +8,6 @@ import { DRACOLoader } from 'three/examples/jsm/loaders/DRACOLoader'
 
 import {toRads} from '../../../utils/3d'
 
-import {WorldFunctions} from '../../../App'
-
 import {Body} from '../../core/Body'
 import Model from './SCModel'
 
@@ -66,7 +64,6 @@ export default function Scorecard({
             <Model 
                 position = {[0.15, 0, -0.4]}
                 selected = {selected}
-                pose = {selected? 1 : null}
                 onClick = {onClick}
             />
         </Suspense>
