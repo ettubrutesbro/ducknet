@@ -51,7 +51,7 @@ export const scorecard = () => {
                     <group rotation = {[toRads(modelRX),toRads(modelRY),toRads(modelRZ)]} >
                     <SCModel 
                         position = {[0,0,0]}
-                        pose = {posed? pose: null} //should soon supersede the 'showX' stuff below
+                        forcePose = {posed? pose: null} //should soon supersede the 'showX' stuff below
                         selected = {posed? pose: false}
                     />
                     </group>

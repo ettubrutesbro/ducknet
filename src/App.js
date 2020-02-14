@@ -58,15 +58,12 @@ function App() {
         onPointerMissed = {()=> select(null)}
         props = {{antialias: false}}
       >
-        {/* <fog attach="fog" args={['#ffffff', 55, 85]} /> 
-        <directionalLight args = {[0xffffff, 0.4]} castShadow />
-        */}
         <PhysicsProvider>
             <WorldFunctions.Provider value = {{
               select: select,
               selected: selected,
-              camStatus: camStatus,
-              setCamStatus: setCamStatus,
+              // camStatus: camStatus,
+              // setCamStatus: setCamStatus,
               abyss: abyss,
               admitToAbyss: admitToAbyss,
             }}>

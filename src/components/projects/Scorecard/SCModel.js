@@ -11,11 +11,11 @@ import { DRACOLoader } from 'three/examples/jsm/loaders/DRACOLoader'
 import {toRads} from '../../../utils/3d'
 import {randBtwn} from '../../../utils/basicMath'
 
-import {cameraContext} from '../../core/Camera'
+import {cameraContext, defaults} from '../../core/Camera'
 
 
 export default function SCModel({
-    pose,
+    forcePose = null, //for forcing pose from storybook?
     selected, //only here bc colors vary depending on selection - selection/pose handled by proj
     onClick = () => {console.log('clicked model')}, //archaic? the model is what must register the click...
     ...props
@@ -194,6 +194,20 @@ export default function SCModel({
     the CA model, giving an impression of complex, connected data augmentation, and showing how the 
     app might be intended to be used
     */
+    const [pose, setPose] = useState(0)
+
+    useEffect(()=>{
+        if(selected) setPose(1)
+        else{
+            console.log('UNSELECTED SC')
+            spitroast.stop()
+            setPose(0)
+        }
+    }, [selected])
+
+        useEffect(()=>{
+        setPose(forcePose) 
+    }, [forcePose])
 
     const {cam, setCam} = useContext(cameraContext)
 
@@ -207,12 +221,7 @@ export default function SCModel({
     }, [pose])
 
     const camposes = [
-        {
-            name: 'idle', //idle
-            position: [0,0,45],
-            rotation: [toRads(-0), toRads(0), toRads(0)],
-            fov: 85,
-        },
+        null,
         {
             name: 'pseudo',
             position: [-4.75,0.5,8],
@@ -239,18 +248,22 @@ export default function SCModel({
     const [spit, roast] = useState(0)
     const spitroast = useSpringEffect([
         {rotation: [toRads(0), toRads(0), toRads(0)],
-            config: {duration: 300}
+            config: {duration: 300},
+            onRest: () => {}
         }, //idle
         {rotation: [toRads(0), toRads(-10), toRads(0)], //pseudo
-            config: {duration: 7000},
+            config: {duration: 6000},
+            onRest: () => {if(!forcePose) setPose(2)}
         }, 
         {rotation: [toRads(-2), toRads(0), toRads(-10)], //blurb
-            config: {duration: 9000},
+            config: {duration: 8000},
+            onRest: () => {if(!forcePose) setPose(3)}
         }, 
         {rotation: [toRads(0), toRads(-20), toRads(0)], //mobile
-            config: {duration: 15000},
+            config: {duration: 16000},
+            onRest: () => {if(!forcePose) setPose(1)}
         }, 
-    ], spit)
+    ], spit, true)
 
     //ANIMS: groups of individual springs for diff. geometries
 
@@ -271,7 +284,7 @@ export default function SCModel({
             onStart: ()=>roast(0),
             onRest: ()=> roast(3),
         }
-    ], pose || pose === 0? pose : 0, true)
+    ], pose || pose === 0? pose : 0)
 
     const pseudo = useSpringEffect([
         {opacity: 0, scale: [0.08, 0.08, 0.08], position: [-35, 20, 0]},
@@ -284,7 +297,7 @@ export default function SCModel({
         if(pose===3) toggleWobs(true)
         if(!selected) toggleWobs(false)
         console.log('wobs:', wobs)
-    }, [pose, selected])
+    }, [pose, selected, forcePose])
 
     const hand = useSpringEffect([
         {position: [0,0,-135], onRest: ()=> toggleWobs(false)}, 
@@ -313,7 +326,7 @@ export default function SCModel({
         >
             <a.group
                 name = 'spitroast' //an additional layer of control for slow inter-pose rotation
-                rotation = {spitroast.rotation}
+                rotation = {spitroast.anim.rotation}
             >
             <group
                 name = 'allblurbs'
@@ -555,15 +568,14 @@ export default function SCModel({
 }
 
 
-const useSpringEffect = (keys, currentKey, print) =>{
+const useSpringEffect = (keys, currentKey, withStop) =>{
 
     const [key, setKey, stop] = useSpring(() => keys[currentKey])
 
     useEffect(()=>{
         stop()
         setKey(keys[currentKey])
-        if(print) console.log(currentKey)
     }, [currentKey])
 
-    return key
+    return withStop? {anim: key, stop: stop} :  key
 }

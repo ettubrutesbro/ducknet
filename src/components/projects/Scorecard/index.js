@@ -25,14 +25,13 @@ export default function Scorecard({
 
 
     const [forced, forceTo] = useState(null)
-    const {camStatus} = useContext(WorldFunctions)
 
     useEffect(()=>{
         if(selected){
             console.log('SELECTED SCORECARD')
             forceTo({
-                position: [0,7,0],
-                rotation: [0,50,0]
+                position: [0,0,0],
+                rotation: [0,0,0]
             })
         }
         else{
@@ -43,48 +42,9 @@ export default function Scorecard({
         }
     }, [selected])
 
-    // useEffect(()=>{
-    //     if(!camStatus){
-    //         setCamDestination(camSprings[0])
-    //     }
-    //     if(camStatus === 'sc start'){
-    //         console.log('changing view and submitting new shit ')
-    //         setCamDestination(camSprings[1])
-            
-    //     }
-    //     if(camStatus === 'dolly1'){
-    //         setCamDestination(camSprings[2])
-    //     }
-    //     if(camStatus === 'pos2closeup'){
-    //         setCamDestination(camSprings[3])
-    //     }
-    //     if(camStatus === 'dollyfrompos2'){
-    //         setCamDestination(camSprings[4])
-    //     }
-    // }, [camStatus, selected])
-
-    // useEffect(()=>{if(selected) onSelect(projectCamera)}, [selected, projectCamera])
-
-    // const [countyUIanim, setCountyUIAnim, stop] = useSpring(()=>({
-    //     opacity: 0, scale: [0.1,0.1,0.1], position: [0,0,0]
-    // }))
-
     //tracks whether forced motion on a body is done (the body component will use the callback when its own tween finishes)
     const [doneForcing, changeDoneForcing] = useState(false)
 
-    // useEffect(()=>{
-    //     //animations herein
-    //     if(
-    //         selected 
-    //         && doneForcing 
-    //         // && alone //with one other project its awk
-    //     ){
-    //         setCountyUIAnim({opacity: 1, position: [-50, 35, 0.1], scale: [0.125,0.125,0.125] })
-    //     }
-    //     else{
-    //         setCountyUIAnim({opacity: 0, position: [0,0,0], scale: [0.01, 0.01,0.01] })
-    //     }
-    // }, [vis, selected, doneForcing, alone])
 
 
     return( <Body 
@@ -106,6 +66,7 @@ export default function Scorecard({
             <Model 
                 position = {[0.15, 0, -0.4]}
                 selected = {selected}
+                pose = {selected? 1 : null}
                 onClick = {onClick}
             />
         </Suspense>

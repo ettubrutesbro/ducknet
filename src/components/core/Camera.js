@@ -19,7 +19,7 @@ export function CameraProvider({debugCamera, children}){
   </cameraContext.Provider>
 }
 
-const defaults = {
+export const defaults = {
     position: [0, 0, 45],
     rotation: [0, 0, 0],
     fov: 25,
