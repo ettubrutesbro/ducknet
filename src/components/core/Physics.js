@@ -1,12 +1,11 @@
 import React, {useState, useEffect, useContext, useRef} from 'react'
-import {useRender} from 'react-three-fiber'
+import {useFrame} from 'react-three-fiber'
 import * as CANNON from 'cannon'
 import TWEEN from '@tweenjs/tween.js'
 
 import {WorldFunctions} from '../../App'
 
 const physicsContext = React.createContext()
-
 export function PhysicsProvider({children}){
   const [world] = useState(()=> new CANNON.World())
   useEffect(() => {
@@ -18,7 +17,7 @@ export function PhysicsProvider({children}){
     world.gravity.set(0,-20, 0)
   }, [world])
   //world stepper every frame
-  useRender(()=> {
+  useFrame(()=> {
     world.step(1/60)
     TWEEN.update() //kinda dangerous: this is not physics, though tween probably will only deal with it...
 
@@ -36,7 +35,6 @@ export function usePhysics({ ...props}, fn, deps = [], name){
   const worldFuncContext = useContext(WorldFunctions)
 
   let isSleep
-  let firstRun = true
   const ref = useRef()
 
   //use provided context: will get value (world info) from nearest parent cannonProvider
@@ -50,10 +48,11 @@ export function usePhysics({ ...props}, fn, deps = [], name){
     }
     fn(body)
     world.addBody(body)
+    ref.current.firstRun = true
     return () => world.removeBody(body)
   }, deps)
   
-  useRender(()=>{    
+  useFrame(()=>{    
     if(ref.current){ 
         if(body.position.y< -20 && !worldFuncContext.abyss.includes(name)){
           // console.log('admitting', name, 'to abyss')
@@ -80,7 +79,7 @@ export function usePhysics({ ...props}, fn, deps = [], name){
         ref.current.position.copy(body.position)
         ref.current.quaternion.copy(body.quaternion)
 
-        if(firstRun){
+        if(ref.current.firstRun){
           /*
           this prevents a Flash of Unpositioned Model, 
           as three renders one frame of a just-mounted model 
@@ -89,10 +88,12 @@ export function usePhysics({ ...props}, fn, deps = [], name){
           some kind of booleans could be used, but even dynamic bodies 
           toggle between dynamic / static depending on selection state etc. 
           */
-          // console.log('first run', body.name)
+          console.log('first run', body.name)
           ref.current.visible = true
-          firstRun = false
+          ref.current.firstRun = false
         }
+
+        // console.log(body.name, ref.current.visible)
     }
   })
 

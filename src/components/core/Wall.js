@@ -53,9 +53,7 @@ export function Enclosure({active}){
     {cage.front && active &&
       <Wall name = 'F' position = {[0, 0, (cage.depth/2)+.5]} rotation = {[0, 0, 0]} size = {[cage.width,cage.height,1]} visible={cage.showFront} />
     }
-      <ambientLight intensity = {0.2}/>
-      <pointLight position = {[3, 4, 25]} color = {0xffffff} intensity = {0.3} castShadow />
-      <pointLight position = {[-10, 10, 8]} color = {0xffffff} intensity = {0.3} castShadow />
+      
     </group>
   )
 }

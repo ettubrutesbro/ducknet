@@ -16,7 +16,6 @@ export function Body({
   position=[0,0,0], rotation=[0,0,0], visible = true, 
   forced={position: null, rotation: null},
   onForceFinish = (v) => {},
-  inScene = true, //controls whether usePhys will run again; toggle when no need to render (i.e. it fell out of view)
   falling,
   children,
 }) {
@@ -129,7 +128,9 @@ export function Body({
   }, [falling])
 
   return (
-      <group ref = {phys.ref} visible = {false}>
+      <group ref = {phys.ref} 
+      visible = {false}
+      >
         
         {shapes.map((shape, i)=>{
           return <mesh key = {i} position = {shapeParams[i].offset || [0,5,0]} rotation = {shapeParams[i].rotation || [0,0,0]}>
@@ -153,14 +154,4 @@ export function Body({
       
       </group>
   )
-}
-
-export const LoadingProject = (props) => {
-  useEffect(()=>{
-    return () => {
-      //insert some callback to let app know one model is done
-      // console.log(`${props.name} loaded`)
-    }
-  })
-  return <mesh> </mesh>
 }
