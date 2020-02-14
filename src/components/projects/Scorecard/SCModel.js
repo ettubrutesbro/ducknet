@@ -189,12 +189,6 @@ export default function SCModel({
         {color: '#7EF9BE', intensity: 0.65} 
     ], vis)
 
-
-    // const blurbLight = useSpringEffect([
-
-    // ])
-
-
     //ANIMATION: POSES
     /* on selection, various pseudo UI elements and phone/hand/govt bldg alternate appearing around
     the CA model, giving an impression of complex, connected data augmentation, and showing how the 
@@ -242,21 +236,48 @@ export default function SCModel({
         },
     ]
 
+    const [spit, roast] = useState(0)
+    const spitroast = useSpringEffect([
+        {rotation: [toRads(0), toRads(0), toRads(0)],
+            config: {duration: 300}
+        }, //idle
+        {rotation: [toRads(0), toRads(-10), toRads(0)], //pseudo
+            config: {duration: 7000},
+        }, 
+        {rotation: [toRads(-2), toRads(0), toRads(-10)], //blurb
+            config: {duration: 9000},
+        }, 
+        {rotation: [toRads(0), toRads(-20), toRads(0)], //mobile
+            config: {duration: 15000},
+        }, 
+    ], spit)
+
     //ANIMS: groups of individual springs for diff. geometries
 
     const rotation = useSpringEffect([
-        {rotation: [toRads(0), toRads(0), toRads(0)]}, //idle
-        {rotation: [toRads(0), toRads(15), toRads(0)]}, //pseudo
-        {rotation: [toRads(-37), toRads(-16), toRads(-10)]}, //blurb
-        {rotation: [toRads(0), toRads(-40), toRads(0)]}, //mobile
-    ], pose || pose === 0? pose : 0)
+        {rotation: [toRads(0), toRads(0), toRads(0)], //idle
+            onStart: () => roast(0),
+            onRest: () => {}
+        }, 
+        {rotation: [toRads(0), toRads(15), toRads(0)], //pseudo
+            onStart: ()=>roast(0),
+            onRest: ()=>roast(1),
+        }, 
+        {rotation: [toRads(-37), toRads(-16), toRads(-10)], //blurb
+            onStart: ()=>roast(0),
+            onRest: ()=> roast(2),
+        }, 
+        {rotation: [toRads(0), toRads(-40), toRads(0)], //mobile
+            onStart: ()=>roast(0),
+            onRest: ()=> roast(3),
+        }
+    ], pose || pose === 0? pose : 0, true)
 
     const pseudo = useSpringEffect([
         {opacity: 0, scale: [0.08, 0.08, 0.08], position: [-35, 20, 0]},
         {opacity: 1, scale: [0.15, 0.25, 0.15], position: [-54, 41, 5]}
     ], pose ===1? 1 : 0)
 
-    // const blurbsAnim = 
 
     const [wobs, toggleWobs] = useState(false)
     useEffect(()=>{
@@ -290,6 +311,10 @@ export default function SCModel({
 
             {...props}
         >
+            <a.group
+                name = 'spitroast' //an additional layer of control for slow inter-pose rotation
+                rotation = {spitroast.rotation}
+            >
             <group
                 name = 'allblurbs'
                 visible = {pose === 2}
@@ -299,6 +324,16 @@ export default function SCModel({
             {pose === 2 &&
                 <pointLight intensity = {3} color = {lightFromPhone.color} position = {[-3,-15,45]} />
             }
+
+            {//TODO: replace much of the blurb stuff
+                /* 
+                    1. use boxGeometries instead of loading the blurbboxes in with obj
+                        lets me do rotations, saves filesize (prob.), 
+                    2. use texture with PNG (should be low size) for blurb texts
+                        will enable more editability
+                */
+            }
+
             {blurbs.children.map((child)=>{
                 const name = child.name
                 const county = child.name.includes('central')? 'pseudocentral' 
@@ -514,21 +549,21 @@ export default function SCModel({
             </a.group>
             
             
-
+            </a.group>
         </a.group>
     )
 }
 
 
-const useSpringEffect = (keys, currentKey) =>{
+const useSpringEffect = (keys, currentKey, print) =>{
 
     const [key, setKey, stop] = useSpring(() => keys[currentKey])
 
     useEffect(()=>{
         stop()
         setKey(keys[currentKey])
-
+        if(print) console.log(currentKey)
     }, [currentKey])
-    // console.log(key)
+
     return key
 }
