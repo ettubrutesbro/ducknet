@@ -1,6 +1,7 @@
 import React, {Suspense, useEffect, useState, useContext, useRef} from 'react'
-import * as THREE from 'three'
+// import * as THREE from 'three'
 
+import {Dom} from 'react-three-fiber'
 
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader'
 import { OBJLoader } from 'three/examples/jsm/loaders/OBJLoader'
@@ -55,7 +56,7 @@ export default function Scorecard({
             {size: [1.7,1.5,1.7], offset: [-1,1.8,0]}
         ]}
         forced = {forced}
-        // visible = {true}
+        visible = {false}
         falling = {falling}
         onForceFinish = {changeDoneForcing}
         {...props}
@@ -67,7 +68,6 @@ export default function Scorecard({
                 onClick = {onClick}
             />
         </Suspense>
-
 
     
     </Body>)

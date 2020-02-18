@@ -102,10 +102,31 @@ function App() {
 
       </Canvas>
    
+      <InfoBlurb />
+      <InfoPage />
+
     </div>
   );
 }
 
+
+const InfoBlurb = styled.div`
+  position: absolute;
+  border: 1px solid red;
+  width: 33%;
+  height: 500px;
+  top: 0; bottom: 0; margin: auto 0;
+  right: 0;
+`
+
+const InfoPage = styled.div`
+display: none;
+  border: 1px solid black;
+  width: 66%; 
+  height: 100%; 
+  position: absolute;
+  top: 0; right: 0;
+`
 
 
 export default App;
