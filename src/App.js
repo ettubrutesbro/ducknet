@@ -29,25 +29,12 @@ export const [userStore] = create(set => ({
 
 function App() {
 
-  const isInitialMount = useRef(true)
-  const [abyss, admitToAbyss] = useState([]) //for removing projects as they fall out of view 
   const {select, selected, study, studying} = userStore(store => ({
     select: store.select,
     selected: store.selected,
     study: store.study,
     studying: store.studying
   }), shallow)
-
-  useEffect(()=>{
-    if(isInitialMount.current){
-      isInitialMount.current = false
-    }
-    else if(!selected){
-      console.log('clearing abyss')
-      admitToAbyss([])
-    }
-  }, [selected])
-
 
   return (
     <div className = 'full'>
