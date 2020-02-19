@@ -5,7 +5,7 @@ import TWEEN from '@tweenjs/tween.js'
 
 import {userStore} from '../../App'
 
-const physicsContext = React.createContext()
+export const physicsContext = React.createContext()
 export function PhysicsProvider({children}){
   const [world] = useState(()=> new CANNON.World())
   const [abyss, admitToAbyss] = useState([])
