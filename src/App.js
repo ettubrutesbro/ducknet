@@ -22,11 +22,6 @@ import Projects from './components/core/Projects'
  
 import {toRads, toDegs} from './utils/3d'
 
-
-export const WorldFunctions = React.createContext({
-  //insert functions that every child of the world should have? 
-})
-
 export const [userStore] = create(set => ({
   selected: null, select: v => set({selected: v}),
   studying: null, study: v => set({studying: v}),
@@ -66,10 +61,6 @@ function App() {
         props = {{antialias: false}}
       >
         <PhysicsProvider>
-            <WorldFunctions.Provider value = {{
-              abyss: abyss,
-              admitToAbyss: admitToAbyss,
-            }}>
             <CameraProvider>
             <Enclosure
               active = {!selected} 
@@ -98,7 +89,6 @@ function App() {
             
             </Projects>
             </CameraProvider>
-            </WorldFunctions.Provider>
             
 
         </PhysicsProvider>
