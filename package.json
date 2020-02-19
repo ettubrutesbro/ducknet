@@ -16,7 +16,7 @@
     "three": "^0.111.0",
     "use-interval": "^1.2.1",
     "use-timeout": "^1.1.0",
-    "zustand": "^2.2.1"
+    "zustand": "^2.2.2"
   },
   "scripts": {
     "start": "react-scripts start",
@@ -47,6 +47,7 @@
     "@storybook/addon-knobs": "^5.3.8",
     "@storybook/addon-links": "^5.3.8",
     "@storybook/addons": "^5.3.8",
-    "@storybook/react": "^5.3.8"
+    "@storybook/react": "^5.3.8",
+    "boganipsum": "^0.2.0"
   }
 }
