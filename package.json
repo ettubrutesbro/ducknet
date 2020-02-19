@@ -16,7 +16,7 @@
     "three": "^0.111.0",
     "use-interval": "^1.2.1",
     "use-timeout": "^1.1.0",
-    "zustand": "^2.2.1"
+    "zustand": "^2.2.2"
   },
   "scripts": {
     "start": "react-scripts start",

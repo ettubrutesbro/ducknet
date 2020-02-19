@@ -9,14 +9,16 @@ should this component have a separate ProjectContext that it passes down for pro
 
 import React, {useContext, useState, useEffect} from 'react'
 import {cameraContext} from './Camera'
+import shallow from 'zustand/shallow'
 
-import {WorldFunctions} from '../../App'
+import {WorldFunctions, userStore} from '../../App'
 
 function Projects({children}){
 
     const {cam, setCam} = useContext(cameraContext)
 
-    const {select, selected, abyss} = useContext(WorldFunctions)
+    const {abyss} = useContext(WorldFunctions)
+    const {select, selected} = userStore(store => ({select: store.select, selected: store.selected}), shallow)
 
     const [alone, projectIsAlone] = useState(null) //for telling a project when the others are all in abyss
     //check if abyss has every project but the selected one

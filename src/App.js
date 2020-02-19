@@ -3,6 +3,9 @@ import './App.css';
 import { Canvas, useFrame, useRender, useLoader } from 'react-three-fiber'
 import styled from 'styled-components'
 
+import create from 'zustand'
+import shallow from 'zustand/shallow'
+
 import * as CANNON from 'cannon'
 
 import {PhysicsProvider, usePhysics} from './components/core/Physics'
@@ -24,17 +27,21 @@ export const WorldFunctions = React.createContext({
   //insert functions that every child of the world should have? 
 })
 
-
-export const UserContext = React.createContext({})
+export const [userStore] = create(set => ({
+  selected: null, select: v => set({selected: v}),
+  studying: null, study: v => set({studying: v}),
+})) 
 
 function App() {
 
   const isInitialMount = useRef(true)
-
-  const [selected, select] = useState(null) //blurb
-  const [studying, study] = useState(null) //page
   const [abyss, admitToAbyss] = useState([]) //for removing projects as they fall out of view 
-
+  const {select, selected, study, studying} = userStore(store => ({
+    select: store.select,
+    selected: store.selected,
+    study: store.study,
+    studying: store.studying
+  }), shallow)
 
   useEffect(()=>{
     if(isInitialMount.current){
@@ -49,20 +56,17 @@ function App() {
 
   return (
     <div className = 'full'>
-      <UserContext.Provider value = {{
-        study: study, studying: studying,
-      }}>
+
       <Canvas 
         invalidateFrameloop = {false}
-        onPointerMissed = {()=> select(null)}
+        onPointerMissed = {()=> {
+          select(null)
+          study(null)
+        }}
         props = {{antialias: false}}
       >
         <PhysicsProvider>
             <WorldFunctions.Provider value = {{
-              select: select,
-              selected: selected,
-              // camStatus: camStatus,
-              // setCamStatus: setCamStatus,
               abyss: abyss,
               admitToAbyss: admitToAbyss,
             }}>
@@ -100,9 +104,9 @@ function App() {
         </PhysicsProvider>
 
       </Canvas>
-      {selected &&
+      {selected && !studying && 
         <InfoBlurb>
-          {selected === 'scorecard' && <SCBlurb />}
+          {!studying && selected === 'scorecard' && <SCBlurb />}
         </InfoBlurb>
       }
       {studying &&
@@ -110,7 +114,6 @@ function App() {
         {studying === 'scorecard' && <SCPage />}
       </InfoPage>
       }
-      </UserContext.Provider>
 
     </div>
   );
@@ -128,7 +131,9 @@ const InfoBlurb = styled.div`
 
 const InfoPage = styled.div`
 // display: none;
-  border: 1px solid black;
+  border-left: 2px solid black;
+  padding-left: 30px;
+  // background: white;
   width: 66%; 
   height: 100%; 
   position: absolute;

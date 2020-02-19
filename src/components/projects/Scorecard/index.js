@@ -12,7 +12,7 @@ import {toRads} from '../../../utils/3d'
 import {Body} from '../../core/Body'
 import Model from './SCModel'
 
-import {UserContext} from '../../../App'
+import {userStore} from '../../../App'
 
 export {SCPage} from './SCPage'
 
@@ -20,7 +20,7 @@ export {SCPage} from './SCPage'
 export function SCBlurb({
     ...props
 }){
-    const {study} = useContext(UserContext)
+    const study = userStore(store => store.study)
     return(
         <React.Fragment>
             <h1>Scorecard of California children's well-being</h1>
