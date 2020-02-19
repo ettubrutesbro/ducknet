@@ -11,7 +11,7 @@ import {Enclosure} from './components/core/Wall'
 
 import Seseme from './components/projects/seseme'
 import Eclipse from './components/projects/Eclipse'
-import Scorecard from './components/projects/Scorecard/'
+import Scorecard, {SCBlurb, SCPage} from './components/projects/Scorecard/'
 
 import {CameraProvider} from './components/core/Camera'
 
@@ -24,13 +24,17 @@ export const WorldFunctions = React.createContext({
   //insert functions that every child of the world should have? 
 })
 
+
+export const UserContext = React.createContext({})
+
 function App() {
 
   const isInitialMount = useRef(true)
 
-  const [selected, select] = useState(null)
+  const [selected, select] = useState(null) //blurb
+  const [studying, study] = useState(null) //page
   const [abyss, admitToAbyss] = useState([]) //for removing projects as they fall out of view 
-  const [camStatus, setCamStatus] = useState(null)
+
 
   useEffect(()=>{
     if(isInitialMount.current){
@@ -42,17 +46,12 @@ function App() {
     }
   }, [selected])
 
-  useEffect(()=>{
-    console.log('cam status changed: ', camStatus)
-  }, [camStatus])
-
-  const [useCamera, chooseCamera] = useState('default')
-  const [adjustOffset, changeAdjOffset] = useState({
-    position: [0,0,0], rotation: [0,0,0], fov: 0
-  })
 
   return (
     <div className = 'full'>
+      <UserContext.Provider value = {{
+        study: study, studying: studying,
+      }}>
       <Canvas 
         invalidateFrameloop = {false}
         onPointerMissed = {()=> select(null)}
@@ -101,9 +100,17 @@ function App() {
         </PhysicsProvider>
 
       </Canvas>
-   
-      <InfoBlurb />
-      <InfoPage />
+      {selected &&
+        <InfoBlurb>
+          {selected === 'scorecard' && <SCBlurb />}
+        </InfoBlurb>
+      }
+      {studying &&
+      <InfoPage>
+        {studying === 'scorecard' && <SCPage />}
+      </InfoPage>
+      }
+      </UserContext.Provider>
 
     </div>
   );
@@ -113,14 +120,14 @@ function App() {
 const InfoBlurb = styled.div`
   position: absolute;
   border: 1px solid red;
-  width: 33%;
+  width: 50%;
   height: 500px;
   top: 0; bottom: 0; margin: auto 0;
   right: 0;
 `
 
 const InfoPage = styled.div`
-display: none;
+// display: none;
   border: 1px solid black;
   width: 66%; 
   height: 100%; 

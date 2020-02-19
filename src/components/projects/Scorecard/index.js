@@ -12,6 +12,26 @@ import {toRads} from '../../../utils/3d'
 import {Body} from '../../core/Body'
 import Model from './SCModel'
 
+import {UserContext} from '../../../App'
+
+export {SCPage} from './SCPage'
+
+
+export function SCBlurb({
+    ...props
+}){
+    const {study} = useContext(UserContext)
+    return(
+        <React.Fragment>
+            <h1>Scorecard of California children's well-being</h1>
+            <p>A web tool for exploring children's health, education, and welfare data in California and all its counties,
+            filterable by race and year. Designed and developed for Children Now, a nonprofit that uses it in meetings with local leaders
+            (government, foundations, nonprofits) to highlight and advocate for children's needs.</p>
+            <button onClick = {()=> study('scorecard')}> View case study </button>
+        </React.Fragment>
+    )
+}
+
 export default function Scorecard({
     onClick = () => console.log('clicked project'), 
     selected = false,
@@ -43,8 +63,6 @@ export default function Scorecard({
 
     //tracks whether forced motion on a body is done (the body component will use the callback when its own tween finishes)
     const [doneForcing, changeDoneForcing] = useState(false)
-
-
 
     return( <Body 
         name = 'scorecard'
