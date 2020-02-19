@@ -227,6 +227,7 @@ export default function SCModel({
             position: [-4.75,0.5,8],
             rotation: [toRads(-0), toRads(-40), toRads(0)],
             fov: 85,
+            config: {precision: 0.0001}
         },
         {
             name: 'blurb',
@@ -235,13 +236,14 @@ export default function SCModel({
             // rotation: [toRads(20),toRads(-45),toRads(-10)], //old
             fov: 65,
             // config: {mass: 1, tension: 10, friction: 100, duration: 3500},
+            config: {precision: 0.0001}
         },
         {
             name: 'mobile',
             position: [-24,2,53],
             rotation: [toRads(-6),toRads(-32),toRads(-3)],
             fov: 32,
-            config: {mass: 7, tension: 200, friction: 70},
+            config: {mass: 7, tension: 200, friction: 70, precision: 0.0001},
         },
     ]
 
@@ -387,6 +389,7 @@ export default function SCModel({
 
             })}
             </group>
+
 
             {springs.map(({scale,color}, i)=>{
                 const county = ca.__$[i]
