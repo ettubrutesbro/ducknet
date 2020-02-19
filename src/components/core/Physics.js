@@ -3,11 +3,13 @@ import {useFrame} from 'react-three-fiber'
 import * as CANNON from 'cannon'
 import TWEEN from '@tweenjs/tween.js'
 
-import {WorldFunctions} from '../../App'
+import {userStore} from '../../App'
 
 const physicsContext = React.createContext()
 export function PhysicsProvider({children}){
   const [world] = useState(()=> new CANNON.World())
+  const [abyss, admitToAbyss] = useState([])
+
   useEffect(() => {
     console.log('WORLD:')
     console.log(world)
@@ -25,20 +27,19 @@ export function PhysicsProvider({children}){
   window.world = world
 
   //world is provided as context for all components
-  return <physicsContext.Provider value = {world} children = {children} />
+  return <physicsContext.Provider value = {{world: world, abyss: abyss, admitToAbyss: admitToAbyss}} children = {children} />
 }
 
 //cannon hook for tracking/updating a physics obj
 //usePhysics(cannon properties, a function to call on the body created herein, deps????)
 export function usePhysics({ ...props}, fn, deps = [], name){
 
-  const worldFuncContext = useContext(WorldFunctions)
-
   let isSleep
   const ref = useRef()
 
   //use provided context: will get value (world info) from nearest parent cannonProvider
-  const world = useContext(physicsContext) //not known: do i need to have a const context = React.createContext() every time i make a component that uses context...???
+  const selected = userStore(store => store.selected)
+  const {world, abyss, admitToAbyss} = useContext(physicsContext) //not known: do i need to have a const context = React.createContext() every time i make a component that uses context...???
 
   //instantiate body for whoever is using usePhysics
   const [body] = useState(()=> new CANNON.Body(props))
@@ -54,12 +55,12 @@ export function usePhysics({ ...props}, fn, deps = [], name){
   
   useFrame(()=>{    
     if(ref.current){ 
-        if(body.position.y< -20 && !worldFuncContext.abyss.includes(name)){
-          // console.log('admitting', name, 'to abyss')
-          worldFuncContext.admitToAbyss([...worldFuncContext.abyss, name])
-          if(!worldFuncContext.selected){
+        if(body.position.y< -20 && !abyss.includes(name)){
+          console.log('admitting', name, 'to abyss')
+          admitToAbyss([abyss, name])
+          if(!selected){
             // console.log('rapid undo: reinserting object')
-            worldFuncContext.admitToAbyss([])
+            admitToAbyss([])
           }
           return
         }

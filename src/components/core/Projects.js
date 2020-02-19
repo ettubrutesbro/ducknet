@@ -18,7 +18,7 @@ function Projects({children}){
     const {cam, setCam} = useContext(cameraContext)
 
     const {abyss} = useContext(WorldFunctions)
-    const {select, selected} = userStore(store => ({select: store.select, selected: store.selected}), shallow)
+    const {select, selected} = userStore()
 
     const [alone, projectIsAlone] = useState(null) //for telling a project when the others are all in abyss
     //check if abyss has every project but the selected one
