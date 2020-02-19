@@ -491,6 +491,7 @@ export default function SCModel({
                 {phonebldg.__$.filter(c => c.name === 'WOBhand').map(child => {
                     return <a.mesh name = 'wobhand' key = 'wobhand'
                         position = {wobhand.position}
+                            onClick = {()=> console.log('clicked a wob')}
                     >
                         <bufferGeometry attach = 'geometry' {...child.geometry} />
                         <meshBasicMaterial 
@@ -547,6 +548,7 @@ export default function SCModel({
 
                     {phonebldg.__$.filter(c => c.name === 'WOBbldg').map(child => {
                         return <mesh name = 'wobbldg' key = 'wobbldg'
+                            onClick = {()=> console.log('clicked a wob')}
                             
                         >
                             <bufferGeometry attach = 'geometry' {...child.geometry} />
