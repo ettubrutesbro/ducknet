@@ -57,7 +57,7 @@ export function usePhysics({ ...props}, fn, deps = [], name){
     if(ref.current){ 
         if(body.position.y< -20 && !abyss.includes(name)){
           console.log('admitting', name, 'to abyss')
-          admitToAbyss([abyss, name])
+          admitToAbyss([...abyss, name])
           if(!selected){
             // console.log('rapid undo: reinserting object')
             admitToAbyss([])
