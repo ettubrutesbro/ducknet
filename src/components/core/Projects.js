@@ -43,6 +43,7 @@ function Projects({children}){
             return React.cloneElement(child, {
                 //foisted props
                 onClick: () => select(name),
+                clickedOutside: () => select(null),
                 selected: selected === name,
                 onSelect: setCam,
                 falling : selected && selected !== name,

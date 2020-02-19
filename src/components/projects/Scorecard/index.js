@@ -8,6 +8,7 @@ import { OBJLoader } from 'three/examples/jsm/loaders/OBJLoader'
 import { DRACOLoader } from 'three/examples/jsm/loaders/DRACOLoader'
 
 import {toRads} from '../../../utils/3d'
+import {LineTo} from '../../../utils/LineTo'
 
 import {Body} from '../../core/Body'
 import Model from './SCModel'
@@ -86,6 +87,7 @@ export default function Scorecard({
                 onClick = {onClick}
             />
         </Suspense>
+
 
     
     </Body>)

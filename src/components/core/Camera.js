@@ -10,13 +10,24 @@ import ReactDOM from 'react-dom'
 export const cameraContext = React.createContext()
 export function CameraProvider({debugCamera, children}){
   const [cam, setCam] = useState(null)
+  const [cameraRef, setCameraRef] = useState(null)
   useEffect(()=>{
     //if prop debugCamera is provided, use it to override (without spring) camera attributes
     if(debugCamera) setCam(debugCamera)
   }, [debugCamera])
-  return <cameraContext.Provider value = {{cam: cam, setCam: setCam}}>
-    <Camera /> {children}
+  return (
+  <cameraContext.Provider 
+    value = {{
+      cam: cam, 
+      setCam: setCam,
+      cameraRef: cameraRef,
+      setCameraRef: setCameraRef
+    }}
+  >
+    <Camera /> 
+    {children}
   </cameraContext.Provider>
+  )
 }
 
 export const defaults = {
@@ -33,16 +44,19 @@ function Camera({
   ...props
 }) {
 
+  const {cam, setCam, setCameraRef} = useContext(cameraContext)
+
   //set camera as default
   const ref = useRef()
   const { setDefaultCamera } = useThree()
   useEffect(() => {
     void setDefaultCamera(ref.current)
+    setCameraRef(ref.current)
   }, [useThis])
 
   
 
-  const {cam, setCam} = useContext(cameraContext)
+
 
   const [springTo, setSpring, stop] = useSpring(()=>({
     position: defaults.position,
@@ -58,6 +72,7 @@ function Camera({
   }, [cam])
 
   useFrame(() => {
+    //may need upd. matrix world...
     ref.current.updateProjectionMatrix()
   })
 

@@ -21,11 +21,14 @@ import {CameraProvider} from './components/core/Camera'
 import Projects from './components/core/Projects'
  
 import {toRads, toDegs} from './utils/3d'
+import {DumbCube} from './utils/DumbCube'
+import {LineTo} from './utils/LineTo'
 
 export const [userStore] = create(set => ({
   selected: null, select: v => set({selected: v}),
   studying: null, study: v => set({studying: v}),
 })) 
+
 
 function App() {
 
@@ -75,9 +78,14 @@ function App() {
               /> 
             
             </Projects>
+
+            <group>
+              <LineTo />
+              <DumbCube /> 
+            </group>
+
             </CameraProvider>
             
-
         </PhysicsProvider>
 
       </Canvas>

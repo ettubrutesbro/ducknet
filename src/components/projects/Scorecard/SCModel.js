@@ -18,6 +18,7 @@ export default function SCModel({
     forcePose = null, //for forcing pose from storybook?
     selected, //only here bc colors vary depending on selection - selection/pose handled by proj
     onClick = () => {console.log('clicked model')}, //archaic? the model is what must register the click...
+    clickedOutside, //for WOBs 
     ...props
 }){
     //ASSETS
@@ -494,7 +495,7 @@ export default function SCModel({
                 {phonebldg.__$.filter(c => c.name === 'WOBhand').map(child => {
                     return <a.mesh name = 'wobhand' key = 'wobhand'
                         position = {wobhand.position}
-                            onClick = {()=> console.log('clicked a wob')}
+                            onClick = {clickedOutside}
                     >
                         <bufferGeometry attach = 'geometry' {...child.geometry} />
                         <meshBasicMaterial 
@@ -551,7 +552,7 @@ export default function SCModel({
 
                     {phonebldg.__$.filter(c => c.name === 'WOBbldg').map(child => {
                         return <mesh name = 'wobbldg' key = 'wobbldg'
-                            onClick = {()=> console.log('clicked a wob')}
+                            onClick = {clickedOutside}
                             
                         >
                             <bufferGeometry attach = 'geometry' {...child.geometry} />
