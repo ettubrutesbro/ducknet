@@ -10,6 +10,7 @@ import * as CANNON from 'cannon'
 
 import {toRads} from '../utils/3d'
 import {LineSpot} from '../utils/LineSpot'
+import {TestFatLine, TestMeshLine} from '../utils/TestFatLine'
 
 import SCModel from '../components/projects/Scorecard/SCModel'
 import Camera from '../components/core/Camera'
@@ -66,8 +67,34 @@ export const line = () => {
     return(
         <Container>
             <PreviewCanvas>
-                <LineSpot />
+                <LineSpot 
+                    goTo = {[]}
+                />
 
+            </PreviewCanvas>
+        </Container>
+    )
+}
+
+export const fatline = () => {
+
+    const testMutation = boolean('test mutating the line', false)
+
+    return(
+        <Container>
+            <PreviewCanvas>
+                <TestFatLine testMutation = {testMutation} />
+            </PreviewCanvas>
+        </Container>
+    )
+}
+export const meshline = () => {
+
+
+    return(
+        <Container>
+            <PreviewCanvas>
+                <TestMeshLine />
             </PreviewCanvas>
         </Container>
     )
