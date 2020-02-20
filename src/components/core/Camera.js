@@ -11,6 +11,9 @@ import {toRads} from '../../utils/3d'
 import {DumbCube} from '../../utils/DumbCube'
 
 import {userStore} from '../../App'
+import * as meshline from 'threejs-meshline'
+
+extend(meshline)
 
 export const cameraContext = React.createContext()
 export function CameraProvider({debugCamera, children}){
@@ -59,9 +62,9 @@ function Camera({
     void setDefaultCamera(ref.current)
   }, [useThis])
 
-  const aRef = useRef()
-  const hudRef = useRef()
+
   const lineRef = useRef()
+  const lineRef2 = useRef()
 
   const [springTo, setSpring, stop] = useSpring(()=>({
     position: defaults.position,
@@ -93,24 +96,27 @@ function Camera({
   }, [lineB])
 
   const updateHud = (a,b) => {
-        let v3 = new THREE.Vector3()
+      let v3 = new THREE.Vector3()
       v3.set(
         (b.x / window.innerWidth) * 2 - 1,
         - (b.y / window.innerHeight) * 2 + 1,
-        400
+        0
       )
 
       v3.unproject(ref.current)
       v3.sub(ref.current.position).normalize()
       var distance = -ref.current.position.z / v3.z
-// 
-      // hudRef.current.position.copy(ref.current.position).add(v3.multiplyScalar(distance))
-      lineRef.current.geometry.vertices[1] = new THREE.Vector3().copy(ref.current.position).add(v3.multiplyScalar(distance))
-      if(a && a.current){
-        // aRef.current.position.copy(a.current.position)
-        lineRef.current.geometry.vertices[0] = new THREE.Vector3().copy(a.current.position)
-      }
+
+      const aTo = a && a.current? new THREE.Vector3().copy(a.current.position) : new THREE.Vector3()
+      const bTo = new THREE.Vector3().copy(ref.current.position).add(v3.multiplyScalar(distance))
+
+
+      lineRef.current.geometry.vertices[0] = aTo
+      lineRef.current.geometry.vertices[1] = bTo
       lineRef.current.geometry.verticesNeedUpdate = true
+
+      lineRef2.current.geometry.setVertices([ aTo, bTo ])
+      lineRef2.current.geometry.verticesNeedUpdate = true
 
   }
 
@@ -132,13 +138,25 @@ function Camera({
       </Dom>
     </group>
 */}
-    <line ref = {lineRef}>
-      <geometry attach = 'geometry' vertices = {['foo','bar'].map((v,i)=>new THREE.Vector3(0,i*100,0))} 
-        onUpdate = {self => self.verticesNeedUpdate = true}
+    <line ref = {lineRef} visible = {false} >
+      <geometry attach = 'geometry' 
+        vertices = {['foo','bar'].map((v,i)=>new THREE.Vector3(0,i*100,0))} 
       />
-      <lineBasicMaterial attach = 'material' color = {0xff0000} depthTest = {false} />
+      <lineBasicMaterial attach = 'material' color = {0xff0000} width = {0.1} />
     </line>
-
+    
+    <mesh ref = {lineRef2} >
+      <meshLine attach = 'geometry'
+        
+        vertices = {[
+          new THREE.Vector3(0,0,0),
+          new THREE.Vector3(0,2,0)
+        ]} 
+        // onUpdate = {self => console.log(self)}
+      />
+      <meshLineMaterial attach = 'material' color = {0x00ff00} lineWidth = {0.05} />
+    </mesh>
+  
 
   </React.Fragment>
 }
