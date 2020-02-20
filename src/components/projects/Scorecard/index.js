@@ -9,6 +9,7 @@ import { DRACOLoader } from 'three/examples/jsm/loaders/DRACOLoader'
 
 import {toRads} from '../../../utils/3d'
 import {LineTo} from '../../../utils/LineTo'
+import {DumbCube} from '../../../utils/DumbCube'
 
 import {Body} from '../../core/Body'
 import Model from './SCModel'
@@ -43,6 +44,10 @@ export default function Scorecard({
     ...props
 }){
 
+    const setA = userStore(store => store.setA)
+    const testAnchor = useRef()
+
+
 
     const [forced, forceTo] = useState(null)
 
@@ -53,12 +58,14 @@ export default function Scorecard({
                 position: [0,0,0],
                 rotation: [0,0,0]
             })
+            setA(testAnchor.current)
         }
         else{
             console.log('unpicked sc')
             // debugger
             forceTo(null)
             onSelect(null)
+            setA(null)
         }
     }, [selected])
 
@@ -87,6 +94,16 @@ export default function Scorecard({
                 onClick = {onClick}
             />
         </Suspense>
+
+        <mesh 
+            ref = {testAnchor}
+            scale = {[0.25,0.25,0.25]}
+            position = {[0,0,1]}
+            visible = {false}
+        >
+            <planeBufferGeometry attach='geometry' args = {[3,3]} />
+            <meshBasicMaterial attach = 'material' color = {0x0000ff}/>
+        </mesh>
 
 
     

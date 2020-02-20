@@ -13,6 +13,8 @@ import {useFrame} from 'react-three-fiber'
 
 import {cameraContext} from '../components/core/Camera'
 
+import {DumbCube} from './DumbCube'
+
 const target = {position: {x: 0, y: 0}}
 
 export function LineTo(){
@@ -27,8 +29,8 @@ export function LineTo(){
         const lineWorldCoords = new THREE.Vector3()
         const targetWorldCoords = new THREE.Vector3()
 
-        targetWorldCoords.x = ((target.position.x) / window.innerWidth) * 2
-        targetWorldCoords.y = ((target.position.y) / window.innerHeight) * 2
+        // targetWorldCoords.x = ((target.position.x) / window.innerWidth) * 2
+        // targetWorldCoords.y = ((target.position.y) / window.innerHeight) * 2
 
         cameraRef.updateMatrixWorld()
         targetWorldCoords.unproject(cameraRef)
@@ -61,4 +63,57 @@ export function LineTo(){
             color = {0xff0000}
         />
     </line>
+}
+
+
+export function OriginBox(){
+    const {cameraRef} = useContext(cameraContext)
+    const groupRef = useRef()
+
+    useEffect(()=>{
+        window.addEventListener('mousemove', (e)=>{
+            // console.log(e.clientX)
+            const mouse = {x: e.clientX, y: e.clientY}
+            // const targetWorldCoords = new THREE.Vector3()
+
+            // targetWorldCoords.x = ((mouse.x) / window.innerWidth) * 2 - 1
+            // targetWorldCoords.y = ((mouse.y) / window.innerHeight) * 2 + 1
+
+            // // cameraRef.updateMatrixWorld()
+            // targetWorldCoords.unproject(cameraRef)
+
+            // groupRef.current.position.set(...Object.values(targetWorldCoords))
+
+        })
+    })
+
+    useFrame(()=>{
+        
+        // const lineWorldCoords = new THREE.Vector3()
+        const targetWorldCoords = new THREE.Vector3()
+
+        targetWorldCoords.x = ((target.position.x) / window.innerWidth) * 2 - 1
+        targetWorldCoords.y = ((target.position.y) / window.innerHeight) * 2 + 1
+
+        cameraRef.updateMatrixWorld()
+        targetWorldCoords.unproject(cameraRef)
+
+        // console.log(targetWorldCoords)
+
+        // lineRef.current.getWorldPosition(lineWorldCoords)
+
+        groupRef.current.position.set(...Object.values(targetWorldCoords))
+
+        // verts[1].set(targetWorldCoords.x, targetWorldCoords.y, targetWorldCoords.z)
+
+        // pos.setXYZ(0, 0,0,0)
+        // pos.setXYZ(1, targetWorldCoords.x, targetWorldCoords.y, targetWorldCoords.z)
+        // pos.needsUpdate = true
+
+    })
+
+    return <group ref = {groupRef}>  
+        <DumbCube />
+    </group>
+
 }

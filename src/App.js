@@ -19,14 +19,16 @@ import Scorecard, {SCBlurb, SCPage} from './components/projects/Scorecard/'
 import {CameraProvider} from './components/core/Camera'
 
 import Projects from './components/core/Projects'
- 
+import Blurb from './components/core/Blurb'
+
 import {toRads, toDegs} from './utils/3d'
-import {DumbCube} from './utils/DumbCube'
-import {LineTo} from './utils/LineTo'
 
 export const [userStore] = create(set => ({
   selected: null, select: v => set({selected: v}),
   studying: null, study: v => set({studying: v}),
+
+  lineA: null, setA: v => set({lineA: v}),
+  lineB: {x: 100, y: 100}, setB: v => set({lineB: v}),
 })) 
 
 
@@ -79,10 +81,7 @@ function App() {
             
             </Projects>
 
-            <group>
-              <LineTo />
-              <DumbCube /> 
-            </group>
+
 
             </CameraProvider>
             
@@ -90,9 +89,9 @@ function App() {
 
       </Canvas>
       {selected && !studying && 
-        <InfoBlurb>
+        <Blurb>
           {!studying && selected === 'scorecard' && <SCBlurb />}
-        </InfoBlurb>
+        </Blurb>
       }
       {studying &&
       <InfoPage>
@@ -103,16 +102,6 @@ function App() {
     </div>
   );
 }
-
-
-const InfoBlurb = styled.div`
-  position: absolute;
-  border: 1px solid red;
-  width: 50%;
-  height: 500px;
-  top: 0; bottom: 0; margin: auto 0;
-  right: 0;
-`
 
 const InfoPage = styled.div`
 // display: none;
