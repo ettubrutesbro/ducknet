@@ -117,7 +117,7 @@ function Camera({
 
       lineRef2.current.geometry.setVertices([ aTo, bTo ])
       lineRef2.current.geometry.verticesNeedUpdate = true
-
+      // console.log(aTo, bTo)
   }
 
   return <React.Fragment> 
@@ -145,16 +145,18 @@ function Camera({
       <lineBasicMaterial attach = 'material' color = {0xff0000} width = {0.1} />
     </line>
     
-    <mesh ref = {lineRef2} >
+    <mesh ref = {lineRef2} renderOrder = {10000}>
       <meshLine attach = 'geometry'
-        
         vertices = {[
           new THREE.Vector3(0,0,0),
           new THREE.Vector3(0,2,0)
         ]} 
         // onUpdate = {self => console.log(self)}
       />
-      <meshLineMaterial attach = 'material' color = {0x00ff00} lineWidth = {0.05} />
+      <meshLineMaterial attach = 'material' color = {0x000000} lineWidth = {0.003} 
+        sizeAttenuation = {false}
+        depthTest = {false}
+      />
     </mesh>
   
 

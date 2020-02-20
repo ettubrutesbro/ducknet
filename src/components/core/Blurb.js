@@ -17,7 +17,7 @@ function Blurb({
             console.log('setting screen coords for line B')
             const rect = ref.current.getBoundingClientRect()
             // console.log(rect.x, rect.y)
-            setB({x: rect.x, y: rect.y + (rect.height/2)})
+            setB({x: rect.x+1, y: rect.y + (rect.height/2)})
         }
 
     })
@@ -29,8 +29,10 @@ function Blurb({
 
 const Container = styled.div`
   position: absolute;
-  border: 1px solid red;
-  width: 50%;
+  // border: 1px solid red;
+  border-left: 2px solid black;
+  padding: 50px;
+  width: 40%;
   height: 500px;
   top: 0; bottom: 0; margin: auto 0;
   right: 0;
