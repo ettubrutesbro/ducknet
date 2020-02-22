@@ -51,7 +51,7 @@ export default function SCModel({
     //change colors and undulate on the Z-scale. 
     const d = ['dental', 'breastfeeding', 'meals']
     const [vis, changeVis] = useState(0)
-    const [springs, setSprings] = useSprings(13, i => ({
+    const [springs, setSprings, stopCountySprings] = useSprings(13, i => ({
         scale: [1,1,1],
         color: '#dedede',
         config: { mass: 1, tension: 120, friction: 32 }
@@ -129,12 +129,12 @@ export default function SCModel({
         })
     })
 
-    const [bars, setBars] = useSprings(7, i => ({
+    const [bars, setBars, stopBars] = useSprings(7, i => ({
         scale: [1,1,1],
         color: '#dedede',
     }))
 
-    const [blurbAnims, setBlurbs] = useSprings(3, i => ({
+    const [blurbAnims, setBlurbs, stopBlurbs] = useSprings(3, i => ({
         opacity: 0,
         position: [0,0,0],
         scale: [1,1,0.01],
@@ -182,6 +182,12 @@ export default function SCModel({
                 // onRest: vis===i? () => {} : () => {setBlurbVisibility(null)}
             }
         })
+
+        return function cleanupMultiSprings(){
+            stopBlurbs()
+            stopBars()
+            stopCountySprings()
+        }
     }, [vis])
     //semi ambient anim: light color changes, but the light's only on if object is selected and in pose 3
     const lightFromPhone = useSpringEffect([
@@ -581,6 +587,9 @@ const useSpringEffect = (keys, currentKey, withStop) =>{
     useEffect(()=>{
         stop()
         setKey(keys[currentKey])
+        return function stopWhenUnmounted(){ //not clear if works
+            stop()
+        }
     }, [currentKey])
 
     return withStop? {anim: key, stop: stop} :  key

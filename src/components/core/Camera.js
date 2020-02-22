@@ -1,17 +1,19 @@
 import React, {useRef, useEffect, useState, useContext} from 'react'
 import {useThree, useFrame, extend, Dom} from 'react-three-fiber'
 import {OrbitControls} from 'three/examples/jsm/controls/OrbitControls'
+import styled from 'styled-components'
 
 import * as THREE from 'three'
-import {LineGeometry} from 'three/examples/jsm/lines/LineGeometry'
-import {Line2} from 'three/examples/jsm/lines/Line2'
+import TWEEN from '@tweenjs/tween.js'
+import * as meshline from 'threejs-meshline'
+// import {LineGeometry} from 'three/examples/jsm/lines/LineGeometry'
+// import {LineMaterial} from 'three/examples/jsm/lines/LineMaterial'
+// import {Line2} from 'three/examples/jsm/lines/Line2'
 
 import {a, useSpring} from 'react-spring/three'
 import {toRads} from '../../utils/3d'
-import {DumbCube} from '../../utils/DumbCube'
 
 import {userStore} from '../../App'
-import * as meshline from 'threejs-meshline'
 
 extend(meshline)
 
@@ -52,7 +54,12 @@ function Camera({
   ...props
 }) {
 
-  const {lineA, lineB} = userStore(store => ({lineA: store.lineA, lineB: store.lineB}))
+  const {lineA, lineB, selected} = userStore(store => ({
+    lineA: store.lineA, 
+    lineB: store.lineB, 
+    selected: store.selected
+  }))
+
   const {cam, setCam, setCameraRef} = useContext(cameraContext)
 
   //set camera as default
@@ -63,8 +70,11 @@ function Camera({
   }, [useThis])
 
 
+  const aRef = useRef()
+
   const lineRef = useRef()
-  const lineRef2 = useRef()
+  const lineMtlRef = useRef()
+  // const fatline = useRef()
 
   const [springTo, setSpring, stop] = useSpring(()=>({
     position: defaults.position,
@@ -74,26 +84,43 @@ function Camera({
 
   useEffect(()=>{
     console.log('moving camera')
-
     stop()
     if(!cam) setSpring(defaults)
     else setSpring(cam)
-
-
   }, [cam])
 
   useFrame(() => {
     //may need upd. matrix world...
     ref.current.updateMatrixWorld()
     ref.current.updateProjectionMatrix()
-  
-    updateHud(lineA, lineB) //hopefully this isn't expensive; shadowCamera gambit didn't work right...
 
+    updateHud(lineA, lineB) //hopefully this isn't expensive; shadowCamera gambit didn't work right...
   })
 
-  useEffect(()=>{
-    console.log(lineB)
-  }, [lineB])
+  // const [dashSpring, setDash] = useSpring(()=>({offset: 0}))
+  useEffect(() => {
+    if(selected){
+    const current = {offset: lineMtlRef.current.dashOffset}
+    lineMtlRef.current.offsetTween = new TWEEN.Tween(current)
+      .to({offset:-0.5}, 400)
+      .easing(TWEEN.Easing.Quadratic.Out)
+      .onUpdate(function(){ lineMtlRef.current.dashOffset = current.offset })
+      .onComplete(()=>{})
+      .delay(700)
+      .start()
+    }
+    else if(lineMtlRef.current.offsetTween){
+
+      lineMtlRef.current.offsetTween.stop()
+      lineMtlRef.current.dashOffset = 0
+
+    }
+  }, [selected])
+
+  console.log(lineMtlRef.current)
+
+
+
 
   const updateHud = (a,b) => {
       let v3 = new THREE.Vector3()
@@ -107,17 +134,11 @@ function Camera({
       v3.sub(ref.current.position).normalize()
       var distance = -ref.current.position.z / v3.z
 
-      const aTo = a && a.current? new THREE.Vector3().copy(a.current.position) : new THREE.Vector3()
       const bTo = new THREE.Vector3().copy(ref.current.position).add(v3.multiplyScalar(distance))
+      const aTo = a && a.current? new THREE.Vector3().copy(a.current.position) : new THREE.Vector3()
 
-
-      lineRef.current.geometry.vertices[0] = aTo
-      lineRef.current.geometry.vertices[1] = bTo
+      lineRef.current.geometry.setVertices([ aTo, bTo ])
       lineRef.current.geometry.verticesNeedUpdate = true
-
-      lineRef2.current.geometry.setVertices([ aTo, bTo ])
-      lineRef2.current.geometry.verticesNeedUpdate = true
-      // console.log(aTo, bTo)
   }
 
   return <React.Fragment> 
@@ -131,34 +152,36 @@ function Camera({
     <group ref = {hudRef} visible = {false}>
       <DumbCube />
     </group>
-
-    <group ref = {aRef} visible = {false}>
+*/}
+    <group>
       <Dom>
-        A
+        <Spot visible = {selected!==null} />
       </Dom>
     </group>
-*/}
-    <line ref = {lineRef} visible = {false} >
-      <geometry attach = 'geometry' 
-        vertices = {['foo','bar'].map((v,i)=>new THREE.Vector3(0,i*100,0))} 
-      />
-      <lineBasicMaterial attach = 'material' color = {0xff0000} width = {0.1} />
-    </line>
+
     
-    <mesh ref = {lineRef2} renderOrder = {10000}>
+    <mesh ref = {lineRef} 
+      renderOrder = {10000}
+      visible = {selected!==null}
+    >
       <meshLine attach = 'geometry'
         vertices = {[
           new THREE.Vector3(0,0,0),
-          new THREE.Vector3(0,2,0)
+          new THREE.Vector3(0,0,0)
         ]} 
-        // onUpdate = {self => console.log(self)}
       />
-      <meshLineMaterial attach = 'material' color = {0x000000} lineWidth = {0.003} 
+      <meshLineMaterial
+        ref = {lineMtlRef}
+        attach = 'material' 
+        color = {0x000000} 
+        lineWidth = {0.00275} 
         sizeAttenuation = {false}
         depthTest = {false}
+        dashArray = {1}
+        // dashOffset = {dashSpring.offset}
+        dashRatio = {0.5}
       />
     </mesh>
-  
 
   </React.Fragment>
 }
@@ -176,3 +199,26 @@ const Controls = props => {
   })
   return <orbitControls ref = {ref} args = {[camera, gl.domElement]} {...props} />
 } 
+
+
+const Spot = styled.div`
+  visibility: ${p => p.visible? 'visible' : 'hidden'};
+  pointer-events: none;
+  transition: transform .35s;
+  transition-delay: ${p => p.visible? '.4s' : 0};
+  transform: scale(${p=> p.visible? 1 : 0});
+  position: relative;
+  width: 1px;
+  height: 1px;
+  border: 1px solid red;
+  &::before{
+    content: '';
+    position: absolute;
+    transform: translate(-50%,-50%);
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    border: 2px solid black;
+    background: white;
+  }
+`

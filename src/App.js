@@ -88,9 +88,19 @@ function App() {
         </PhysicsProvider>
 
       </Canvas>
-      {selected && !studying && 
-        <Blurb>
-          {!studying && selected === 'scorecard' && <SCBlurb />}
+      {//selected && !studying && 
+        <Blurb visible = {selected !== null}>
+          {!studying && selected === 'scorecard' && 
+            <h1 key = 'hi' >Scorecard of California children's well-being</h1>
+          }
+          {!studying && selected === 'scorecard' &&
+            <p key = 'foo'>A web tool for exploring children's health, education, and welfare data in California and all its counties,
+            filterable by race and year. Designed and developed for Children Now, a nonprofit that uses it in meetings with local leaders
+            (government, foundations, nonprofits) to highlight and advocate for children's needs.</p>
+          }
+          {!studying && selected === 'scorecard' && 
+            <button onClick = {()=> study('scorecard')}> View case study </button>
+          }
         </Blurb>
       }
       {studying &&
