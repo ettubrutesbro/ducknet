@@ -98,8 +98,15 @@ function App() {
         </PhysicsProvider>
 
       </Canvas>
-      {//selected && !studying && 
-        <Blurb visible = {selected !== null}>
+      {
+        <Blurb 
+          mode = {
+            studying !== null? 'expand' 
+            : selected !== null? 'visible' 
+            : 'hidden'
+          }
+          visible = {selected !== null}
+        >
           {SCBlurb[0]}
           {SCBlurb[1]}
           {SCBlurb[2]}
@@ -107,31 +114,23 @@ function App() {
       }
 
 
-      {studying &&
+      {/* studying &&
       <InfoPage>
         {studying === 'scorecard' && <SCPage />}
       </InfoPage>
-      }
+      */}
 
     </div>
   );
 }
 
 const InfoPage = styled.div`
-// display: none;
-  border-left: 2px solid black;
+  // border-left: 2px solid black;
   padding-left: 30px;
-  // background: white;
   width: 66%; 
   height: 100%; 
   position: absolute;
   top: 0; right: 0;
-`
-
-const HackyTextStuff = styled.div`
-  position: absolute;
-  top: 0; left: 0;
-  // visibility: hidden;
 `
 
 export default App;
