@@ -42,7 +42,8 @@ export function Eclipse({
         dracoLoader.setDecoderPath('/draco-gltf/')
         loader.setDRACOLoader(dracoLoader)
       })
-     const texture = useLoader(THREE.TextureLoader, '/eclipse/mc35Blur03.jpg' )
+     // const texture = useLoader(THREE.TextureLoader, '/eclipse/mc35Blur03.jpg' )
+     const texture = useLoader(THREE.TextureLoader, '/eclipse/old_wax.jpg' )
     const [projectCamera, changeView] = useState({
         position: [32, 21, 35],
         rotation: [toRads(-26), toRads(35), toRads(14)],

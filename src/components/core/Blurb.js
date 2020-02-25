@@ -152,7 +152,7 @@ function Blurb({
         </LeftBorder>
       </Container>
 
-      <PageBG 
+      <MockBorderTarget 
         ref = {borderTarget} 
       />
 
@@ -206,16 +206,9 @@ const BGSquare = styled(animated.div)`
   pointer-events: none;
 `
 
-const PageBG = styled(animated.div)` 
+const MockBorderTarget = styled(InfoPage)` 
   opacity: 0;
-  pointer-events: none;
-  border-left: 2px solid red;
-  padding-left: 30px;
-  width: 66.6%; 
-  height: 100%; 
-  position: absolute;
-  top: 0; right: 0;
-  box-sizing: border-box;
+  visibility: hidden;
 `
 
 
