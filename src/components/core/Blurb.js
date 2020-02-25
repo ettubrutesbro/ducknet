@@ -36,15 +36,15 @@ function Blurb({
 
     const [border, setBorder] = useSpring(()=>({
       transform: 'translate3d(0px,0,0) scaleY(0)',
+      opacity: 1,
       ref: borderAnimRef,
       config: {duration: 250}
     }))
-
-    const [pageBG, setPageBG] = useSpring(()=>({
-      transform: 'translate3d(-100%,0,0)',
-      ref: pageBGAnimRef,
-      config: {duration: 1000}
+    const [bg, setBG] = useSpring(()=>({
+      transform: 'scaleX(0)', opacity: 0,
+      ref: pageBGAnimRef
     }))
+
 
     const [containerHt, setConHt] = useState(0)
 
@@ -53,50 +53,44 @@ function Blurb({
     useEffect(()=>{
       console.log('from', previousMode, 'to', mode)
       if(mode === 'expand'){
-        /* 
-          border needs to be transformed to go to full height
-          divide innerHeight by containerHt to get scale for border
-
-          get difference between current border position and target position
-        */
         const yScalar = window.innerHeight / containerHt
         const borderGoTo = borderTarget.current.getBoundingClientRect().x - borderRef.current.getBoundingClientRect().x
         console.log('bordergoto', borderGoTo)
         setBorder({
-          from: {transform: 'translate3d(0px,0,0) scaleY(0)'},
-          to: {transform: `translate3d(${borderGoTo + 4}px,0,0) scaleY(${yScalar})`},
-          // translate: `translate3d(${borderGoTo + 4}px,0,0)`,
-          // scale: `scaleY(${yScalar})`,
+          transform: `translate3d(${borderGoTo + 4}px,0,0) scaleY(${yScalar})`,
+          opacity: 1,
           config: config.default,
-          // immediate: false
+          reset: false
         })
-        setPageBG({transform: 'translate3d(0%,0,0)',})
+        setBG({
+          from: {transform: 'scaleX(0)', opacity: 0},
+          to: {transform: 'scaleX(1)', opacity: 1},
+          reset: true
+        })
       }
       else if(mode === 'visible') {
         setBorder({
-          transform: `translate3d(0px,0,0) scaleY(1)`,
-          // immediate: false,
-          // translate: 'translate3d(0px,0,0)', 
-          // scale: 'scaleY(1)'
+          from: {transform: `translate3d(0px,0,0) scaleY(0)`, opacity: 1},
+          to: {transform: `translate3d(0px,0,0) scaleY(1)`, opacity: 1},
+          reset: true
         })
         if(contentref.current) setConHt(contentref.current.getBoundingClientRect().height)
       }
       else if(previousMode && previousMode.mode){
         if(previousMode.mode === 'expand' && mode === 'hidden'){
+          const yScalar = window.innerHeight / containerHt
           setBorder({
-            transform: `translate3d(0px,0,0) scaleY(0)`,
-            // immediate: true
-            // translate: 'translate3d(0px,0,0)',
-            // scale: 'scaleY(0)'
+            transform: `translate3d(0px,0,0) scaleY(${yScalar})`,
+            opacity: 0,
+            reset: false
           })
-          setPageBG({transform: 'translate3d(-100%,0,0)'})
+          setBG({transform: 'scaleX(1)', opacity: 0, reset: false})
         }
         else if(previousMode.mode === 'visible' && mode === 'hidden'){
           setBorder({
-            transform: `translate3d(-100%,0,0) scaleY(0)`,
-            // immediate: false
-            // translate: 'translate3d(0px,0,0)',
-            // scale: 'scaleY(0)'
+            transform: `translate3d(0px,0,0) scaleY(0)`,
+            opacity: 1,
+            reset: false
           }) 
         }
       }
@@ -121,13 +115,13 @@ function Blurb({
 
 
     useChain(
-      mode === 'expand'? [transitionRef, borderAnimRef, pageBGAnimRef]: 
-      mode === 'visible'? [borderAnimRef, transitionRef]
-      : [transitionRef, borderAnimRef], 
+      mode === 'expand'? [transitionRef, borderAnimRef, pageBGAnimRef]
+      : mode === 'visible'? [borderAnimRef, transitionRef, pageBGAnimRef]
+      : [transitionRef, borderAnimRef, pageBGAnimRef], 
 
-      // mode === 'expand'? [0, 0.2, 0.6]: 
-      mode === 'visible'? [.925, 1.05] 
-      : [0, 0.2]
+      mode === 'expand'? [0, 0.2, 0.5] 
+      : mode === 'visible'? [.925, 1.05, 1.05] 
+      : [0, 0.2, 0.2]
     )
 
     return <Fragment>
@@ -144,16 +138,17 @@ function Blurb({
         <LeftBorder 
           ref = {borderRef} 
           style = {border} 
-        />
+        >
+          <BGSquare 
+            style = {bg}
+          />
+
+        </LeftBorder>
       </Container>
 
       <PageBG 
         ref = {borderTarget} 
-      >
-        <BGSquare 
-          style = {pageBG}
-        />
-      </PageBG>
+      />
 
 
     </Fragment>
@@ -185,11 +180,17 @@ const LeftBorder = styled(animated.div)`
     top:0; left: 0px;
     width: 0px; height: 100%;
     border-right: 2px black solid;
+    &::after{
+      position: absolute;
+    transform-origin: 50% 50%;
+    top:0; left: 0px;
+    width: 0px; height: 100%;
+    border-right: 2px black solid;
+    }
 `
 
 const PageBG = styled(animated.div)` 
-  // opacity: 0;
-  // background: white;
+  opacity: 0;
   pointer-events: none;
   border-left: 2px solid red;
   padding-left: 30px;
@@ -198,16 +199,19 @@ const PageBG = styled(animated.div)`
   position: absolute;
   top: 0; right: 0;
   box-sizing: border-box;
-  overflow: hidden;
 `
 
 const BGSquare = styled(animated.div)`
   position: absolute;
   top: 0; left: 0;
-  width: 100%;
-  height: 100%;
-  background: rgba(255,255,255,0.5);
-  transform: translateX(-100%);
+  width: 66vw; height: 100%;
+  background: red;
+  opacity: 0;
+  transform-origin: 0% 50%;
+  pointer-events: none;
+
 `
+
+
 
 export default Blurb
