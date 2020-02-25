@@ -11,6 +11,7 @@ import * as CANNON from 'cannon'
 import {toRads} from '../utils/3d'
 import {LineSpot} from '../utils/LineSpot'
 import {TestFatLine, TestMeshLine} from '../utils/TestFatLine'
+import {DataTextureTest} from '../utils/DataTextureTest'
 
 import SCModel from '../components/projects/Scorecard/SCModel'
 import Camera from '../components/core/Camera'
@@ -99,6 +100,19 @@ export const meshline = () => {
         </Container>
     )
 }
+
+
+export const datatex = () => {
+
+    return <Container>
+        <PreviewCanvas>
+
+            <DataTextureTest />
+          
+        </PreviewCanvas>
+    </Container>
+}
+
 
 const Container = styled.div`
     border: 1px solid black;

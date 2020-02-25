@@ -147,6 +147,7 @@ function Camera({
   }
 
   return <React.Fragment> 
+    
     <a.perspectiveCamera 
       ref={ref} 
       position = {springTo.position}
