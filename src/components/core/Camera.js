@@ -117,11 +117,6 @@ function Camera({
     }
   }, [selected])
 
-  console.log(lineMtlRef.current)
-
-
-
-
   const updateHud = (a,b) => {
       let v3 = new THREE.Vector3()
       v3.set(

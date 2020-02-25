@@ -1,4 +1,5 @@
 import React, {Suspense, useEffect, useState, useContext, useRef} from 'react'
+import {animated} from 'react-spring'
 // import * as THREE from 'three'
 
 import {Dom} from 'react-three-fiber'
@@ -18,21 +19,21 @@ import {userStore} from '../../../App'
 
 export {SCPage} from './SCPage'
 
-
-export function SCBlurb({
-    ...props
-}){
+const BlurbTitle = () => (<animated.h1 key = 'title'> Scorecard of California children's well-being </animated.h1>)
+const Blurb = () => (<animated.p key = 'blurb' >A web tool for exploring children's health, education, and welfare data in California and all its counties, filterable by race and year. Designed and developed for Children Now, a nonprofit that uses it in meetings with local leaders
+(government, foundations, nonprofits) to highlight and advocate for children's needs.</animated.p>)
+const Button = () => {
     const study = userStore(store => store.study)
-    return(
-        <React.Fragment>
-            <h1>Scorecard of California children's well-being</h1>
-            <p>A web tool for exploring children's health, education, and welfare data in California and all its counties,
-            filterable by race and year. Designed and developed for Children Now, a nonprofit that uses it in meetings with local leaders
-            (government, foundations, nonprofits) to highlight and advocate for children's needs.</p>
-            <button onClick = {()=> study('scorecard')}> View case study </button>
-        </React.Fragment>
-    )
+    return <animated.button key = 'btn' onClick = {()=> study('scorecard')}> View case study </animated.button>
 }
+
+export const SCBlurb = [
+    <BlurbTitle />,
+    <Blurb />,
+    <Button />
+]
+
+
 
 export default function Scorecard({
     onClick = () => console.log('clicked project'), 
@@ -46,8 +47,6 @@ export default function Scorecard({
 
     const setA = userStore(store => store.setA)
     const testAnchor = useRef()
-
-
 
     const [forced, forceTo] = useState(null)
 

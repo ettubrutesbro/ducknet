@@ -1,29 +1,60 @@
-import React, {useEffect, useRef, useContext} from 'react'
+import React, {useEffect, useRef, useContext, useState} from 'react'
 // import ReactDOM from 'react-dom'
 import styled from 'styled-components'
-import {animated, useTransition} from 'react-spring' 
+import {animated, useTransition, useSpring, useChain, config} from 'react-spring' 
 
 import {userStore} from '../../App'
 
 
 function Blurb({
     children,
+    visible,
     ...props
 }){
     const ref = useRef()
+    const contentref = useRef()
+    const springRef = useRef()
+    const transitionRef = useRef()
+
     const setB = userStore(store => store.setB)
 
-    const transitions = useTransition(children, item => item.key, 
-      { 
+    const [border, setBorder] = useSpring(()=>({
+      transform: 'scaleY(0)',
+      ref: springRef,
+      config: {duration: 250}
+    }))
 
-        
-        from: {transform: 'translate3d(-25%,0,0)', opacity: 0}, 
-        enter: { transform: 'translate3d(0%,0,0)', opacity: 1},
-        leave: { transform: 'translate3d(-25%,0,0)', opacity: 0},
-        config: {duration: 250},
-        trail: 50,
+    const [containerHt, setConHt] = useState(0)
+
+        useEffect(()=>{
+      if(visible) {
+        setBorder({transform: 'scaleY(1)'})
+        if(contentref.current){
+          console.log(contentref.current.getBoundingClientRect())
+          setConHt(contentref.current.getBoundingClientRect().height)
+        }
       }
-    )
+      else {
+        setBorder({transform: 'scaleY(0)'})
+        // debugger
+      }
+    }, [visible])
+
+    const transitions = useTransition(visible? children : [], 
+      (item, i, foo) => { return 'item'+i }, 
+      {
+        ref: transitionRef,
+        from: {opacity: 0, transform: 'translateX(-150px)'},
+        enter: {opacity: 1, transform: 'translateX(0px)'},
+        leave: {opacity: 0, transform: 'translateX(-125px)'},
+        config: visible? config.default : config.stiff,
+        trail: visible? 40 : 60,
+        reset: true,
+        onStart: ()=>{ 
+          // console.log(contentref.current.getBoundingClientRect().height) 
+          // setConHt(contentref.current.getBoundingClientRect().height)
+        }
+    })
 
     useEffect(()=>{
         if(ref.current){
@@ -34,41 +65,73 @@ function Blurb({
         }
 
     })
-    return <Container ref = {ref} {...props}>
 
-        {transitions.map(({item, props, key}) => 
-          <animated.div key = {key} style = {props}> {item} </animated.div>)}
-        {
-          //children
-        }
+
+
+    useChain(visible? [springRef, transitionRef] : [transitionRef, springRef], visible? [.925, 1.05] : [0, 0.15])
+
+    return <Container 
+      ref = {ref} 
+      visible = {visible} 
+      height = {containerHt}
+      {...props}
+    >
+      <Flex 
+        // ref = {contentref}
+        // ref = {self => {
+          // console.log(self)
+          // if(self) setConHt(self.getBoundingClientRect().height)
+        // }}
+      >
+        {transitions.map(({item, key, props}) => <animated.div key = {key} style = {{...props}} children = {item}/>)}
+      </Flex>
+
+      <ShadowContent
+        ref = {contentref}
+      >
+        {children}
+      </ShadowContent>
+
+      <LeftBorder 
+        style = {border} 
+      />
     </Container>
 }
 
 const Container = styled.div`
   position: absolute;
-  // border: 1px solid red;
-  // border-left: 2px solid black;
-  padding: 50px;
   width: 40%;
-  height: 500px;
+  // height: 100%;
+  height: ${p => p.height}px;
   top: 0; bottom: 0; margin: auto 0;
   right: 0;
   pointer-events: ${p => p.visible? 'auto' : 'none'};
-
   overflow: hidden;
+  padding: 50px 100px 50px 50px;
 
-  &::after{
-    content: '';
+`
+
+const Flex = styled.div`
+  position: relative;
+  // height: 100%;
+  // display: flex;
+  // flex-direction: column;
+  // justify-content: center;
+
+`
+
+const LeftBorder = styled(animated.div)`
+    transform: scaleY(0);
     position: absolute;
-    transform: scaleY(${p => p.visible? 1 : 0});
-    transition: transform .375s;
-    transition-delay: ${p => p.visible? '1s' : 0};
     transform-origin: 50% 50%;
     top:0; left: 0px;
     width: 0px; height: 100%;
     border-right: 2px black solid;
-
-  }
 `
+
+const ShadowContent = styled.div`
+  visibility: hidden;
+`
+
 
 export default Blurb

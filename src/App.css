@@ -6,3 +6,41 @@ html, body, #root, .full, canvas{
 h1, h2, h3, h4{
   margin: 0;
 }
+
+body {
+    font-family: 'Archivo', sans-serif;
+    font-size: 16px;
+    line-height: 182.5%;
+    letter-spacing: 0.03em;
+}
+
+
+h1{
+    font-family: 'Spectral', serif;
+    font-weight: 600;
+    font-size: 40px;
+    line-height: 45px;
+    letter-spacing: -0.02em;
+
+}
+
+p {
+    margin: 20px 0;
+}
+
+button{
+    font-family: 'Archivo', sans-serif;
+    font-size: 16px;
+    font-weight: 600;
+    padding: 15px 35px;
+    letter-spacing: 0.05em;
+    background: black;
+    appearance: none;
+    outline: none;
+    border: none;
+    color: white;
+
+    margin-top: 10px;
+
+}
+
