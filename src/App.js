@@ -21,6 +21,7 @@ import {CameraProvider} from './components/core/Camera'
 
 import Projects from './components/core/Projects'
 import Blurb from './components/core/Blurb'
+import Page from './components/core/Page'
 
 import {toRads, toDegs} from './utils/3d'
 
@@ -38,16 +39,20 @@ export const [userStore] = create(set => ({
 
   lineA: null, setA: v => set({lineA: v}),
   lineB: {x: 100, y: 100}, setB: v => set({lineB: v}),
+
+  //for signaling when animation can fire for page contents
+  pageReady: false, setPageReady: v => set({pageReady: v})
 })) 
 
 
 function App() {
 
-  const {select, selected, study, studying} = userStore(store => ({
+  const {select, selected, study, studying, pageReady} = userStore(store => ({
     select: store.select,
     selected: store.selected,
     study: store.study,
-    studying: store.studying
+    studying: store.studying,
+    pageReady: store.pageReady
   }), shallow)
 
   return (
@@ -64,6 +69,11 @@ function App() {
       >
         <PhysicsProvider>
             <CameraProvider>
+
+            <spotLight color = {0xeaddb9} intensity = {1.2} position = {[-7,25,-4]}/>
+            <pointLight color = {0xffffff} intensity = {.35} position = {[-40,8,3]}/>
+            <ambientLight color = { 0x232330 } />
+
             <Enclosure
               active = {!selected} 
             /> 
@@ -98,6 +108,7 @@ function App() {
         </PhysicsProvider>
 
       </Canvas>
+
       {
         <Blurb 
           mode = {
@@ -107,30 +118,23 @@ function App() {
           }
           visible = {selected !== null}
         >
-          {SCBlurb[0]}
-          {SCBlurb[1]}
-          {SCBlurb[2]}
+          {selected === 'scorecard' && SCBlurb[0]}
+          {selected === 'scorecard' && SCBlurb[1]}
+          {selected === 'scorecard' && SCBlurb[2]}
         </Blurb>
       }
 
 
-      {/* studying &&
-      <InfoPage>
+      { 
+      <Page
+        // title = {SCBlurb[0]}
+      >
         {studying === 'scorecard' && <SCPage />}
-      </InfoPage>
-      */}
+      </Page>
+      }
 
     </div>
   );
 }
-
-const InfoPage = styled.div`
-  // border-left: 2px solid black;
-  padding-left: 30px;
-  width: 66%; 
-  height: 100%; 
-  position: absolute;
-  top: 0; right: 0;
-`
 
 export default App;

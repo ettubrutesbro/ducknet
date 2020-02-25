@@ -33,6 +33,7 @@ function Blurb({
     const pageBGAnimRef = useRef()
 
     const setB = userStore(store => store.setB)
+    const setPageReady = userStore(store => store.setPageReady)
 
     const [border, setBorder] = useSpring(()=>({
       transform: 'translate3d(0px,0,0) scaleY(0)',
@@ -53,11 +54,12 @@ function Blurb({
     useEffect(()=>{
       console.log('from', previousMode, 'to', mode)
       if(mode === 'expand'){
+        setPageReady(true)
         const yScalar = window.innerHeight / containerHt
         const borderGoTo = borderTarget.current.getBoundingClientRect().x - borderRef.current.getBoundingClientRect().x
         console.log('bordergoto', borderGoTo)
         setBorder({
-          transform: `translate3d(${borderGoTo + 4}px,0,0) scaleY(${yScalar})`,
+          transform: `translate3d(${borderGoTo}px,0,0) scaleY(${yScalar})`,
           opacity: 1,
           config: config.default,
           reset: false
@@ -65,10 +67,11 @@ function Blurb({
         setBG({
           from: {transform: 'scaleX(0)', opacity: 0},
           to: {transform: 'scaleX(1)', opacity: 1},
-          reset: true
+          reset: true,
         })
       }
       else if(mode === 'visible') {
+        setPageReady(false)
         setBorder({
           from: {transform: `translate3d(0px,0,0) scaleY(0)`, opacity: 1},
           to: {transform: `translate3d(0px,0,0) scaleY(1)`, opacity: 1},
@@ -78,13 +81,18 @@ function Blurb({
       }
       else if(previousMode && previousMode.mode){
         if(previousMode.mode === 'expand' && mode === 'hidden'){
+          setPageReady(false)
           const yScalar = window.innerHeight / containerHt
           setBorder({
-            transform: `translate3d(0px,0,0) scaleY(${yScalar})`,
+            transform: `translate3d(200px,0,0) scaleY(${yScalar})`,
             opacity: 0,
             reset: false
           })
-          setBG({transform: 'scaleX(1)', opacity: 0, reset: false})
+          setBG({
+            transform: 'scaleX(1)', 
+            opacity: 0, 
+            reset: false,
+          })
         }
         else if(previousMode.mode === 'visible' && mode === 'hidden'){
           setBorder({
@@ -102,7 +110,7 @@ function Blurb({
         ref: transitionRef,
         from: {opacity: 0, transform: 'translateX(-150px)'},
         enter: {opacity: 1, transform: 'translateX(0px)'},
-        leave: mode === 'expand'? {opacity: 0, transform: 'translateX(-300px)'}
+        leave: mode === 'expand'? {opacity: 0, transform: 'translateX(-330px)'}
           : {opacity: 0, transform: 'translateX(-125px)'} //hidden
         , //TODO: more dramatic for mode == expand?
         config: mode==='visible'? config.default : config.stiff,
@@ -110,16 +118,12 @@ function Blurb({
         reset: true,
     })
 
-
-
-
-
     useChain(
       mode === 'expand'? [transitionRef, borderAnimRef, pageBGAnimRef]
       : mode === 'visible'? [borderAnimRef, transitionRef, pageBGAnimRef]
       : [transitionRef, borderAnimRef, pageBGAnimRef], 
 
-      mode === 'expand'? [0, 0.2, 0.5] 
+      mode === 'expand'? [0, 0.2, 0.25] 
       : mode === 'visible'? [.925, 1.05, 1.05] 
       : [0, 0.2, 0.2]
     )
@@ -179,14 +183,25 @@ const LeftBorder = styled(animated.div)`
     transform-origin: 50% 50%;
     top:0; left: 0px;
     width: 0px; height: 100%;
-    border-right: 2px black solid;
     &::after{
+      content: '';
       position: absolute;
-    transform-origin: 50% 50%;
-    top:0; left: 0px;
-    width: 0px; height: 100%;
-    border-right: 2px black solid;
+      transform-origin: 50% 50%;
+      top:0; left: 0px;
+      width: 0px; height: 100%;
+      border-right: 2px black solid;
     }
+    z-index: 10;
+`
+
+const BGSquare = styled(animated.div)`
+  position: absolute;
+  top: 0; left: 0;
+  width: 66vw; height: 100%;
+  background: white; //do gradient
+  opacity: 0;
+  transform-origin: 0% 50%;
+  pointer-events: none;
 `
 
 const PageBG = styled(animated.div)` 
@@ -194,23 +209,14 @@ const PageBG = styled(animated.div)`
   pointer-events: none;
   border-left: 2px solid red;
   padding-left: 30px;
-  width: 66%; 
+  width: 66.6%; 
   height: 100%; 
   position: absolute;
   top: 0; right: 0;
   box-sizing: border-box;
 `
 
-const BGSquare = styled(animated.div)`
-  position: absolute;
-  top: 0; left: 0;
-  width: 66vw; height: 100%;
-  background: red;
-  opacity: 0;
-  transform-origin: 0% 50%;
-  pointer-events: none;
 
-`
 
 
 

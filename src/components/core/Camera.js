@@ -9,7 +9,7 @@ import * as meshline from 'threejs-meshline'
 // import {LineGeometry} from 'three/examples/jsm/lines/LineGeometry'
 // import {LineMaterial} from 'three/examples/jsm/lines/LineMaterial'
 // import {Line2} from 'three/examples/jsm/lines/Line2'
-
+import {config} from 'react-spring'
 import {a, useSpring} from 'react-spring/three'
 import {toRads} from '../../utils/3d'
 
@@ -44,6 +44,12 @@ export const defaults = {
     position: [0, 0, 45],
     rotation: [0, 0, 0],
     fov: 25,
+    config: {
+      mass: config.slow.mass,
+      tension: config.slow.tension,
+      friction: config.slow.friction,
+      precision: 0.00001
+    }
     //maybe set a really gentle config so the transitions from selection > default
     //aren't as jarring...
 }
@@ -116,6 +122,11 @@ function Camera({
 
     }
   }, [selected])
+
+  console.log(lineMtlRef.current)
+
+
+
 
   const updateHud = (a,b) => {
       let v3 = new THREE.Vector3()

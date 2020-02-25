@@ -108,7 +108,6 @@ export default function SCModel({
             showBlurb: 'pseudocentral'
         },
     }
-    const greyRange = chroma.scale(['#ededed', '#dedede', '#9f9f9f']).domain([0, 1.5])
     //calculate colors and lengths for bar graphs 
     const genericRangeQuartiles = [
         [.5, .525, .95, 1.3], [1.1, 1.4, 1.6, 1.8], [.88, 1, 1.4, 1.5]
@@ -150,9 +149,7 @@ export default function SCModel({
                 const cv = pcts[currentVis][cty]
                 return {
                     scale: [1,1, cv || pcts[currentVis].baseZ], 
-                    // scale: [1,1,1], 
-                    color: selected? pcts[currentVis].colorRange(cv || pcts[currentVis].baseZ).hex() 
-                        : greyRange(cv || pcts[currentVis].baseZ).hex(),
+                    color: pcts[currentVis].colorRange(cv || pcts[currentVis].baseZ).hex(),
                     delay: 25 * i,
                     onRest: () => {if(i===12){
                         changeVis(vis < 2? vis+1 : 0)
@@ -477,9 +474,7 @@ export default function SCModel({
                         >
                             <planeBufferGeometry attach = 'geometry' args = {[15,22]} />
                             <a.meshBasicMaterial attach = 'material'
-                                color = {selected? pcts[d[vis]].colorRange((i+1)*0.6).hex()
-                                    : greyRange((i+1)*0.5).hex()
-                                }
+                                color = { pcts[d[vis]].colorRange((i+1)*0.6).hex() }
                              />
                         </mesh>
                     })}
