@@ -4,9 +4,10 @@ import bogan from 'boganipsum'
 
 import {ProjectPage} from '../../core/Page'
 
+
 export const SCPage = () => {
     return(
-        <ProjectPage>
+        <ProjectPage title = {`Scorecard of California children's well-being`}>
             <p>
             Lorem ipsum dolor sit amet, consectetur adipiscing elit. Mauris convallis lorem at varius tempor. Interdum et malesuada fames ac ante ipsum primis in faucibus. Sed convallis, libero vitae tempor pretium, massa sapien sagittis nisl, sit amet tempus diam turpis eu risus. Proin ut sapien quam. Vestibulum et luctus ex, in auctor mauris. Praesent at ipsum at arcu imperdiet blandit a vel tortor. Donec nec tellus eu nibh consequat dapibus sed dapibus risus. Morbi id suscipit tortor. Sed fringilla metus non ante facilisis, non viverra sem molestie. Quisque volutpat tempus sollicitudin. Nulla sollicitudin enim nisl, eu condimentum libero placerat sit amet. Suspendisse commodo, est in cursus maximus, lorem lacus aliquet magna, sit amet semper magna sem ullamcorper lacus. Donec id odio augue. Sed dictum magna dolor, eget sodales ipsum condimentum pharetra. Mauris id mauris faucibus, commodo dolor vel, mollis sem.
             </p>

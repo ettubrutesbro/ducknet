@@ -113,7 +113,9 @@ function Blurb({
         leave: mode === 'expand'? {opacity: 0, transform: 'translateX(-330px)'}
           : {opacity: 0, transform: 'translateX(-125px)'} //hidden
         , //TODO: more dramatic for mode == expand?
-        config: mode==='visible'? config.default : config.stiff,
+        config: mode==='visible'? config.default 
+          : previousMode && previousMode.mode === 'expand' ? config.slow 
+          : config.stiff,
         trail: mode==='visible'? 40 : 60,
         reset: true,
     })
@@ -125,7 +127,7 @@ function Blurb({
 
       mode === 'expand'? [0, 0.2, 0.25] 
       : mode === 'visible'? [.925, 1.05, 1.05] 
-      : [0, 0.2, 0.2]
+      : [0, 0.1, 0.1]
     )
 
     return <Fragment>

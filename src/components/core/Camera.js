@@ -89,7 +89,6 @@ function Camera({
   }))
 
   useEffect(()=>{
-    console.log('moving camera')
     stop()
     if(!cam) setSpring(defaults)
     else setSpring(cam)

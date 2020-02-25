@@ -14,7 +14,7 @@ import {Body} from './components/core/Body'
 import {Enclosure} from './components/core/Wall'
 
 import Seseme from './components/projects/seseme'
-import Eclipse from './components/projects/Eclipse'
+import Eclipse, {EclipseBlurb} from './components/projects/Eclipse'
 import Scorecard, {SCBlurb, SCPage} from './components/projects/Scorecard/'
 
 import {CameraProvider} from './components/core/Camera'
@@ -121,16 +121,16 @@ function App() {
           {selected === 'scorecard' && SCBlurb[0]}
           {selected === 'scorecard' && SCBlurb[1]}
           {selected === 'scorecard' && SCBlurb[2]}
+
+          {selected === 'eclipse' && EclipseBlurb[0]}
+          {selected === 'eclipse' && EclipseBlurb[1]}
+          {selected === 'eclipse' && EclipseBlurb[2]}
         </Blurb>
       }
 
 
-      { 
-      <Page
-        // title = {SCBlurb[0]}
-      >
-        {studying === 'scorecard' && <SCPage />}
-      </Page>
+      {
+         <SCPage /> 
       }
 
     </div>

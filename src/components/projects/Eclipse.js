@@ -1,11 +1,33 @@
 import React, {Suspense, useEffect, useState} from 'react'
 import * as THREE from 'three'
+import {animated} from 'react-spring'
+
 import {useLoader} from 'react-three-fiber'
 import {Body} from '../core/Body'
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader'
 import { DRACOLoader } from 'three/examples/jsm/loaders/DRACOLoader'
 
+import {userStore} from '../../App'
+
 import {toRads} from '../../utils/3d'
+
+
+const BlurbTitle = () => (<animated.h1 key = 'title'> Inspiration Mars 2014 </animated.h1>)
+const Blurb = () => (<animated.p key = 'blurb' >Animated presentation for the 
+    Eclipse Rocketry club's (UC Davis) entry in an international Mars mission design competition. 
+ I created looping clips and transitions with 3dsmax and After Effects to mimic 'one-take' cinema with no camera cuts.</animated.p>)
+const Button = () => {
+    const study = userStore(store => store.study)
+    return <animated.button key = 'btn' onClick = {()=> study('scorecard')}> View sketches </animated.button>
+}
+
+export const EclipseBlurb = [
+    <BlurbTitle />,
+    <Blurb />,
+    <Button />
+]
+
+
 
 export function Eclipse({
     onClick = () => console.log('clicked eclipse'), 
