@@ -54,7 +54,7 @@ export default function Scorecard({
         if(selected){
             console.log('SELECTED SCORECARD')
             forceTo({
-                position: [0,0,0],
+                position: [-.65,-0.1,-.1],
                 rotation: [0,0,0]
             })
             setA(testAnchor.current)
