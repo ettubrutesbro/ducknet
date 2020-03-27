@@ -14,7 +14,7 @@ import {randBtwn} from '../../../utils/basicMath'
 import {cameraContext, defaults} from '../../core/Camera'
 
 
-export default function SCModel({
+export function SCModel({
     forcePose = null, //for forcing pose from storybook?
     selected, //only here bc colors vary depending on selection - selection/pose handled by proj
     onClick = () => {console.log('clicked model')}, //archaic? the model is what must register the click...
@@ -199,33 +199,26 @@ export default function SCModel({
     app might be intended to be used
     */
     const [pose, setPose] = useState(0)
+    const {cam, setCam} = useContext(cameraContext)
 
     useEffect(()=>{
         if(selected) setPose(1)
         else{
-            console.log('UNSELECTED SC')
             spitroast.stop()
             setPose(0)
         }
     }, [selected])
 
-        useEffect(()=>{
-        setPose(forcePose) 
-    }, [forcePose])
+    //when POSE changes, set cosmetic rotation group & camera accordingly
+    useEffect(()=>{ 
+        if(selected && pose) setCam(camposes[pose])
+        else setCam(null)
 
-    const {cam, setCam} = useContext(cameraContext)
+    }, [pose, selected])
 
-    useEffect(()=>{ //when POSE changes, set cosmetic rotation group & camera accordingly
-        if(pose || pose === 0){
-            setCam(camposes[pose])
-        }
-        else{
-            setCam(null)
-        }
-    }, [pose])
 
     const camposes = [
-        null,
+        null, //idle
         {
             name: 'pseudo',
             position: [-4.75,0.5,8],
@@ -302,7 +295,7 @@ export default function SCModel({
     useEffect(()=>{
         if(pose===3) toggleWobs(true)
         if(!selected) toggleWobs(false)
-        console.log('wobs:', wobs)
+        // console.log('wobs:', wobs)
     }, [pose, selected, forcePose])
 
     const hand = useSpringEffect([
@@ -319,6 +312,10 @@ export default function SCModel({
         {scale: [1,1,1], position: [0,0,0], opacity: 1, delay: 600, config: config.slow}
     ], pose === 3? 1 : 0)
 
+    //FOR STORYBOOK ONLY
+    useEffect(()=>{
+        setPose(forcePose) 
+    }, [forcePose])
 
     return(
         <a.group 

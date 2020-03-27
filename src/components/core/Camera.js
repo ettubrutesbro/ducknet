@@ -26,6 +26,12 @@ export function CameraProvider({debugCamera, children}){
     //if prop debugCamera is provided, use it to override (without spring) camera attributes
     if(debugCamera) setCam(debugCamera)
   }, [debugCamera])
+
+  useEffect(()=>{
+    console.log('CAM CHANGE')
+    console.log(cam)
+  }, [cam])
+
   return (
   <cameraContext.Provider 
     value = {{
@@ -122,7 +128,6 @@ function Camera({
     }
   }, [selected])
 
-  console.log(lineMtlRef.current)
 
 
 

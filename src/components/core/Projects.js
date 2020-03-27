@@ -8,7 +8,6 @@ should this component have a separate ProjectContext that it passes down for pro
 */
 
 import React, {useContext, useState, useEffect} from 'react'
-import {cameraContext} from './Camera'
 import {physicsContext} from './Physics'
 
 import shallow from 'zustand/shallow'
@@ -17,7 +16,6 @@ import {userStore} from '../../App'
 
 function Projects({children}){
 
-    const {cam, setCam} = useContext(cameraContext)
     const {abyss, admitToAbyss} = useContext(physicsContext)
 
     const {select, selected} = userStore()
@@ -45,7 +43,6 @@ function Projects({children}){
                 onClick: () => select(name),
                 clickedOutside: () => select(null),
                 selected: selected === name,
-                onSelect: setCam,
                 falling : selected && selected !== name,
                 alone: alone === name
             })
