@@ -82,7 +82,7 @@ function Camera({
   }, [useThis])
 
 
-  const aRef = useRef()
+  const lineDot = useRef()
 
   const lineRef = useRef()
   const lineMtlRef = useRef()
@@ -151,6 +151,8 @@ function Camera({
 
       lineRef.current.geometry.setVertices([ aTo, bTo ])
       lineRef.current.geometry.verticesNeedUpdate = true
+
+      if(lineDot && lineDot.current) lineDot.current.position.copy(aTo)
   }
 
   return <React.Fragment> 
@@ -166,9 +168,12 @@ function Camera({
       <DumbCube />
     </group>
 */}
-    <group>
+    <group ref = {lineDot}>
       <Dom>
-        <Spot visible = {selected!==null} />
+        <Spot 
+          
+          visible = {selected!==null} 
+        />
       </Dom>
     </group>
 
