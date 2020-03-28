@@ -7,7 +7,6 @@ import { OBJLoader } from 'three/examples/jsm/loaders/OBJLoader'
 import { DRACOLoader } from 'three/examples/jsm/loaders/DRACOLoader'
 
 import {toRads} from '../../../utils/3d'
-import {LineTo} from '../../../utils/LineTo'
 import {DumbCube} from '../../../utils/DumbCube'
 
 import {Body} from '../../core/Body'
@@ -47,7 +46,7 @@ export function SCObject({
             {size: [1.7,1.5,1.7], offset: [-1,1.8,0]}
         ]}
         forced = {forced}
-
+        falling = {falling}
         onForceFinish = {changeDoneForcing}
         {...props}
     >
@@ -63,7 +62,7 @@ export function SCObject({
             ref = {testAnchor}
             scale = {[0.25,0.25,0.25]}
             position = {[0,0,1]}
-            visible = {true}
+            visible = {false}
         >
             <planeBufferGeometry attach='geometry' args = {[3,3]} />
             <meshBasicMaterial attach = 'material' color = {0x0000ff}/>

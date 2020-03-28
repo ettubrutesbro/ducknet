@@ -10,10 +10,12 @@ const Button = () => {
     return <animated.button key = 'btn' onClick = {()=> study('scorecard')}> View case study </animated.button>
 }
 
-export const SCBlurb = [
-    <BlurbTitle />,
-    <Blurb />,
-    <Button />
-]
+export const SCBlurb = () => {
+    return [
+    <BlurbTitle key = 'title' />,
+    <Blurb key = 'blurb' />,
+    <Button key = 'btn' />
+    ]
+}
 
 // export default SCBlurb

@@ -5,7 +5,7 @@ import {animated, useTransition, useChain, useSpring, config} from 'react-spring
 import {userStore} from '../../App'
 
 //component for use by project page
-export function ProjectPage({
+export default function ProjectPage({
   children,
   title,
   ...props

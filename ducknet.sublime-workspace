@@ -520,65 +520,27 @@
 	"buffers":
 	[
 		{
+			"file": "src/components/projects/Scorecard/index.js",
+			"settings":
+			{
+				"buffer_size": 269,
+				"line_ending": "Windows"
+			}
+		},
+		{
 			"file": "src/App.js",
 			"settings":
 			{
-				"buffer_size": 3952,
+				"buffer_size": 3690,
 				"encoding": "UTF-8",
 				"line_ending": "Windows"
 			}
 		},
 		{
-			"contents": "import React, {useState, useEffect, Suspense} from 'react'\nimport * as CANNON from 'cannon'\n// import {animated, useSpring} from 'react-spring'\nimport TWEEN from '@tweenjs/tween.js'\n\nimport {usePhysics} from './Physics'\nimport {toRads } from '../../utils/3d'\n\nconsole.log(TWEEN)\n\n//box only, subsequent bodies will use parameters to construct compound bodies / other shapes\n\n\nexport const LoadingProject = (props) => {\n  useEffect(()=>{\n    return () => {\n      //insert some callback to let app know one model is done\n      console.log(`${props.name} loaded`)\n    }\n  })\n  return <mesh> </mesh>\n}",
-			"file": "src/components/core/Body.js",
-			"file_size": 5689,
-			"file_write_time": 132222103974052652,
+			"file": "src/components/projects/Scorecard/SCObject.js",
 			"settings":
 			{
-				"buffer_size": 597,
-				"line_ending": "Windows"
-			}
-		},
-		{
-			"file": "src/components/core/Camera.js",
-			"settings":
-			{
-				"buffer_size": 2273,
-				"encoding": "UTF-8",
-				"line_ending": "Windows"
-			}
-		},
-		{
-			"file": "src/components/core/Wall.js",
-			"settings":
-			{
-				"buffer_size": 2411,
-				"encoding": "UTF-8",
-				"line_ending": "Windows"
-			}
-		},
-		{
-			"file": "src/components/projects/seseme.js",
-			"settings":
-			{
-				"buffer_size": 3697,
-				"encoding": "UTF-8",
-				"line_ending": "Unix"
-			}
-		},
-		{
-			"file": "public/scorecard/state.gltf",
-			"settings":
-			{
-				"buffer_size": 21923,
-				"line_ending": "Windows"
-			}
-		},
-		{
-			"file": "src/components/projects/Scorecard.js",
-			"settings":
-			{
-				"buffer_size": 3286,
+				"buffer_size": 2330,
 				"encoding": "UTF-8",
 				"line_ending": "Windows"
 			}
@@ -587,8 +549,86 @@
 			"file": "src/components/core/Physics.js",
 			"settings":
 			{
-				"buffer_size": 2895,
+				"buffer_size": 3399,
 				"line_ending": "Windows"
+			}
+		},
+		{
+			"contents": "Searching 41 files for \"setB\"\n\nC:\\Users\\jalk\\ducknet\\src\\App.js:\n   41  \n   42    lineA: null, setA: v => set({lineA: v}),\n   43:   lineB: {x: 100, y: 100}, setB: v => set({lineB: v}),\n   44  \n   45    //for signaling when animation can fire for page contents\n\nC:\\Users\\jalk\\ducknet\\src\\components\\core\\Blurb.js:\n   21            console.log('setting screen coords for line B')\n   22            const rect = ref.current.getBoundingClientRect()\n   23:           setB({x: rect.x+1, y: rect.y + (rect.height/2)})\n   24        }\n   25      })\n   ..\n   33      const pageBGAnimRef = useRef()\n   34  \n   35:     const setB = userStore(store => store.setB)\n   36      const setPageReady = userStore(store => store.setPageReady)\n   37  \n   38:     const [border, setBorder] = useSpring(()=>({\n   39        transform: 'translate3d(0px,0,0) scaleY(0)',\n   40        opacity: 1,\n   ..\n   42        config: {duration: 250}\n   43      }))\n   44:     const [bg, setBG] = useSpring(()=>({\n   45        transform: 'scaleX(0)', opacity: 0,\n   46        ref: pageBGAnimRef\n   ..\n   59          const borderGoTo = borderTarget.current.getBoundingClientRect().x - borderRef.current.getBoundingClientRect().x\n   60          console.log('bordergoto', borderGoTo)\n   61:         setBorder({\n   62            transform: `translate3d(${borderGoTo}px,0,0) scaleY(${yScalar})`,\n   63            opacity: 1,\n   ..\n   65            reset: false\n   66          })\n   67:         setBG({\n   68            from: {transform: 'scaleX(0)', opacity: 0},\n   69            to: {transform: 'scaleX(1)', opacity: 1},\n   ..\n   73        else if(mode === 'visible') {\n   74          setPageReady(false)\n   75:         setBorder({\n   76            from: {transform: `translate3d(0px,0,0) scaleY(0)`, opacity: 1},\n   77            to: {transform: `translate3d(0px,0,0) scaleY(1)`, opacity: 1},\n   ..\n   84            setPageReady(false)\n   85            const yScalar = window.innerHeight / containerHt\n   86:           setBorder({\n   87              transform: `translate3d(200px,0,0) scaleY(${yScalar})`,\n   88              opacity: 0,\n   89              reset: false\n   90            })\n   91:           setBG({\n   92              transform: 'scaleX(1)', \n   93              opacity: 0, \n   ..\n   96          }\n   97          else if(previousMode.mode === 'visible' && mode === 'hidden'){\n   98:           setBorder({\n   99              transform: `translate3d(0px,0,0) scaleY(0)`,\n  100              opacity: 1,\n\nC:\\Users\\jalk\\ducknet\\src\\components\\core\\Page.js:\n   26    }))\n   27  \n   28:   const [btnTrans, setButtonTrans] = useSpring(()=>({\n   29        ref: btnAnimRef,\n   30        transform: 'translate(0%, -100%)',\n   ..\n   35      if(pageReady){\n   36        setTitleTrans({transform: 'translate(0%, 0%)', opacity: 1})\n   37:       setButtonTrans({transform: 'translate(0%, 0%)', opacity: 1})\n   38      }\n   39      else{\n   40        setTitleTrans({transform: 'translate(0%, -50%)', opacity: 0})\n   41:       setButtonTrans({transform: 'translate(0%, -100%)', opacity: 0})\n   42      }\n   43    }, [pageReady])\n\nC:\\Users\\jalk\\ducknet\\src\\components\\projects\\Scorecard\\SCModel.js:\n  129      })\n  130  \n  131:     const [bars, setBars, stopBars] = useSprings(7, i => ({\n  132          scale: [1,1,1],\n  133          color: '#dedede',\n  134      }))\n  135  \n  136:     const [blurbAnims, setBlurbs, stopBlurbs] = useSprings(3, i => ({\n  137          opacity: 0,\n  138          position: [0,0,0],\n  ...\n  141      }))\n  142  \n  143:     const [blurbVisibility, setBlurbVisibility] = useState(null)\n  144  \n  145      useEffect(()=>{\n  ...\n  158              \n  159          })\n  160:         setBars(i => {\n  161              return{\n  162                  // whichBar === 'county'? [((-230-54) * (1-countyBarLengths[vis][3-number])/2),0,0]\n  ...\n  167              }\n  168          })\n  169:         setBlurbs(i => {\n  170              const heightOffset = i === 0? .5 : i===1? 4 : 0\n  171              return{\n  ...\n  176                  delay: key => key === 'opacity' && vis === i? 650 : vis === i? 400 : 0,\n  177                  //\n  178:                 onStart: vis===i? () => {setBlurbVisibility(i)} : () => {},\n  179:                 // onRest: vis===i? () => {} : () => {setBlurbVisibility(null)}\n  180              }\n  181          })\n\n22 matches across 4 files\n",
+			"settings":
+			{
+				"buffer_size": 4344,
+				"line_ending": "Windows",
+				"name": "Find Results",
+				"scratch": true
+			}
+		},
+		{
+			"file": "src/components/core/Blurb.js",
+			"settings":
+			{
+				"buffer_size": 5908,
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"file": "src/components/core/Body.js",
+			"settings":
+			{
+				"buffer_size": 5294,
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"file": "src/components/projects/Scorecard/SCModel.js",
+			"settings":
+			{
+				"buffer_size": 23434,
+				"encoding": "UTF-8",
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"file": "src/components/core/Projects.js",
+			"settings":
+			{
+				"buffer_size": 1666,
+				"encoding": "UTF-8",
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"file": "src/components/core/Camera.js",
+			"settings":
+			{
+				"buffer_size": 5890,
+				"encoding": "UTF-8",
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"file": "src/stories/test.stories.js",
+			"settings":
+			{
+				"buffer_size": 3315,
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"settings":
+			{
+				"buffer_size": 0,
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"file": "src/components/projects/Scorecard/SCBlurb.js",
+			"settings":
+			{
+				"buffer_size": 894,
+				"encoding": "UTF-8",
+				"line_ending": "Windows",
+				"name": "import React from 'react'"
 			}
 		}
 	],
@@ -643,25 +683,40 @@
 		"/C/Users/jalk/ducknet",
 		"/C/Users/jalk/ducknet/public",
 		"/C/Users/jalk/ducknet/src",
+		"/C/Users/jalk/ducknet/src/components",
+		"/C/Users/jalk/ducknet/src/components/core",
+		"/C/Users/jalk/ducknet/src/components/projects",
+		"/C/Users/jalk/ducknet/src/components/projects/Scorecard",
 		"/C/Users/jalk/ducknet/src/stories",
 		"/C/Users/jalk/ducknet/src/utils"
 	],
 	"file_history":
 	[
+		"/C/Users/jalk/ducknet/src/utils/DumbCube.js",
+		"/C/Users/jalk/ducknet/src/components/projects/Scorecard/SCPage.js",
+		"/C/Users/jalk/ducknet/src/components/projects/Scorecard/SCObject.js",
+		"/C/Users/jalk/ducknet/src/components/projects/Scorecard/SCModel.js",
+		"/C/Users/jalk/ducknet/src/index.js",
+		"/C/Users/jalk/ducknet/src/components/core/Camera.js",
+		"/C/Users/jalk/ducknet/src/components/projects/seseme.js",
+		"/C/Users/jalk/ducknet/src/components/core/Wall.js",
+		"/C/Users/jalk/ducknet/src/components/core/Physics.js",
+		"/C/Users/jalk/ducknet/src/App.js",
+		"/C/Users/jalk/ducknet/src/components/core/Body.js",
+		"/C/Users/jalk/ducknet/src/components/projects/projectlist.js",
+		"/C/Users/jalk/ducknet/src/components/core/Page.js",
+		"/C/Users/jalk/ducknet/src/components/projects/Scorecard/index.js",
+		"/W/Google Drive/Important Documents/history1585333206363.csv",
+		"/W/Google Drive/Important Documents/export_20200327.csv",
+		"/C/Users/jalk/ducknet/public/scorecard/state.gltf",
+		"/C/Users/jalk/ducknet/src/components/projects/Scorecard.js",
 		"/C/Users/jalk/ducknet/.gitignore",
 		"/C/Users/jalk/ducknet/src/components/projects/Eclipse.js",
-		"/C/Users/jalk/ducknet/src/components/projects/seseme.js",
-		"/C/Users/jalk/ducknet/src/components/projects/Scorecard.js",
-		"/C/Users/jalk/ducknet/src/App.js",
 		"/C/Users/jalk/ducknet/public/seseme.gltf",
-		"/C/Users/jalk/ducknet/src/components/core/Body.js",
-		"/C/Users/jalk/ducknet/src/components/core/Wall.js",
 		"/C/Users/jalk/ducknet/src/components/Debug.js",
 		"/C/Users/jalk/ducknet/public/scorecard-ss.gltf",
 		"/C/Users/jalk/ducknet/src/components/projects/Proteus.js",
-		"/C/Users/jalk/ducknet/src/components/core/Physics.js",
 		"/C/Users/jalk/ducknet/package.json",
-		"/C/Users/jalk/ducknet/src/components/core/Camera.js",
 		"/C/Users/jalk/ducknet/public/scorecard.gltf",
 		"/C/Users/jalk/ducknet/node_modules/cannon/docs/files/src_collision_ObjectCollisionMatrix.js.html",
 		"/C/Users/jalk/ducknet/node_modules/cannon/test/Body.js",
@@ -675,7 +730,6 @@
 		"/C/Users/jalk/ducknet/public/seseme.glb",
 		"/C/Users/jalk/portfolio-react/node_modules/oimo/examples/js/docs.js",
 		"/C/Users/jalk/ducknet/src/components/Debug2.js",
-		"/C/Users/jalk/ducknet/src/index.js",
 		"/C/Users/jalk/ducknet/src/components/debug/range.js",
 		"/C/Users/jalk/ducknet/public/sese-dd.gltf",
 		"/C/Users/jalk/learnwithjason/src/App.js",
@@ -765,27 +819,18 @@
 		"/C/Users/Duck/scorecard/src/utilities/stopwords.json",
 		"/C/Users/Duck/scorecard/src/utilities/toLowerCase.js",
 		"/C/Users/Duck/scorecard/src/components/SearchInput.jsx",
-		"/C/Users/Duck/scorecard/src/components/IndicatorList.jsx",
-		"/C/Users/Duck/scorecard/src/components/generic/SanityCheckTip.jsx",
-		"/C/Users/Duck/scorecard/src/assets/searchzoom.svg",
-		"/C/Users/Duck/scorecard/src/data/indicators/lowIncomeDental.json",
-		"/C/Users/Duck/scorecard/src/data/indicators/suspension.json",
-		"/C/Users/Duck/scorecard/src/components/Legend.jsx",
-		"/C/Users/Duck/scorecard/src/utilities/trungCombo.js",
-		"/C/Users/Duck/scorecard/stories/workflows.stories.js",
-		"/C/Users/Duck/scorecard/stories/breakdowns.stories.js",
-		"/C/Users/Duck/scorecard/src/data/demographicsAndPopulation.json",
-		"/C/Users/Duck/scorecard/node_modules/axobject-query/lib/etc/objects/AlertDialogRole.js"
+		"/C/Users/Duck/scorecard/src/components/IndicatorList.jsx"
 	],
 	"find":
 	{
-		"height": 27.0
+		"height": 40.0
 	},
 	"find_in_files":
 	{
 		"height": 104.0,
 		"where_history":
 		[
+			"C:\\Users\\jalk\\ducknet\\src",
 			"C:\\Users\\Duck\\scorecard\\src",
 			"C:\\Users\\Duck\\scorecard\\stories",
 			"C:\\Users\\Duck\\scorecard\\src\\components",
@@ -797,6 +842,18 @@
 		"case_sensitive": false,
 		"find_history":
 		[
+			"aRef",
+			"setB",
+			"cam",
+			"wobs",
+			"onSelect",
+			"setCam",
+			"onselect",
+			"doneForcing",
+			"changeDoneForcing",
+			"falling",
+			"SCModel",
+			"SCBlurb",
 			"OBJLoader",
 			"GLTFLoader",
 			"assign",
@@ -912,19 +969,7 @@
 			"18",
 			"Button",
 			"caption",
-			"p>",
-			"p",
-			"const mask",
-			"fadeinworkflo",
-			"keyframes",
-			"opacity",
-			"pickmenu",
-			"z-index: 3",
-			"header",
-			"mask",
-			" 2s",
-			"2s",
-			"faintest"
+			"p>"
 		],
 		"highlight": true,
 		"in_selection": false,
@@ -943,156 +988,30 @@
 	"groups":
 	[
 		{
-			"selected": 1,
+			"selected": 2,
 			"sheets":
 			[
 				{
 					"buffer": 0,
-					"file": "src/App.js",
+					"file": "src/components/projects/Scorecard/index.js",
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 3952,
+						"buffer_size": 269,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								1392,
-								1392
+								269,
+								269
 							]
 						],
 						"settings":
 						{
 							"syntax": "Packages/Babel/JavaScript (Babel).sublime-syntax",
-							"tab_size": 2,
-							"translate_tabs_to_spaces": true
-						},
-						"translation.x": 0.0,
-						"translation.y": 810.0,
-						"zoom_level": 1.0
-					},
-					"stack_index": 3,
-					"type": "text"
-				},
-				{
-					"buffer": 1,
-					"file": "src/components/core/Body.js",
-					"semi_transient": false,
-					"settings":
-					{
-						"buffer_size": 597,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								374,
-								374
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/Babel/JavaScript (Babel).sublime-syntax",
-							"tab_size": 2,
-							"translate_tabs_to_spaces": true
-						},
-						"translation.x": 0.0,
-						"translation.y": 0.0,
-						"zoom_level": 1.0
-					},
-					"stack_index": 0,
-					"type": "text"
-				},
-				{
-					"buffer": 2,
-					"file": "src/components/core/Camera.js",
-					"semi_transient": false,
-					"settings":
-					{
-						"buffer_size": 2273,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								1308,
-								1308
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/Babel/JavaScript (Babel).sublime-syntax",
-							"tab_size": 2,
-							"translate_tabs_to_spaces": true
-						},
-						"translation.x": 0.0,
-						"translation.y": 0.0,
-						"zoom_level": 1.0
-					},
-					"stack_index": 4,
-					"type": "text"
-				},
-				{
-					"buffer": 3,
-					"file": "src/components/core/Wall.js",
-					"semi_transient": false,
-					"settings":
-					{
-						"buffer_size": 2411,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								332,
-								332
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/Babel/JavaScript (Babel).sublime-syntax",
-							"tab_size": 2,
-							"translate_tabs_to_spaces": true
-						},
-						"translation.x": 0.0,
-						"translation.y": 0.0,
-						"zoom_level": 1.0
-					},
-					"stack_index": 9,
-					"type": "text"
-				}
-			]
-		},
-		{
-			"selected": 3,
-			"sheets":
-			[
-				{
-					"buffer": 2,
-					"file": "src/components/core/Camera.js",
-					"semi_transient": false,
-					"settings":
-					{
-						"buffer_size": 2273,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								650,
-								650
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/Babel/JavaScript (Babel).sublime-syntax",
-							"tab_size": 2,
+							"tab_size": 4,
 							"translate_tabs_to_spaces": true
 						},
 						"translation.x": 0.0,
@@ -1103,20 +1022,20 @@
 					"type": "text"
 				},
 				{
-					"buffer": 4,
-					"file": "src/components/projects/seseme.js",
+					"buffer": 1,
+					"file": "src/App.js",
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 3697,
+						"buffer_size": 3690,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								1731,
-								1731
+								1476,
+								1476
 							]
 						],
 						"settings":
@@ -1126,19 +1045,455 @@
 							"translate_tabs_to_spaces": true
 						},
 						"translation.x": 0.0,
-						"translation.y": 367.0,
+						"translation.y": 1727.0,
 						"zoom_level": 1.0
 					},
 					"stack_index": 5,
 					"type": "text"
 				},
 				{
-					"buffer": 5,
-					"file": "public/scorecard/state.gltf",
+					"buffer": 2,
+					"file": "src/components/projects/Scorecard/SCObject.js",
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 21923,
+						"buffer_size": 2330,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								2008,
+								2008
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/Babel/JavaScript (Babel).sublime-syntax",
+							"tab_size": 4,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 169.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 0,
+					"type": "text"
+				},
+				{
+					"buffer": 3,
+					"file": "src/components/core/Physics.js",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 3399,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								1755,
+								1755
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/Babel/JavaScript (Babel).sublime-syntax",
+							"tab_size": 2,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 1197.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 2,
+					"type": "text"
+				},
+				{
+					"buffer": 4,
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 4344,
+						"regions":
+						{
+							"match":
+							{
+								"flags": 112,
+								"regions":
+								[
+									[
+										157,
+										161
+									],
+									[
+										461,
+										465
+									],
+									[
+										612,
+										616
+									],
+									[
+										644,
+										648
+									],
+									[
+										755,
+										759
+									],
+									[
+										948,
+										952
+									],
+									[
+										1256,
+										1260
+									],
+									[
+										1449,
+										1453
+									],
+									[
+										1676,
+										1680
+									],
+									[
+										1976,
+										1980
+									],
+									[
+										2163,
+										2167
+									],
+									[
+										2365,
+										2369
+									],
+									[
+										2571,
+										2575
+									],
+									[
+										2802,
+										2806
+									],
+									[
+										2981,
+										2985
+									],
+									[
+										3198,
+										3202
+									],
+									[
+										3358,
+										3362
+									],
+									[
+										3530,
+										3534
+									],
+									[
+										3661,
+										3665
+									],
+									[
+										3870,
+										3874
+									],
+									[
+										4156,
+										4160
+									],
+									[
+										4252,
+										4256
+									]
+								],
+								"scope": ""
+							}
+						},
+						"selection":
+						[
+							[
+								644,
+								644
+							]
+						],
+						"settings":
+						{
+							"detect_indentation": false,
+							"line_numbers": false,
+							"output_tag": 1,
+							"result_base_dir": "",
+							"result_file_regex": "^([^ \t].*):$",
+							"result_line_regex": "^ +([0-9]+):",
+							"scroll_past_end": true,
+							"syntax": "Packages/Default/Find Results.hidden-tmLanguage",
+							"translate_tabs_to_spaces": false
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 7,
+					"type": "text"
+				},
+				{
+					"buffer": 5,
+					"file": "src/components/core/Blurb.js",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 5908,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								754,
+								754
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/Babel/JavaScript (Babel).sublime-syntax",
+							"tab_size": 2,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 17.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 3,
+					"type": "text"
+				},
+				{
+					"buffer": 6,
+					"file": "src/components/core/Body.js",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 5294,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								529,
+								529
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/Babel/JavaScript (Babel).sublime-syntax",
+							"tab_size": 2,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 15,
+					"type": "text"
+				}
+			]
+		},
+		{
+			"selected": 3,
+			"sheets":
+			[
+				{
+					"buffer": 7,
+					"file": "src/components/projects/Scorecard/SCModel.js",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 23434,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								8816,
+								8816
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/Babel/JavaScript (Babel).sublime-syntax",
+							"tab_size": 4,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 3743.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 4,
+					"type": "text"
+				},
+				{
+					"buffer": 2,
+					"file": "src/components/projects/Scorecard/SCObject.js",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 2330,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								1789,
+								1789
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/Babel/JavaScript (Babel).sublime-syntax",
+							"tab_size": 4,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 984.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 10,
+					"type": "text"
+				},
+				{
+					"buffer": 8,
+					"file": "src/components/core/Projects.js",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 1666,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								873,
+								874
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/Babel/JavaScript (Babel).sublime-syntax",
+							"tab_size": 4,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 9,
+					"type": "text"
+				},
+				{
+					"buffer": 9,
+					"file": "src/components/core/Camera.js",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 5890,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								5890,
+								5890
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/Babel/JavaScript (Babel).sublime-syntax",
+							"tab_size": 2,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 3993.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 1,
+					"type": "text"
+				},
+				{
+					"buffer": 1,
+					"file": "src/App.js",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 3690,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								2845,
+								2845
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/Babel/JavaScript (Babel).sublime-syntax",
+							"tab_size": 2,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 1048.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 8,
+					"type": "text"
+				},
+				{
+					"buffer": 10,
+					"file": "src/stories/test.stories.js",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 3315,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								807,
+								807
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/Babel/JavaScript (Babel).sublime-syntax",
+							"tab_size": 4,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 11,
+					"type": "text"
+				},
+				{
+					"buffer": 11,
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 0,
 						"regions":
 						{
 						},
@@ -1157,54 +1512,53 @@
 						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 11,
+					"stack_index": 12,
 					"type": "text"
 				},
 				{
-					"buffer": 6,
-					"file": "src/components/projects/Scorecard.js",
+					"buffer": 12,
+					"file": "src/components/projects/Scorecard/SCBlurb.js",
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 3286,
+						"buffer_size": 894,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								0,
-								0
+								864,
+								864
 							]
 						],
 						"settings":
 						{
-							"syntax": "Packages/Babel/JavaScript (Babel).sublime-syntax",
-							"tab_size": 4,
-							"translate_tabs_to_spaces": true
+							"auto_name": "import React from 'react'",
+							"syntax": "Packages/Babel/JavaScript (Babel).sublime-syntax"
 						},
 						"translation.x": 0.0,
-						"translation.y": 151.0,
+						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 1,
+					"stack_index": 16,
 					"type": "text"
 				},
 				{
-					"buffer": 3,
-					"file": "src/components/core/Wall.js",
+					"buffer": 6,
+					"file": "src/components/core/Body.js",
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 2411,
+						"buffer_size": 5294,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								0,
-								0
+								756,
+								756
 							]
 						],
 						"settings":
@@ -1217,84 +1571,59 @@
 						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 2,
+					"stack_index": 14,
 					"type": "text"
-				},
+				}
+			]
+		},
+		{
+			"selected": 1,
+			"sheets":
+			[
 				{
-					"buffer": 7,
-					"file": "src/components/core/Physics.js",
+					"buffer": 12,
+					"file": "src/components/projects/Scorecard/SCBlurb.js",
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 2895,
+						"buffer_size": 894,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								0,
-								0
+								894,
+								894
 							]
 						],
 						"settings":
 						{
-							"syntax": "Packages/Babel/JavaScript (Babel).sublime-syntax",
-							"tab_size": 2,
-							"translate_tabs_to_spaces": true
+							"auto_name": "import React from 'react'",
+							"syntax": "Packages/Babel/JavaScript (Babel).sublime-syntax"
 						},
 						"translation.x": 0.0,
-						"translation.y": 292.0,
+						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 7,
+					"stack_index": 17,
 					"type": "text"
 				},
 				{
-					"buffer": 0,
-					"file": "src/App.js",
-					"semi_transient": false,
-					"settings":
-					{
-						"buffer_size": 3952,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								2506,
-								2506
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/Babel/JavaScript (Babel).sublime-syntax",
-							"tab_size": 2,
-							"translate_tabs_to_spaces": true
-						},
-						"translation.x": 0.0,
-						"translation.y": 907.0,
-						"zoom_level": 1.0
-					},
-					"stack_index": 8,
-					"type": "text"
-				},
-				{
-					"buffer": 1,
+					"buffer": 6,
 					"file": "src/components/core/Body.js",
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 597,
+						"buffer_size": 5294,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								0,
-								0
+								396,
+								396
 							]
 						],
 						"settings":
@@ -1303,11 +1632,11 @@
 							"tab_size": 2,
 							"translate_tabs_to_spaces": true
 						},
-						"translation.x": 78.0,
-						"translation.y": 379.0,
+						"translation.x": 0.0,
+						"translation.y": 55.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 10,
+					"stack_index": 13,
 					"type": "text"
 				}
 			]
@@ -1315,7 +1644,7 @@
 	],
 	"incremental_find":
 	{
-		"height": 27.0
+		"height": 28.0
 	},
 	"input":
 	{
@@ -1329,24 +1658,31 @@
 				0,
 				0,
 				1,
-				1
+				2
 			],
 			[
 				1,
 				0,
 				2,
 				1
+			],
+			[
+				1,
+				1,
+				2,
+				2
 			]
 		],
 		"cols":
 		[
 			0.0,
-			0.5,
+			0.421866521975,
 			1.0
 		],
 		"rows":
 		[
 			0.0,
+			0.793157076205,
 			1.0
 		]
 	},
@@ -1363,7 +1699,7 @@
 	"project": "ducknet.sublime-project",
 	"replace":
 	{
-		"height": 50.0
+		"height": 52.0
 	},
 	"save_all_on_build": true,
 	"select_file":
@@ -1372,6 +1708,82 @@
 		"last_filter": "",
 		"selected_items":
 		[
+			[
+				"physics.js",
+				"src\\components\\core\\Physics.js"
+			],
+			[
+				"scobject",
+				"src\\components\\projects\\Scorecard\\SCObject.js"
+			],
+			[
+				"scmodel.js",
+				"src\\components\\projects\\Scorecard\\SCModel.js"
+			],
+			[
+				"app.js",
+				"src\\App.js"
+			],
+			[
+				"camera.js",
+				"src\\components\\core\\Camera.js"
+			],
+			[
+				"dumbcub",
+				"src\\utils\\DumbCube.js"
+			],
+			[
+				"projects.js",
+				"src\\components\\core\\Projects.js"
+			],
+			[
+				"test.stories.js",
+				"src\\stories\\test.stories.js"
+			],
+			[
+				"dumbcub.js",
+				"src\\utils\\DumbCube.js"
+			],
+			[
+				"body.js",
+				"src\\components\\core\\Body.js"
+			],
+			[
+				"projects",
+				"src\\components\\core\\Projects.js"
+			],
+			[
+				"scobject.js",
+				"src\\components\\projects\\Scorecard\\SCObject.js"
+			],
+			[
+				"dumbcube",
+				"src\\utils\\DumbCube.js"
+			],
+			[
+				"scpage",
+				"src\\components\\projects\\Scorecard\\SCPage.js"
+			],
+			[
+				"scblurb",
+				"src\\components\\projects\\Scorecard\\SCBlurb.js"
+			],
+			[
+				"scorecard/index.js",
+				"src\\components\\projects\\Scorecard\\index.js"
+			],
+			[
+				"index.js",
+				"src\\index.js"
+			],
+			[
+				"scorecard.js",
+				"src\\components\\projects\\Scorecard\\index.js"
+			],
+			[
+				"page.js",
+				"src\\components\\core\\Page.js"
+			],
 			[
 				"wall.js",
 				"src\\components\\core\\Wall.js"
@@ -1389,14 +1801,6 @@
 				"src\\App.js"
 			],
 			[
-				"physics.js",
-				"src\\components\\core\\Physics.js"
-			],
-			[
-				"body.js",
-				"src\\components\\core\\Body.js"
-			],
-			[
 				".gitignore",
 				".gitignore"
 			],
@@ -1407,10 +1811,6 @@
 			[
 				"seseme.js",
 				"src\\components\\projects\\seseme.js"
-			],
-			[
-				"app.js",
-				"src\\App.js"
 			],
 			[
 				"seseme",
@@ -1431,10 +1831,6 @@
 			[
 				"sco",
 				"node_modules\\cannon\\docs\\files\\src_collision_ObjectCollisionMatrix.js.html"
-			],
-			[
-				"camera.js",
-				"src\\components\\core\\Camera.js"
 			],
 			[
 				"debug",
@@ -1547,10 +1943,6 @@
 			[
 				"wizard",
 				"scorecard\\src\\Wizard.jsx"
-			],
-			[
-				"index.js",
-				"scorecard\\src\\index.js"
 			],
 			[
 				"packag.j",
@@ -1827,62 +2219,6 @@
 			[
 				"upchev",
 				"src\\assets\\icons\\upchev.svg"
-			],
-			[
-				".html",
-				"public\\index.html"
-			],
-			[
-				"horizontal",
-				"src\\components\\HorizontalBarGraph.jsx"
-			],
-			[
-				"breakdown.jsx",
-				"src\\components\\Breakdown.jsx"
-			],
-			[
-				"mobilescore",
-				"src\\MobileScorecard.jsx"
-			],
-			[
-				"index.stories",
-				"stories\\index.stories.js"
-			],
-			[
-				"browsercomp",
-				"src\\data\\browserCompatibility.js"
-			],
-			[
-				"responsivesco",
-				"src\\ResponsiveScorecard.jsx"
-			],
-			[
-				"global",
-				"src\\global.css"
-			],
-			[
-				"semantic",
-				"src\\assets\\semanticTitles.js"
-			],
-			[
-				"countylist",
-				"src\\components\\CountyList.jsx"
-			],
-			[
-				"responsive",
-				"src\\ResponsiveNav.jsx"
-			],
-			[
-				"expanb\t",
-				"src\\components\\ExpandBox.jsx"
-			],
-			[
-				"responi",
-				"src\\ResponsiveScorecard.jsx"
-			],
-			[
-				"sanitycheck",
-				"src\\components\\generic\\SanityCheckTip.jsx"
 			]
 		],
 		"width": 0.0
@@ -1909,14 +2245,14 @@
 		],
 		"width": 0.0
 	},
-	"selected_group": 0,
+	"selected_group": 1,
 	"settings":
 	{
 	},
 	"show_minimap": false,
 	"show_open_files": false,
 	"show_tabs": true,
-	"side_bar_visible": false,
+	"side_bar_visible": true,
 	"side_bar_width": 219.0,
 	"status_bar_visible": true,
 	"template_settings":

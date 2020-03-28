@@ -1,5 +1,5 @@
 import React, {useRef, useEffect} from 'react'
-export function usePrevious(value){
+export default function usePrevious(value){
     //usePrevious({propWantedForComparison})
     const ref = useRef()
     useEffect(() => {

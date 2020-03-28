@@ -5,7 +5,7 @@ import {animated, useTransition, useSpring, useChain, config}  from 'react-sprin
 
 import {InfoPage} from './Page'
 
-import {usePrevious} from '../../utils/Hooks'
+import usePrevious from '../hooks/usePrevious'
 
 import {userStore} from '../../App'
 

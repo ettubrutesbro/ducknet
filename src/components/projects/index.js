@@ -10,13 +10,13 @@ import {SCObject, SCBlurb, SCPage} from './Scorecard'
 import {MockObject, MockBlurb, MockPage} from './MockProject'
 
 const allprojects = {
-    Scorecard: {
+    scorecard: {
         object: SCObject,
         blurb: SCBlurb,
         page: SCPage
     },
 
-    MockProject: {
+    mockProject: {
         object: MockObject,
         blurb: MockBlurb,
         page: MockPage

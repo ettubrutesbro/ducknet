@@ -31,7 +31,7 @@ import {toRads, toDegs} from './utils/3d'
 require("typeface-spectral")
 require("typeface-archivo")
 
-const {Scorecard, MockProject} = allprojects
+const {scorecard, mockProject} = allprojects
 
 
 
@@ -58,6 +58,8 @@ function App() {
     pageReady: store.pageReady
   }), shallow)
 
+  const activeProject = allprojects[selected]
+
   return (
     <div className = 'full'>
 
@@ -81,15 +83,15 @@ function App() {
               active = {!selected} 
             /> 
             <Projects>
-              <Scorecard.object
+              <scorecard.object
                 name = 'scorecard'
                 key = 'scorecard'
                 position = {[-1,35,0]}
                 rotation = {[0,10,0]}
               />
-              <MockProject.object
-                name = 'mock'
-                key = 'mock'
+              <mockProject.object
+                name = 'mockProject'
+                key = 'mockProject'
               />
               {/*
               <Seseme 
@@ -116,27 +118,23 @@ function App() {
 
       </Canvas>
 
-      {
-        <Blurb 
-          mode = {
-            studying !== null? 'expand' 
-            : selected !== null? 'visible' 
-            : 'hidden'
-            
-          }
-          visible = {selected !== null}
-        >
-          {selected === 'scorecard' && Scorecard.blurb[0]}
-          {selected === 'scorecard' && Scorecard.blurb[1]}
-          {selected === 'scorecard' && Scorecard.blurb[2]}
+      
+      <Blurb 
+        mode = {
+          studying !== null? 'expand' 
+          : selected !== null? 'visible' 
+          : 'hidden'
+          
+        }
+        visible = {selected !== null}
+      >
+        {activeProject && <activeProject.blurb />}
 
-        </Blurb>
-      }
-
-
-      {
-         <Scorecard.page /> 
-      }
+      </Blurb>
+      
+      <Page title = {selected} >
+      {activeProject && activeProject.page }
+      </Page>
 
     </div>
   );
