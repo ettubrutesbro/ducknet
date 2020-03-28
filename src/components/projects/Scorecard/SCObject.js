@@ -15,6 +15,8 @@ import {SCModel} from './SCModel'
 
 import {userStore} from '../../../App'
 
+import useObjectSelection from '../../hooks/useObjectSelection'
+
 export function SCObject({
     onClick = () => console.log('clicked project'), 
     selected = false,
@@ -24,29 +26,13 @@ export function SCObject({
     ...props
 }){
 
-    const setA = userStore(store => store.setA)
     const testAnchor = useRef()
-
-    const [forced, forceTo] = useState(null)
-
-    useEffect(()=>{
-        if(selected){
-            console.log('SELECTED SCORECARD')
-            forceTo({
-                position: [-.65,-0.1,-.1],
-                rotation: [0,0,0]
-            })
-            setA(testAnchor.current)
-        }
-        else{
-            console.log('unpicked sc')
-            // debugger
-            forceTo(null)
-            // console.log('scobject setcam')
-            // onSelect(null)
-            setA(null)
-        }
-    }, [selected])
+    const forced = useObjectSelection(
+        'scorecard',
+        selected,
+        {position: [0,0,0], rotation: [0,0,0]},
+        testAnchor
+    )
 
     //tracks whether forced motion on a body is done (the body component will use the callback when its own tween finishes)
     const [doneForcing, changeDoneForcing] = useState(false)
@@ -61,8 +47,7 @@ export function SCObject({
             {size: [1.7,1.5,1.7], offset: [-1,1.8,0]}
         ]}
         forced = {forced}
-        visible = {false}
-        falling = {falling}
+
         onForceFinish = {changeDoneForcing}
         {...props}
     >
@@ -78,7 +63,7 @@ export function SCObject({
             ref = {testAnchor}
             scale = {[0.25,0.25,0.25]}
             position = {[0,0,1]}
-            visible = {false}
+            visible = {true}
         >
             <planeBufferGeometry attach='geometry' args = {[3,3]} />
             <meshBasicMaterial attach = 'material' color = {0x0000ff}/>

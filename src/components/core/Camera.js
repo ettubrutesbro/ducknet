@@ -133,6 +133,7 @@ function Camera({
 
 
   const updateHud = (a,b) => {
+
       let v3 = new THREE.Vector3()
       v3.set(
         (b.x / window.innerWidth) * 2 - 1,
@@ -145,7 +146,8 @@ function Camera({
       var distance = -ref.current.position.z / v3.z
 
       const bTo = new THREE.Vector3().copy(ref.current.position).add(v3.multiplyScalar(distance))
-      const aTo = a && a.current? new THREE.Vector3().copy(a.current.position) : new THREE.Vector3()
+      let aTo = new THREE.Vector3()
+      if(a && a.current) a.current.getWorldPosition(aTo)
 
       lineRef.current.geometry.setVertices([ aTo, bTo ])
       lineRef.current.geometry.verticesNeedUpdate = true

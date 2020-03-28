@@ -1,41 +1,28 @@
 /*
     What are the requirements of getting a project into the app? 
 */
-import React, {Fragment, useState, useEffect} from 'react'
+import React, {Fragment, useState, useEffect, useRef} from 'react'
 import {Body} from '../../core/Body'
 import {DumbCube} from '../../../utils/DumbCube'
 
-import {userStore} from '../../../App'
+import useObjectSelection from '../../hooks/useObjectSelection'
 
 function MockObject({
     onClick = () => console.log('clicked project [ONSELECT NEEDS PROP]'),
     selected = false,
-    onSelect,
     falling,
     showBody = true,
     ...props
 }){
-    const setA = userStore(store => store.setA)
-    const [forced, forceTo] = useState(null)
 
-    useEffect(()=>{
-        if(selected){
-            console.log('SELECTED mockproject')
-            forceTo({
-                position: [0,3,0],
-                rotation: [15,30,-20]
-            })
-            // setA(testAnchor.current)
-        }
-        else{
-            console.log('unpicked mockproject')
-            // debugger
-            forceTo(null)
-            // console.log('mockproj setcam')
-            // setA(null)
-        }
-    }, [selected])
+    const anchor = useRef()
 
+    const forced = useObjectSelection(
+        'mock', 
+        selected, 
+        {position: [0,3,0], rotation: [15,30,-20]}, 
+        anchor
+    )
 
     return <Body
         name = 'mock'
@@ -46,7 +33,14 @@ function MockObject({
         {...props}
     >
         {/* <Suspense> would normally wrap bc model loading has to happen */}
-        <DumbCube onClick = {onClick} />
+        
+        <mesh
+            ref = {anchor}
+            onClick = {onClick}
+        >
+            <boxBufferGeometry attach = 'geometry' args = {[1,1,1]} />
+            <meshNormalMaterial attach = 'material' />
+        </mesh>
         {/* </Suspense> */}
 
     </Body>

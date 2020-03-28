@@ -28,8 +28,6 @@ import Page from './components/core/Page'
 
 import {toRads, toDegs} from './utils/3d'
 
-
-
 require("typeface-spectral")
 require("typeface-archivo")
 
@@ -42,6 +40,7 @@ export const [userStore] = create(set => ({
   studying: null, study: v => set({studying: v}),
 
   lineA: null, setA: v => set({lineA: v}),
+  // lineA: null, setA: v => console.log(v),
   lineB: {x: 100, y: 100}, setB: v => set({lineB: v}),
 
   //for signaling when animation can fire for page contents
