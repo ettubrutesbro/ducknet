@@ -44,7 +44,7 @@ export const [userStore] = create(set => ({
   lineB: {x: 100, y: 100}, setB: v => set({lineB: v}),
 
   //for signaling when animation can fire for page contents
-  pageReady: false, setPageReady: v => set({pageReady: v})
+  // pageReady: false, setPageReady: v => set({pageReady: v})
 })) 
 
 
@@ -118,23 +118,9 @@ function App() {
 
       </Canvas>
 
+      {activeProject && selected && !studying && <Blurb> {activeProject.blurb}  </Blurb>}
+      {activeProject && studying && <Page title = {selected} > {activeProject.page } </Page>}
       
-      <Blurb 
-        mode = {
-          studying !== null? 'expand' 
-          : selected !== null? 'visible' 
-          : 'hidden'
-          
-        }
-        visible = {selected !== null}
-      >
-        {activeProject && <activeProject.blurb />}
-
-      </Blurb>
-      
-      <Page title = {selected} >
-      {activeProject && activeProject.page }
-      </Page>
 
     </div>
   );

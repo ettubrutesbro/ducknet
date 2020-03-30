@@ -49,13 +49,18 @@ function MockObject({
     </Body>
 }
 
-const MockBlurb = () => {
+//only the button needs to reference 
+const MockBlurbButton = () => {
     const study = userStore(store => store.study)
-    return [<animated.h1> Project Title </animated.h1>,
-    <animated.p> This paragraph should explain project, and give basic context - 0. name and time 1. what is it? 2. company/client + users + collaborators... Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis in purus dictum, mollis dolor vel, tempor ex. Vestibulum eu gravida nulla. Curabitur tortor sem, vehicula eget felis eget, malesuada sollicitudin lorem. Duis eget nulla id tellus maximus feugiat a nec purus.
-    </animated.p>,
-    <animated.button onClick = {()=> study('mockProject')}> View case study </animated.button>]
+    return <button onClick = {()=>study('mockProject')}> View case study </button>
 }
+const MockBlurb = [
+    <h1> Project Title </h1>,
+    <p> This paragraph should explain project, and give basic context - 0. name and time 1. what is it? 2. company/client + users + collaborators... Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis in purus dictum, mollis dolor vel, tempor ex. Vestibulum eu gravida nulla. Curabitur tortor sem, vehicula eget felis eget, malesuada sollicitudin lorem. Duis eget nulla id tellus maximus feugiat a nec purus.
+    </p>,
+    <MockBlurbButton />
+]
+
 
 const MockPage = [
         <h3>Hello mock page </h3>,
