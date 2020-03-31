@@ -7,13 +7,11 @@ import {useSpring, animated} from 'react-spring'
 import {Canvas, useFrame, useRender} from 'react-three-fiber'
 import * as CANNON from 'cannon'
 
-
 import {toRads} from '../utils/3d'
-import {LineSpot} from '../utils/LineSpot'
-import {TestFatLine, TestMeshLine} from '../utils/TestFatLine'
+
 import {DataTextureTest} from '../utils/DataTextureTest'
 
-import SCModel from '../components/projects/Scorecard/SCModel'
+import {SCModel} from '../components/projects/Scorecard/SCModel'
 import Camera from '../components/core/Camera'
 
 import PreviewCanvas from '../components/PreviewCanvas'
@@ -22,7 +20,7 @@ import PreviewCanvas from '../components/PreviewCanvas'
 import { withContexts } from '@storybook/addon-contexts/react';
  
 export default { 
-    title: 'Project models',
+    title: 'Experiments',
     decorators: [withKnobs]
 }
 
@@ -63,44 +61,6 @@ export const scorecard = () => {
         </Container>
     )
 }
-
-export const line = () => {
-    return(
-        <Container>
-            <PreviewCanvas>
-                <LineSpot 
-                    goTo = {[]}
-                />
-
-            </PreviewCanvas>
-        </Container>
-    )
-}
-
-export const fatline = () => {
-
-    const testMutation = boolean('test mutating the line', false)
-
-    return(
-        <Container>
-            <PreviewCanvas>
-                <TestFatLine testMutation = {testMutation} />
-            </PreviewCanvas>
-        </Container>
-    )
-}
-export const meshline = () => {
-
-
-    return(
-        <Container>
-            <PreviewCanvas>
-                <TestMeshLine />
-            </PreviewCanvas>
-        </Container>
-    )
-}
-
 
 export const datatex = () => {
 

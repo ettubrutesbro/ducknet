@@ -54,12 +54,11 @@ const Container = styled.div`
   top: 0; bottom: 0; margin: auto 0;
   right: 0;
   padding: 50px 0 50px 0;
-  border: 1px solid red;
+  border-left: 2px solid black;
 `
 
 const Content = styled.div`
   position: relative;
-  border: 1px solid green;
   overflow: hidden;
   padding-left: 50px;
   padding-right: 100px;

@@ -66,10 +66,11 @@ function Camera({
   ...props
 }) {
 
-  const {lineA, lineB, selected} = userStore(store => ({
+  const {lineA, lineB, selected, studying} = userStore(store => ({
     lineA: store.lineA, 
     lineB: store.lineB, 
-    selected: store.selected
+    selected: store.selected,
+    studying: store.studying
   }))
 
   const {cam, setCam, setCameraRef} = useContext(cameraContext)
@@ -126,7 +127,7 @@ function Camera({
       lineMtlRef.current.dashOffset = 0
 
     }
-  }, [selected])
+  }, [selected, studying])
 
 
 
