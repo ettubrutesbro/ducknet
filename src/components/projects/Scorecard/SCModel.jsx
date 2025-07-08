@@ -52,7 +52,7 @@ export default function SCModel({
     //change colors and undulate on the Z-scale. 
     const d = ['dental', 'breastfeeding', 'meals']
     const [vis, changeVis] = useState(0)
-    const [springs, setSprings] = useSprings(12, i => ({
+    const [springs, api] = useSprings(12, i => ({
         scale: [1,1,1],
         color: '#dedede',
         config: { mass: 1, tension: 120, friction: 32 }
@@ -130,12 +130,12 @@ export default function SCModel({
         })
     })
 
-    const [bars, setBars] = useSprings(7, i => ({
+    const [bars, barsApi] = useSprings(7, i => ({
         scale: [1,1,1],
         color: '#dedede',
     }))
 
-    const [blurbAnims, setBlurbs] = useSprings(3, i => ({
+    const [blurbAnims, blurbsApi] = useSprings(3, i => ({
         opacity: 0,
         position: [0,0,0],
         scale: [1,1,0.01],
@@ -146,7 +146,7 @@ export default function SCModel({
 
     useEffect(()=>{
         const currentVis = d[vis]
-        setSprings.start(i => {
+        api.start(i => {
             const cty = ca.scene.children[i].name
                 const cv = pcts[currentVis][cty]
                 return {
@@ -155,13 +155,14 @@ export default function SCModel({
                     color: selected? pcts[currentVis].colorRange(cv || pcts[currentVis].baseZ).hex() 
                         : greyRange(cv || pcts[currentVis].baseZ).hex(),
                     delay: 25 * i,
-                    onRest: () => {if(i===12){
+                    onRest: () => {if(i===11){
                         changeVis(vis < 2? vis+1 : 0)
                     }}
                 }
             
         })
-        setBars.start(i => {
+        barsApi.start(i => {
+            console.log('bar anim])')
             return{
                 // whichBar === 'county'? [((-230-54) * (1-countyBarLengths[vis][3-number])/2),0,0]
                 position: i < 4? [((-230 - 54) * (1-countyBarLengths[vis][3-i])) / 2, 0, 0] 
@@ -170,7 +171,7 @@ export default function SCModel({
                 color: i < 4? countyBarColors[vis][3-i] : raceBarColors[vis][i-4]
             }
         })
-        setBlurbs.start(i => {
+        blurbsApi.start(i => {
             const heightOffset = i === 0? .5 : i===1? 4 : 0
             return{
                 opacity: vis===i? 1 : 0,
