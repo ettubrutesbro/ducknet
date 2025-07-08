@@ -1,7 +1,7 @@
 import React, {Suspense, useEffect, useState, useContext} from 'react'
-import {useLoader} from 'react-three-fiber'
+import {useLoader} from '@react-three/fiber'
 import * as THREE from 'three'
-import {a, useSprings, useSpring, config} from 'react-spring/three'
+import {a, useSprings, useSpring, config} from '@react-spring/three'
 import chroma from 'chroma-js'
 
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader'
@@ -13,6 +13,8 @@ import {randBtwn} from '../../../utils/basicMath'
 
 import {cameraContext, defaults} from '../../core/Camera'
 
+// import resplit from '/scorecard/resplit.gltf?url'
+
 
 export default function SCModel({
     forcePose = null, //for forcing pose from storybook?
@@ -22,7 +24,7 @@ export default function SCModel({
 }){
     //ASSETS
     const dracoLoader = new DRACOLoader()
-    dracoLoader.setDecoderPath('/draco-gltf/')
+    dracoLoader.setDecoderPath('https://www.gstatic.com/draco/v1/decoders/')
     const ca = useLoader(GLTFLoader, '/scorecard/resplit.gltf', loader => {
       loader.setDRACOLoader(dracoLoader)
     })
@@ -50,7 +52,7 @@ export default function SCModel({
     //change colors and undulate on the Z-scale. 
     const d = ['dental', 'breastfeeding', 'meals']
     const [vis, changeVis] = useState(0)
-    const [springs, setSprings] = useSprings(13, i => ({
+    const [springs, setSprings] = useSprings(12, i => ({
         scale: [1,1,1],
         color: '#dedede',
         config: { mass: 1, tension: 120, friction: 32 }
@@ -145,7 +147,7 @@ export default function SCModel({
     useEffect(()=>{
         const currentVis = d[vis]
         setSprings(i => {
-            const cty = ca.__$[i].name
+            const cty = ca.scene.children[i].name
                 const cv = pcts[currentVis][cty]
                 return {
                     scale: [1,1, cv || pcts[currentVis].baseZ], 
@@ -312,7 +314,7 @@ export default function SCModel({
         {scale: [1,1,0.2], position: [0,0,850], opacity: -0.5}, 
         {scale: [1,1,1], position: [0,0,0], opacity: 1, delay: 600, config: config.slow}
     ], pose === 3? 1 : 0)
-
+    console.log(springs)
 
     return(
         <a.group 
@@ -387,9 +389,9 @@ export default function SCModel({
 
             })}
             </group>
-
             {springs.map(({scale,color}, i)=>{
-                const county = ca.__$[i]
+                const county = ca.scene.children[i]
+                console.log(county.name)
                 return(
                     <a.mesh 
                         key = {county.name}
@@ -412,7 +414,7 @@ export default function SCModel({
                 rotation = {[toRads(-90),0,0]}
                 scale = {pseudo.scale}
             >
-                {pseudoui.__$.filter(c =>!c.name.includes('Box')).map(child => {
+                {pseudoui.scene.children.filter(c =>!c.name.includes('Box')).map(child => {
                     return <mesh key = {child.name} >
                         <bufferGeometry attach = 'geometry' {...child.geometry} />
                         <a.meshBasicMaterial 
@@ -424,7 +426,7 @@ export default function SCModel({
                         />
                     </mesh>
                 })}
-                {pseudoui.__$.filter(c =>c.name.includes('Box')).map((child, i) => {
+                {pseudoui.scene.children.filter(c =>c.name.includes('Box')).map((child, i) => {
                     const number = Number(child.name.replace('Box',''))-1
                     const whichBar = number > 3? 'race' : 'county'
 
@@ -465,7 +467,7 @@ export default function SCModel({
                         return <mesh name = {'swatch'+i} key = {'swatch'+i}
                             position = {[395, -350 + ((i*22) + (i*11)), 369]}
                         >
-                            <planeBufferGeometry attach = 'geometry' args = {[15,22]} />
+                            <planeGeometry attach = 'geometry' args = {[15,22]} />
                             <a.meshBasicMaterial attach = 'material'
                                 color = {selected? pcts[d[vis]].colorRange((i+1)*0.6).hex()
                                     : greyRange((i+1)*0.5).hex()
@@ -475,7 +477,7 @@ export default function SCModel({
                     })}
                 </a.group>
 
-                {phonebldg.__$.filter(c => c.name === 'hand').map(child => {
+                {phonebldg.scene.children.filter(c => c.name === 'hand').map(child => {
                     return <a.mesh name = 'hand' key = 'hand'
                         position = {hand.position}
                     >
@@ -488,7 +490,7 @@ export default function SCModel({
                         />
                     </a.mesh>
                 })}
-                {phonebldg.__$.filter(c => c.name === 'WOBhand').map(child => {
+                {phonebldg.scene.children.filter(c => c.name === 'WOBhand').map(child => {
                     return <a.mesh name = 'wobhand' key = 'wobhand'
                         position = {wobhand.position}
                             onClick = {()=> console.log('clicked a wob')}
@@ -508,7 +510,7 @@ export default function SCModel({
                         intensity = {lightFromPhone.intensity} 
                     />
                     <mesh visible = {false}>
-                        <boxBufferGeometry attach = 'geometry' args = {[100,100,100]} />
+                        <boxGeometry attach = 'geometry' args = {[100,100,100]} />
                         <meshNormalMaterial attach = 'material' />
                     </mesh>
                 </group>
@@ -517,7 +519,7 @@ export default function SCModel({
                     rotation = {[0, toRads(-13), 0]}
                     position = {[100, 0, 80]}
                 >
-                    {phonebldg.__$.filter(c => c.name === 'bldg').map(child => {
+                    {phonebldg.scene.children.filter(c => c.name === 'bldg').map(child => {
                         return <a.mesh name = 'bldg' key = 'bldg'
                             position = {bldg.position}
                         >
@@ -531,7 +533,7 @@ export default function SCModel({
                             />
                         </a.mesh>
                     })}
-                    {phonebldg.__$.filter(c => c.name === 'bldgshadow').map(child => {
+                    {phonebldg.scene.children.filter(c => c.name === 'bldgshadow').map(child => {
                         return <a.mesh name = 'bldgshadow' key = 'bldgshadow'
                             scale = {bldgshadow.scale}
                             position = {bldgshadow.position}
@@ -546,7 +548,7 @@ export default function SCModel({
                         </a.mesh>
                     })}
 
-                    {phonebldg.__$.filter(c => c.name === 'WOBbldg').map(child => {
+                    {phonebldg.scene.children.filter(c => c.name === 'WOBbldg').map(child => {
                         return <mesh name = 'wobbldg' key = 'wobbldg'
                             onClick = {()=> console.log('clicked a wob')}
                             
@@ -572,12 +574,12 @@ export default function SCModel({
 
 const useSpringEffect = (keys, currentKey, withStop) =>{
 
-    const [key, setKey, stop] = useSpring(() => keys[currentKey])
+    const [key, api] = useSpring(() => keys[currentKey])
 
     useEffect(()=>{
-        stop()
-        setKey(keys[currentKey])
+        api.stop()
+        api.start(keys[currentKey])
     }, [currentKey])
 
-    return withStop? {anim: key, stop: stop} :  key
+    return withStop? {anim: key, stop: api.stop} :  key
 }

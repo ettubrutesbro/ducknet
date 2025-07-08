@@ -11,7 +11,7 @@ this could be the foundation for a slight refactor of how context / camera are h
 */
 
 import React from 'react'
-import { Canvas } from 'react-three-fiber'
+import { Canvas } from '@react-three/fiber'
 import Camera, {CameraProvider} from './core/Camera'
 
 

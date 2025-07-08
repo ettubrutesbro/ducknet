@@ -1,5 +1,5 @@
 import React, {useState, useEffect, useContext, useRef} from 'react'
-import {useFrame} from 'react-three-fiber'
+import {useFrame} from '@react-three/fiber'
 import * as CANNON from 'cannon'
 import TWEEN from '@tweenjs/tween.js'
 

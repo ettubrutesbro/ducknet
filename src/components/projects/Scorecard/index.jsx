@@ -1,7 +1,7 @@
 import React, {Suspense, useEffect, useState, useContext, useRef} from 'react'
 // import * as THREE from 'three'
 
-import {Dom} from 'react-three-fiber'
+// import {Dom} from 'react-three-fiber'
 
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader'
 import { OBJLoader } from 'three/examples/jsm/loaders/OBJLoader'

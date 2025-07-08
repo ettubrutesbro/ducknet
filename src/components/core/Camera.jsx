@@ -1,8 +1,8 @@
 import React, {useRef, useEffect, useState, useContext} from 'react'
-import {useThree, useFrame, extend} from 'react-three-fiber'
+import {useThree, useFrame, extend} from '@react-three/fiber'
 import {OrbitControls} from 'three/examples/jsm/controls/OrbitControls'
 
-import {a, useSpring} from 'react-spring/three'
+import {a, useSpring} from '@react-spring/three'
 import {toRads} from '../../utils/3d'
 
 import ReactDOM from 'react-dom'
@@ -33,14 +33,11 @@ function Camera({
   ...props
 }) {
 
-  //set camera as default
+  //set camera as default?
   const ref = useRef()
-  const { setDefaultCamera } = useThree()
-  useEffect(() => {
-    void setDefaultCamera(ref.current)
-  }, [useThis])
 
-  
+  const set = useThree((state) => state.set)
+  useEffect(()=> void set({camera: ref.current}), [])
 
   const {cam, setCam} = useContext(cameraContext)
 
@@ -52,12 +49,13 @@ function Camera({
 
   useEffect(()=>{
     console.log('moving camera')
-    stop()
+    // stop()
     if(!cam) setSpring(defaults)
     else setSpring(cam)
   }, [cam])
 
   useFrame(() => {
+    ref.current.updateMatrixWorld()
     ref.current.updateProjectionMatrix()
   })
 

@@ -1,10 +1,9 @@
 import React, {useState, useEffect, useContext, useRef, Suspense} from 'react';
 import './App.css';
-import { Canvas, useFrame, useRender, useLoader } from 'react-three-fiber'
+import { Canvas, useFrame, useLoader } from '@react-three/fiber'
 import styled from 'styled-components'
 
-import create from 'zustand'
-import shallow from 'zustand/shallow'
+import { create } from 'zustand'
 
 import * as CANNON from 'cannon'
 
@@ -22,30 +21,27 @@ import Projects from './components/core/Projects'
  
 import {toRads, toDegs} from './utils/3d'
 
-export const [userStore] = create(set => ({
-  selected: null, select: v => set({selected: v}),
-  studying: null, study: v => set({studying: v}),
+export const userStore = create((set) => ({
+  selected: null,
+  studying: null,
+  select: (v) => set({ selected: v }),
+  study: (v) => set({ studying: v }),
 })) 
 
 function App() {
 
-  const {select, selected, study, studying} = userStore(store => ({
-    select: store.select,
-    selected: store.selected,
-    study: store.study,
-    studying: store.studying
-  }), shallow)
+  const { select, selected, study, studying } = userStore()
 
   return (
     <div className = 'full'>
 
       <Canvas 
-        invalidateFrameloop = {false}
-        onPointerMissed = {()=> {
+        // frameloop="demand"
+        onPointerMissed={() => {
           select(null)
           study(null)
         }}
-        props = {{antialias: false}}
+        gl={{ antialias: false }}
       >
         <PhysicsProvider>
             <CameraProvider>

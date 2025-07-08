@@ -1,6 +1,6 @@
 import React, {Suspense, useEffect, useState} from 'react'
 import * as THREE from 'three'
-import {useLoader} from 'react-three-fiber'
+import {useLoader} from '@react-three/fiber'
 import {Body} from '../core/Body'
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader'
 import { DRACOLoader } from 'three/examples/jsm/loaders/DRACOLoader'
@@ -17,7 +17,7 @@ export function Eclipse({
 }){
     const dragon = useLoader(GLTFLoader, '/eclipse/eclipse.gltf', loader => {
     const dracoLoader = new DRACOLoader()
-        dracoLoader.setDecoderPath('/draco-gltf/')
+        dracoLoader.setDecoderPath('https://www.gstatic.com/draco/v1/decoders/')
         loader.setDRACOLoader(dracoLoader)
       })
      const texture = useLoader(THREE.TextureLoader, '/eclipse/mc35Blur03.jpg' )
@@ -27,6 +27,8 @@ export function Eclipse({
         fov: 35,
     })
     const [forced, forceTo] = useState(null)
+
+    console.log(dragon.scene.children[0].geometry)
 
     useEffect(()=>{
         if(selected){
@@ -56,7 +58,7 @@ export function Eclipse({
     >
         
         <mesh scale = {[.2,.2,.2]} position = {[0,0.7,0]} rotation = {[0,toRads(90),0]} onClick = {onClick}>
-            <bufferGeometry attach = 'geometry' {...dragon.__$[1].geometry} />
+            <bufferGeometry attach = 'geometry' {...dragon.scene.children[0].geometry} />
             
             <meshMatcapMaterial attach = 'material' matcap = {texture} />
         </mesh>

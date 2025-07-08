@@ -22,7 +22,7 @@ export function Wall({
 
   return (
     <mesh ref = {phys.ref}>
-      <boxBufferGeometry attach = 'geometry' args = {size} />
+      <boxGeometry attach = 'geometry' args = {size} />
       <meshNormalMaterial attach = 'material' transparent opacity = {0.25} visible={visible} />
     </mesh>
   )
