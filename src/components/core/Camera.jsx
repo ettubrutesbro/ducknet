@@ -41,7 +41,7 @@ function Camera({
 
   const {cam, setCam} = useContext(cameraContext)
 
-  const [springTo, setSpring, stop] = useSpring(()=>({
+  const [springTo, api] = useSpring(()=>({
     position: defaults.position,
     rotation: defaults.rotation,
     fov: defaults.fov,
@@ -49,9 +49,9 @@ function Camera({
 
   useEffect(()=>{
     console.log('moving camera')
-    // stop()
-    if(!cam) setSpring(defaults)
-    else setSpring(cam)
+    api.stop()
+    if(!cam) api.start(defaults)
+    else api.start(cam)
   }, [cam])
 
   useFrame(() => {

@@ -146,7 +146,7 @@ export default function SCModel({
 
     useEffect(()=>{
         const currentVis = d[vis]
-        setSprings(i => {
+        setSprings.start(i => {
             const cty = ca.scene.children[i].name
                 const cv = pcts[currentVis][cty]
                 return {
@@ -161,7 +161,7 @@ export default function SCModel({
                 }
             
         })
-        setBars(i => {
+        setBars.start(i => {
             return{
                 // whichBar === 'county'? [((-230-54) * (1-countyBarLengths[vis][3-number])/2),0,0]
                 position: i < 4? [((-230 - 54) * (1-countyBarLengths[vis][3-i])) / 2, 0, 0] 
@@ -170,7 +170,7 @@ export default function SCModel({
                 color: i < 4? countyBarColors[vis][3-i] : raceBarColors[vis][i-4]
             }
         })
-        setBlurbs(i => {
+        setBlurbs.start(i => {
             const heightOffset = i === 0? .5 : i===1? 4 : 0
             return{
                 opacity: vis===i? 1 : 0,
