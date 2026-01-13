@@ -162,7 +162,6 @@ export default function SCModel({
             
         })
         barsApi.start(i => {
-            console.log('bar anim])')
             return{
                 // whichBar === 'county'? [((-230-54) * (1-countyBarLengths[vis][3-number])/2),0,0]
                 position: i < 4? [((-230 - 54) * (1-countyBarLengths[vis][3-i])) / 2, 0, 0] 
@@ -208,7 +207,7 @@ export default function SCModel({
         }
     }, [selected])
 
-        useEffect(()=>{
+    useEffect(()=>{
         setPose(forcePose) 
     }, [forcePose])
 
@@ -216,9 +215,11 @@ export default function SCModel({
 
     useEffect(()=>{ //when POSE changes, set cosmetic rotation group & camera accordingly
         if(pose || pose === 0){
+            console.log('setting pose', pose, 'cam to', camposes[pose])
             setCam(camposes[pose])
         }
         else{
+            console.log('no pose, setting cam to null')
             setCam(null)
         }
     }, [pose])
@@ -315,7 +316,6 @@ export default function SCModel({
         {scale: [1,1,0.2], position: [0,0,850], opacity: -0.5}, 
         {scale: [1,1,1], position: [0,0,0], opacity: 1, delay: 600, config: config.slow}
     ], pose === 3? 1 : 0)
-    console.log(springs)
 
     return(
         <a.group 
@@ -392,7 +392,6 @@ export default function SCModel({
             </group>
             {springs.map(({scale,color}, i)=>{
                 const county = ca.scene.children[i]
-                console.log(county.name)
                 return(
                     <a.mesh 
                         key = {county.name}
@@ -582,5 +581,8 @@ const useSpringEffect = (keys, currentKey, withStop) =>{
         api.start(keys[currentKey])
     }, [currentKey])
 
-    return withStop? {anim: key, stop: api.stop} :  key
+    return withStop? {
+        anim: key, 
+        stop: () => api.stop()
+    } :  key
 }

@@ -520,75 +520,58 @@
 	"buffers":
 	[
 		{
+			"contents": "import React, {useState, useEffect, useContext, useRef, Suspense} from 'react';\nimport './App.css';\nimport { Canvas, useFrame, useRender, useLoader } from 'react-three-fiber'\nimport styled from 'styled-components'\n\nimport create from 'zustand'\nimport shallow from 'zustand/shallow'\n\nimport * as CANNON from 'cannon'\n\nimport {PhysicsProvider, usePhysics} from './components/core/Physics'\nimport {Body} from './components/core/Body'\nimport {Enclosure} from './components/core/Wall'\n\nimport Seseme from './components/projects/seseme'\nimport Eclipse from './components/projects/Eclipse'\nimport Scorecard, {SCBlurb, SCPage} from './components/projects/Scorecard/'\n\nimport {CameraProvider} from './components/core/Camera'\n\nimport Projects from './components/core/Projects'\n \nimport {toRads, toDegs} from './utils/3d'\n\nexport const [userStore] = create(set => ({\n  selected: null, select: v => set({selected: v}),\n  studying: null, study: v => set({studying: v}),\n})) \n\nfunction App() {\n\n  const {select, selected, study, studying} = userStore(store => ({\n    select: store.select,\n    selected: store.selected,\n    study: store.study,\n    studying: store.studying\n  }), shallow)\n\n  return (\n    <div className = 'full'>\n\n      <Canvas \n        invalidateFrameloop = {false}\n        onPointerMissed = {()=> {\n          select(null)\n          study(null)\n        }}\n        props = {{antialias: false}}\n      >\n        <PhysicsProvider>\n            <CameraProvider>\n            <Enclosure\n              active = {!selected} \n            /> \n            <Projects>\n              <Scorecard\n                name = 'scorecard'\n                key = 'scorecard'\n                position = {[-1,35,0]}\n                rotation = {[0,10,0]}\n              />\n            \n              <Seseme \n                name = 'seseme'\n                key = 'seseme'\n                position = {[-1.5,18,0]} \n                rotation = {[0,35,0]} \n              /> \n            \n              <Eclipse \n                name = 'eclipse'\n                key = 'eclipse'\n                position = {[2,5,0]} \n                rotation = {[0,0,0]}\n              /> \n            \n            </Projects>\n            </CameraProvider>\n            \n\n        </PhysicsProvider>\n\n      </Canvas>\n      {selected && !studying && \n        <InfoBlurb>\n          {!studying && selected === 'scorecard' && <SCBlurb />}\n        </InfoBlurb>\n      }\n      {studying &&\n      <InfoPage>\n        {studying === 'scorecard' && <SCPage />}\n      </InfoPage>\n      }\n\n    </div>\n  );\n}\n\n\nconst InfoBlurb = styled.div`\n  position: absolute;\n  border: 1px solid red;\n  width: 50%;\n  height: 500px;\n  top: 0; bottom: 0; margin: auto 0;\n  right: 0;\n`\n\nconst InfoPage = styled.div`\n// display: none;\n  border-left: 2px solid black;\n  padding-left: 30px;\n  // background: white;\n  width: 66%; \n  height: 100%; \n  position: absolute;\n  top: 0; right: 0;\n`\n\n\nexport default App;\n",
 			"file": "src/App.js",
+			"file_size": 2924,
+			"file_write_time": 133962346319328033,
 			"settings":
 			{
-				"buffer_size": 3952,
-				"encoding": "UTF-8",
-				"line_ending": "Windows"
-			}
-		},
-		{
-			"contents": "import React, {useState, useEffect, Suspense} from 'react'\nimport * as CANNON from 'cannon'\n// import {animated, useSpring} from 'react-spring'\nimport TWEEN from '@tweenjs/tween.js'\n\nimport {usePhysics} from './Physics'\nimport {toRads } from '../../utils/3d'\n\nconsole.log(TWEEN)\n\n//box only, subsequent bodies will use parameters to construct compound bodies / other shapes\n\n\nexport const LoadingProject = (props) => {\n  useEffect(()=>{\n    return () => {\n      //insert some callback to let app know one model is done\n      console.log(`${props.name} loaded`)\n    }\n  })\n  return <mesh> </mesh>\n}",
-			"file": "src/components/core/Body.js",
-			"file_size": 5689,
-			"file_write_time": 132222103974052652,
-			"settings":
-			{
-				"buffer_size": 597,
-				"line_ending": "Windows"
-			}
-		},
-		{
-			"file": "src/components/core/Camera.js",
-			"settings":
-			{
-				"buffer_size": 2273,
-				"encoding": "UTF-8",
-				"line_ending": "Windows"
-			}
-		},
-		{
-			"file": "src/components/core/Wall.js",
-			"settings":
-			{
-				"buffer_size": 2411,
-				"encoding": "UTF-8",
-				"line_ending": "Windows"
-			}
-		},
-		{
-			"file": "src/components/projects/seseme.js",
-			"settings":
-			{
-				"buffer_size": 3697,
-				"encoding": "UTF-8",
+				"buffer_size": 2924,
 				"line_ending": "Unix"
 			}
 		},
 		{
-			"file": "public/scorecard/state.gltf",
+			"contents": "import React, {useRef, useEffect, useState, useContext} from 'react'\nimport {useThree, useFrame, extend} from 'react-three-fiber'\nimport {OrbitControls} from 'three/examples/jsm/controls/OrbitControls'\n\nimport {a, useSpring} from 'react-spring/three'\nimport {toRads} from '../../utils/3d'\n\nimport ReactDOM from 'react-dom'\n\nexport const cameraContext = React.createContext()\nexport function CameraProvider({debugCamera, children}){\n  const [cam, setCam] = useState(null)\n  useEffect(()=>{\n    //if prop debugCamera is provided, use it to override (without spring) camera attributes\n    if(debugCamera) setCam(debugCamera)\n  }, [debugCamera])\n  return <cameraContext.Provider value = {{cam: cam, setCam: setCam}}>\n    <Camera /> {children}\n  </cameraContext.Provider>\n}\n\nexport const defaults = {\n    position: [0, 0, 45],\n    rotation: [0, 0, 0],\n    fov: 25,\n    //maybe set a really gentle config so the transitions from selection > default\n    //aren't as jarring...\n}\n\nfunction Camera({\n  // projectCamera, \n  useThis = true,\n  ...props\n}) {\n\n  //set camera as default\n  const ref = useRef()\n  const { setDefaultCamera } = useThree()\n  useEffect(() => {\n    void setDefaultCamera(ref.current)\n  }, [useThis])\n\n  \n\n  const {cam, setCam} = useContext(cameraContext)\n\n  const [springTo, setSpring, stop] = useSpring(()=>({\n    position: defaults.position,\n    rotation: defaults.rotation,\n    fov: defaults.fov,\n  }))\n\n  useEffect(()=>{\n    console.log('moving camera')\n    stop()\n    if(!cam) setSpring(defaults)\n    else setSpring(cam)\n  }, [cam])\n\n  useFrame(() => {\n    ref.current.updateProjectionMatrix()\n  })\n\n  return <React.Fragment> \n    <a.perspectiveCamera \n      ref={ref} \n      position = {springTo.position}\n      rotation = {springTo.rotation}\n      fov = {springTo.fov}\n    />\n  </React.Fragment>\n}\n\nexport default Camera\n\n\n//orbit controls for debug only\nextend({OrbitControls})\nconst Controls = props => {\n  const { gl, camera } = useThree()\n  const ref = useRef()\n  useFrame(()=> {\n    ref.current.update()\n  })\n  return <orbitControls ref = {ref} args = {[camera, gl.domElement]} {...props} />\n} \n",
+			"file": "src/components/core/Camera.js",
+			"file_size": 2120,
+			"file_write_time": 133962346319333715,
 			"settings":
 			{
-				"buffer_size": 21923,
-				"line_ending": "Windows"
+				"buffer_size": 2120,
+				"line_ending": "Unix"
 			}
 		},
 		{
-			"file": "src/components/projects/Scorecard.js",
+			"contents": "import React, {Suspense, useEffect, useState} from 'react'\nimport {usePhysics} from './Physics'\nimport * as CANNON from 'cannon'\nimport {toRads} from '../../utils/3d'\n\nexport function Wall({\n  name = 'some wall?', \n  position=[0,0,0], \n  rotation=[0,0,0], \n  size, \n  visible=true\n}) {\n  const phys = usePhysics({mass: 0}, body => {\n    console.log('wall')\n    body.addShape(new CANNON.Box(new CANNON.Vec3(...size.map((s)=>s/2)))) //size is only going to be visual until you add it here\n    body.position.set(...position)\n    body.quaternion.setFromEuler(...rotation.map((r)=>toRads(r)),'XYZ')\n    body.name = name\n    body.onSleep = () => {}\n\n  }, [...size])\n\n  return (\n    <mesh ref = {phys.ref}>\n      <boxBufferGeometry attach = 'geometry' args = {size} />\n      <meshNormalMaterial attach = 'material' transparent opacity = {0.25} visible={visible} />\n    </mesh>\n  )\n}\n\nexport function Enclosure({active}){\n  const [cage, modCage] = useState({\n    left: true, right: true, ground: true, back: true, front: true,\n    // showLeft: true, showRight: true, showGround: true, showBack: true, showFront: false,\n    showLeft: false, showRight: false, showGround: false, showBack: false, showFront: false,\n    width: 19, height: 12, depth: 6, //TODO: vary these attributes depending on screensize\n  }) \n\n  return(\n    <group>\n    {cage.ground && active && \n      <Wall name = 'ground' position = {[0, (-cage.height/2)-.5, 0]} rotation = {[-90, 0, 0]} size = {[cage.width,cage.depth,1]} visible = {cage.showGround}/>\n    }\n    {cage.left && active &&\n      <Wall name = 'L' position = {[(cage.width/2)+.5, 0, 0]} rotation = {[0, -90, 0]} size = {[cage.depth,cage.height,1]} visible = {cage.showLeft}/>\n    }\n    {cage.right && active &&\n      <Wall name = 'R' position = {[(-cage.width/2)-.5, 0, 0]} rotation = {[0, 90, 0]} size = {[cage.depth,cage.height,1]} visible = {cage.showRight}/>\n    }\n    {cage.back && active &&\n      <Wall name = 'B' position = {[0, 0, (-cage.depth/2)-.5]} rotation = {[0, 0, 0]} size = {[cage.width,cage.height,1]} visible={cage.showBack} />\n    }\n    {cage.front && active &&\n      <Wall name = 'F' position = {[0, 0, (cage.depth/2)+.5]} rotation = {[0, 0, 0]} size = {[cage.width,cage.height,1]} visible={cage.showFront} />\n    }\n      \n    </group>\n  )\n}",
+			"file": "src/components/core/Wall.js",
+			"file_size": 2284,
+			"file_write_time": 133962346319335535,
 			"settings":
 			{
-				"buffer_size": 3286,
-				"encoding": "UTF-8",
-				"line_ending": "Windows"
+				"buffer_size": 2284,
+				"line_ending": "Unix"
 			}
 		},
 		{
+			"contents": "import * as THREE from 'three'\nimport React, { useState, useEffect, useRef, Suspense } from 'react'\nimport { useLoader, useFrame } from 'react-three-fiber'\nimport { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader'\nimport { DRACOLoader } from 'three/examples/jsm/loaders/DRACOLoader'\n\nimport {Body} from '../core/Body'\nimport {toRads} from '../../utils/3d'\n  \nexport function Seseme({\n  onClick = () => console.log('clicked seseme'), \n  selected, \n  onSelect, //enables project component to send camera changes up\n  debug = true,\n  ...props\n}) {\n\n  const ref = useRef()\n  const [projectCamera, changeView] = useState({\n    position: [32, 21, 35],\n    rotation: [toRads(-26), toRads(35), toRads(14)],\n    fov: 35,\n  })\n  const [forced, forceTo] = useState(null)\n\n\n  const pedestal = useLoader(GLTFLoader, '/seseme/pedestal.gltf', loader => {\n    const dracoLoader = new DRACOLoader()\n    dracoLoader.setDecoderPath('/draco-gltf/')\n    loader.setDRACOLoader(dracoLoader)\n  })\n  const pillar = useLoader(GLTFLoader, '/seseme/pillar.gltf', loader => {\n    const dracoLoader = new DRACOLoader()\n    dracoLoader.setDecoderPath('/draco-gltf/')\n    loader.setDRACOLoader(dracoLoader)\n  })\n\n  // const group = useRef()\n\n  const [plrHts, modPlrHt] = useState({\n    a: 9.5, b: -1.5, c: -9.5, d:-15\n                                                  })\n\n\n  useEffect(()=>{\n      // console.log(ref.current.position)\n      if(selected){\n          console.log('picked seseme')\n          forceTo({\n              position: [0,5,0],\n              rotation: [0,45,0]\n          })\n          onSelect(projectCamera)\n      }\n      else{\n          // console.log('unpicked seseme')\n          forceTo(null)\n          onSelect(null)\n      }\n  }, [selected])\n\n  \n\n\n  return (\n    <Body \n      name = 'seseme'\n      shapes = {['box','box']}\n      shapeParams = {[\n        {size: [2.4, 3.6, 2.4], offset: [0,0,0]},\n        {size: [1.7, 3.1, 1.7], offset: [0,3,0]}\n      ]} \n      forced = {forced}\n      {...props}\n      visible  = {true}\n    >\n      <group name = 'seseme' position = {[0.3,1.8,0.2]} scale = {[.1,.1,.1]}>\n        <group name = 'main' onClick = {onClick}>\n        <mesh name=\"pedestal\">\n          <bufferGeometry attach=\"geometry\" {...pedestal.__$[1].geometry} />\n          <meshLambertMaterial attach = 'material' />\n        </mesh>\n        <mesh name = \"pillar\" position = {[1,plrHts.a,2.1]}>\n          <bufferGeometry attach = 'geometry' {...pillar.__$[1].geometry} />\n          <meshLambertMaterial attach = 'material' />\n        </mesh>\n       \n        <mesh name = \"pillar2\" position = {[1,plrHts.b,-6.25]} rotation = {[0,toRads(90),0]} >\n          <bufferGeometry attach = 'geometry' {...pillar.__$[1].geometry} />\n          <meshLambertMaterial attach = 'material' />\n        </mesh>\n        \n        <mesh name = \"pillar3\" position = {[-7.1,plrHts.c,-6.25]} rotation = {[0,toRads(180),0]} >\n          <bufferGeometry attach = 'geometry' {...pillar.__$[1].geometry} />\n          <meshLambertMaterial attach = 'material' />\n        </mesh>\n        \n        <mesh name = \"pillar4\" position = {[-7.1,plrHts.d,2.1]} rotation = {[0,toRads(-90),0]} >\n          <bufferGeometry attach = 'geometry' {...pillar.__$[1].geometry} />\n          <meshLambertMaterial attach = 'material' />\n        </mesh>\n        </group>\n      </group>\n    </Body>\n  )\n}\n\nfunction Material(){\n  return(\n    <meshNormalMaterial \n      attach = 'material' \n      color = {0x4f473d}\n      specular = {0x84836e}\n      emissive = {0x11141c}\n      shininess = {12}\n    />\n  )\n}\n\n\n// this might get cumbersome but it's what i have rn\nexport default function SesemeWrapped(props){\n  return <Suspense fallback = {<React.Fragment />}><Seseme {...props} /></Suspense>\n}",
+			"file": "src/components/projects/seseme.js",
+			"file_size": 3734,
+			"file_write_time": 133962346319342359,
+			"settings":
+			{
+				"buffer_size": 3734,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"contents": "import React, {useState, useEffect, useContext, useRef} from 'react'\nimport {useFrame} from 'react-three-fiber'\nimport * as CANNON from 'cannon'\nimport TWEEN from '@tweenjs/tween.js'\n\nimport {userStore} from '../../App'\n\nexport const physicsContext = React.createContext()\nexport function PhysicsProvider({children}){\n  const [world] = useState(()=> new CANNON.World())\n  const [abyss, admitToAbyss] = useState([])\n\n  useEffect(() => {\n    console.log('WORLD:')\n    console.log(world)\n    world.broadphase = new CANNON.NaiveBroadphase()\n    world.allowSleep = true\n    world.solver.iterations = 10\n    world.gravity.set(0,-20, 0)\n  }, [world])\n  //world stepper every frame\n  useFrame(()=> {\n    world.step(1/60)\n    TWEEN.update() //kinda dangerous: this is not physics, though tween probably will only deal with it...\n\n  })\n  window.world = world\n\n  //world is provided as context for all components\n  return <physicsContext.Provider value = {{world: world, abyss: abyss, admitToAbyss: admitToAbyss}} children = {children} />\n}\n\n//cannon hook for tracking/updating a physics obj\n//usePhysics(cannon properties, a function to call on the body created herein, deps????)\nexport function usePhysics({ ...props}, fn, deps = [], name){\n\n  let isSleep\n  const ref = useRef()\n\n  //use provided context: will get value (world info) from nearest parent cannonProvider\n  const selected = userStore(store => store.selected)\n  const {world, abyss, admitToAbyss} = useContext(physicsContext) //not known: do i need to have a const context = React.createContext() every time i make a component that uses context...???\n\n  //instantiate body for whoever is using usePhysics\n  const [body] = useState(()=> new CANNON.Body(props))\n  useEffect(()=>{\n    if(body.mass > 0){ \n      console.log(name, 'ADDED')\n    }\n    fn(body)\n    world.addBody(body)\n    ref.current.firstRun = true\n    return () => world.removeBody(body)\n  }, deps)\n  \n  useFrame(()=>{    \n    if(ref.current){ \n        if(body.position.y< -20 && !abyss.includes(name)){\n          console.log('admitting', name, 'to abyss')\n          admitToAbyss([...abyss, name])\n          if(!selected){\n            // console.log('rapid undo: reinserting object')\n            admitToAbyss([])\n          }\n          return\n        }\n\n        if(body.sleepState===2){\n          if(!isSleep){\n            body.onSleep()\n            isSleep = true\n          }\n          return\n        }else{\n          if(isSleep && body.sleepState!==2){\n            body.onWake()\n          }\n        }\n        //referenced threejs object position set to match corresponding cannon phys object\n        ref.current.position.copy(body.position)\n        ref.current.quaternion.copy(body.quaternion)\n\n        if(ref.current.firstRun){\n          /*\n          this prevents a Flash of Unpositioned Model, \n          as three renders one frame of a just-mounted model \n          before the position syncs with the physics body\n          unfortunately it also runs for static bodies right now - \n          some kind of booleans could be used, but even dynamic bodies \n          toggle between dynamic / static depending on selection state etc. \n          */\n          console.log('first run', body.name)\n          ref.current.visible = true\n          ref.current.firstRun = false\n        }\n\n        // console.log(body.name, ref.current.visible)\n    }\n  })\n\n  return {ref: ref, body: body}\n}\n",
 			"file": "src/components/core/Physics.js",
+			"file_size": 3399,
+			"file_write_time": 133962346319334230,
 			"settings":
 			{
-				"buffer_size": 2895,
-				"line_ending": "Windows"
+				"buffer_size": 3399,
+				"line_ending": "Unix"
 			}
 		}
 	],
@@ -604,8 +587,16 @@
 		"selected_items":
 		[
 			[
-				"package",
+				"theme",
+				"UI: Select Theme"
+			],
+			[
+				"install pack",
 				"Package Control: Install Package"
+			],
+			[
+				"package",
+				"Install Package Control"
 			],
 			[
 				"prett",
@@ -640,14 +631,13 @@
 	},
 	"expanded_folders":
 	[
-		"/C/Users/jalk/ducknet",
-		"/C/Users/jalk/ducknet/public",
-		"/C/Users/jalk/ducknet/src",
-		"/C/Users/jalk/ducknet/src/stories",
-		"/C/Users/jalk/ducknet/src/utils"
+		"/Users/duck/ducknet"
 	],
 	"file_history":
 	[
+		"/Users/duck/ducknet/src/components/core/Body.js",
+		"/Users/duck/ducknet/public/scorecard/state.gltf",
+		"/Users/duck/ducknet/src/components/projects/Scorecard.js",
 		"/C/Users/jalk/ducknet/.gitignore",
 		"/C/Users/jalk/ducknet/src/components/projects/Eclipse.js",
 		"/C/Users/jalk/ducknet/src/components/projects/seseme.js",
@@ -772,14 +762,11 @@
 		"/C/Users/Duck/scorecard/src/data/indicators/suspension.json",
 		"/C/Users/Duck/scorecard/src/components/Legend.jsx",
 		"/C/Users/Duck/scorecard/src/utilities/trungCombo.js",
-		"/C/Users/Duck/scorecard/stories/workflows.stories.js",
-		"/C/Users/Duck/scorecard/stories/breakdowns.stories.js",
-		"/C/Users/Duck/scorecard/src/data/demographicsAndPopulation.json",
-		"/C/Users/Duck/scorecard/node_modules/axobject-query/lib/etc/objects/AlertDialogRole.js"
+		"/C/Users/Duck/scorecard/stories/workflows.stories.js"
 	],
 	"find":
 	{
-		"height": 27.0
+		"height": 24.0
 	},
 	"find_in_files":
 	{
@@ -935,15 +922,16 @@
 			""
 		],
 		"reverse": false,
+		"scrollbar_highlights": true,
 		"show_context": true,
 		"use_buffer2": true,
+		"use_gitignore": true,
 		"whole_word": false,
 		"wrap": true
 	},
 	"groups":
 	[
 		{
-			"selected": 1,
 			"sheets":
 			[
 				{
@@ -952,50 +940,83 @@
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 3952,
+						"buffer_size": 2924,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								1392,
-								1392
+								1872,
+								1872
 							]
 						],
 						"settings":
 						{
-							"syntax": "Packages/Babel/JavaScript (Babel).sublime-syntax",
+							"syntax": "Packages/JavaScript/JSX.sublime-syntax",
 							"tab_size": 2,
 							"translate_tabs_to_spaces": true
 						},
 						"translation.x": 0.0,
-						"translation.y": 810.0,
+						"translation.y": 500.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 3,
+					"stack_index": 2,
+					"stack_multiselect": false,
 					"type": "text"
 				},
 				{
 					"buffer": 1,
-					"file": "src/components/core/Body.js",
+					"file": "src/components/core/Camera.js",
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 597,
+						"buffer_size": 2120,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								374,
-								374
+								0,
+								0
 							]
 						],
 						"settings":
 						{
-							"syntax": "Packages/Babel/JavaScript (Babel).sublime-syntax",
+							"syntax": "Packages/JavaScript/JSX.sublime-syntax",
+							"tab_size": 2,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 1,
+					"stack_multiselect": false,
+					"type": "text"
+				},
+				{
+					"buffer": 2,
+					"file": "src/components/core/Wall.js",
+					"selected": true,
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 2284,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								2284,
+								2284
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/JavaScript/JavaScript.sublime-syntax",
 							"tab_size": 2,
 							"translate_tabs_to_spaces": true
 						},
@@ -1004,199 +1025,84 @@
 						"zoom_level": 1.0
 					},
 					"stack_index": 0,
-					"type": "text"
-				},
-				{
-					"buffer": 2,
-					"file": "src/components/core/Camera.js",
-					"semi_transient": false,
-					"settings":
-					{
-						"buffer_size": 2273,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								1308,
-								1308
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/Babel/JavaScript (Babel).sublime-syntax",
-							"tab_size": 2,
-							"translate_tabs_to_spaces": true
-						},
-						"translation.x": 0.0,
-						"translation.y": 0.0,
-						"zoom_level": 1.0
-					},
-					"stack_index": 4,
-					"type": "text"
-				},
-				{
-					"buffer": 3,
-					"file": "src/components/core/Wall.js",
-					"semi_transient": false,
-					"settings":
-					{
-						"buffer_size": 2411,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								332,
-								332
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/Babel/JavaScript (Babel).sublime-syntax",
-							"tab_size": 2,
-							"translate_tabs_to_spaces": true
-						},
-						"translation.x": 0.0,
-						"translation.y": 0.0,
-						"zoom_level": 1.0
-					},
-					"stack_index": 9,
+					"stack_multiselect": false,
 					"type": "text"
 				}
 			]
 		},
 		{
-			"selected": 3,
 			"sheets":
 			[
 				{
-					"buffer": 2,
+					"buffer": 1,
 					"file": "src/components/core/Camera.js",
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 2273,
+						"buffer_size": 2120,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								650,
-								650
+								990,
+								990
 							]
 						],
 						"settings":
 						{
-							"syntax": "Packages/Babel/JavaScript (Babel).sublime-syntax",
+							"syntax": "Packages/JavaScript/JSX.sublime-syntax",
 							"tab_size": 2,
 							"translate_tabs_to_spaces": true
 						},
 						"translation.x": 0.0,
 						"translation.y": 0.0,
-						"zoom_level": 1.0
-					},
-					"stack_index": 6,
-					"type": "text"
-				},
-				{
-					"buffer": 4,
-					"file": "src/components/projects/seseme.js",
-					"semi_transient": false,
-					"settings":
-					{
-						"buffer_size": 3697,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								1731,
-								1731
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/Babel/JavaScript (Babel).sublime-syntax",
-							"tab_size": 2,
-							"translate_tabs_to_spaces": true
-						},
-						"translation.x": 0.0,
-						"translation.y": 367.0,
-						"zoom_level": 1.0
-					},
-					"stack_index": 5,
-					"type": "text"
-				},
-				{
-					"buffer": 5,
-					"file": "public/scorecard/state.gltf",
-					"semi_transient": false,
-					"settings":
-					{
-						"buffer_size": 21923,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								0,
-								0
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/Text/Plain text.tmLanguage"
-						},
-						"translation.x": 0.0,
-						"translation.y": 0.0,
-						"zoom_level": 1.0
-					},
-					"stack_index": 11,
-					"type": "text"
-				},
-				{
-					"buffer": 6,
-					"file": "src/components/projects/Scorecard.js",
-					"semi_transient": false,
-					"settings":
-					{
-						"buffer_size": 3286,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								0,
-								0
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/Babel/JavaScript (Babel).sublime-syntax",
-							"tab_size": 4,
-							"translate_tabs_to_spaces": true
-						},
-						"translation.x": 0.0,
-						"translation.y": 151.0,
 						"zoom_level": 1.0
 					},
 					"stack_index": 1,
+					"stack_multiselect": false,
 					"type": "text"
 				},
 				{
 					"buffer": 3,
+					"file": "src/components/projects/seseme.js",
+					"selected": true,
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 3734,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								1323,
+								1322
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/JavaScript/JavaScript.sublime-syntax",
+							"tab_size": 2,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 0,
+					"stack_multiselect": false,
+					"type": "text"
+				},
+				{
+					"buffer": 2,
 					"file": "src/components/core/Wall.js",
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 2411,
+						"buffer_size": 2284,
 						"regions":
 						{
 						},
@@ -1209,7 +1115,7 @@
 						],
 						"settings":
 						{
-							"syntax": "Packages/Babel/JavaScript (Babel).sublime-syntax",
+							"syntax": "Packages/JavaScript/JavaScript.sublime-syntax",
 							"tab_size": 2,
 							"translate_tabs_to_spaces": true
 						},
@@ -1218,15 +1124,16 @@
 						"zoom_level": 1.0
 					},
 					"stack_index": 2,
+					"stack_multiselect": false,
 					"type": "text"
 				},
 				{
-					"buffer": 7,
+					"buffer": 4,
 					"file": "src/components/core/Physics.js",
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 2895,
+						"buffer_size": 3399,
 						"regions":
 						{
 						},
@@ -1239,7 +1146,7 @@
 						],
 						"settings":
 						{
-							"syntax": "Packages/Babel/JavaScript (Babel).sublime-syntax",
+							"syntax": "Packages/Text/Plain text.tmLanguage",
 							"tab_size": 2,
 							"translate_tabs_to_spaces": true
 						},
@@ -1247,7 +1154,8 @@
 						"translation.y": 292.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 7,
+					"stack_index": 3,
+					"stack_multiselect": false,
 					"type": "text"
 				},
 				{
@@ -1256,37 +1164,7 @@
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 3952,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								2506,
-								2506
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/Babel/JavaScript (Babel).sublime-syntax",
-							"tab_size": 2,
-							"translate_tabs_to_spaces": true
-						},
-						"translation.x": 0.0,
-						"translation.y": 907.0,
-						"zoom_level": 1.0
-					},
-					"stack_index": 8,
-					"type": "text"
-				},
-				{
-					"buffer": 1,
-					"file": "src/components/core/Body.js",
-					"semi_transient": false,
-					"settings":
-					{
-						"buffer_size": 597,
+						"buffer_size": 2924,
 						"regions":
 						{
 						},
@@ -1299,15 +1177,16 @@
 						],
 						"settings":
 						{
-							"syntax": "Packages/Babel/JavaScript (Babel).sublime-syntax",
+							"syntax": "Packages/JavaScript/JSX.sublime-syntax",
 							"tab_size": 2,
 							"translate_tabs_to_spaces": true
 						},
-						"translation.x": 78.0,
-						"translation.y": 379.0,
+						"translation.x": 0.0,
+						"translation.y": 907.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 10,
+					"stack_index": 4,
+					"stack_multiselect": false,
 					"type": "text"
 				}
 			]
@@ -1315,7 +1194,7 @@
 	],
 	"incremental_find":
 	{
-		"height": 27.0
+		"height": 24.0
 	},
 	"input":
 	{
@@ -1341,7 +1220,7 @@
 		"cols":
 		[
 			0.0,
-			0.5,
+			0.507653808594,
 			1.0
 		],
 		"rows":
@@ -1353,7 +1232,10 @@
 	"menu_visible": true,
 	"output.find_results":
 	{
-		"height": 0.0
+		"height": 0.0,
+		"history":
+		[
+		]
 	},
 	"output.unsaved_changes":
 	{
@@ -1363,7 +1245,7 @@
 	"project": "ducknet.sublime-project",
 	"replace":
 	{
-		"height": 50.0
+		"height": 44.0
 	},
 	"save_all_on_build": true,
 	"select_file":

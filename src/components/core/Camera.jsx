@@ -50,7 +50,10 @@ function Camera({
   useEffect(()=>{
     console.log('moving camera')
     api.stop()
-    if(!cam) api.start(defaults)
+    if(!cam){
+      console.log('no cam, using defaults')
+      api.start(defaults)
+    }
     else api.start(cam)
   }, [cam])
 

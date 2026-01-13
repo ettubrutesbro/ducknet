@@ -28,7 +28,6 @@ export function Eclipse({
     })
     const [forced, forceTo] = useState(null)
 
-    console.log(dragon.scene.children[0].geometry)
 
     useEffect(()=>{
         if(selected){
